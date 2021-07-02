@@ -19,4 +19,4 @@ clean:
 	rm -f $(OBJ_NAME)
 
 test: $(OBJ_NAME)
-	./$(OBJ_NAME)	
+	./$(OBJ_NAME)
