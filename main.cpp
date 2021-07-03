@@ -5,8 +5,11 @@
 
 //Add some safety checks to see if Vulkan is enabled
 //include GLFW and vulkan
+#define VK_USE_PLATFORM_XCB_KHR
 #define GLFW_INCLUDE_VULKAN
+#define GLFW_EXPOSE_NATIVE_X11
 #include <GLFW/glfw3.h>
+#include <GLFW/glfw3native.h>
 
 //uncomment this line to disable debug mode
 //#define NDEBUG
@@ -20,6 +23,8 @@
 #include <string>
 #include <map>
 #include <optional>
+
+#include <xcb/xcb.h>
 
 
 //TODO: can i change this to a #define?
@@ -117,6 +122,7 @@ private:
 
     void initVulkan() {
         createInstance();
+        createSurface();
         setupDebugMessenger();
         //pick graphics card that meet required vulkan features
         //TODO: add a method for the user to control this?
@@ -138,6 +144,7 @@ private:
         if (enableValidationLayers) {
             DestroyDebugUtilsMessengerEXT(instance, debugMessenger, nullptr);
         }
+        vkDestroySurfaceKHR(instance, surface, nullptr);
         vkDestroyDevice(device, nullptr);
         //destroy vulkan instance
         vkDestroyInstance(instance, nullptr);
@@ -191,7 +198,7 @@ private:
         //is still needed to be able to create an instance.
         VkDebugUtilsMessengerCreateInfoEXT createDebugInfo{};
         
-        //setup debug layers and extensions for instance
+        //setup debug layers and extensions for instance#define VK_USE_PLATFORM_WIN32_KHR
         if (enableValidationLayers) {
             //convert size int to uint32_t
             createInfo.enabledLayerCount = static_cast<uint32_t>( validationLayers.size() );
@@ -213,6 +220,19 @@ private:
         //in future vulkan versions
         if (vkCreateInstance(&createInfo, nullptr, &instance) != VK_SUCCESS) {
             throw std::runtime_error("failed to create instance");
+        }
+    }
+
+    void createSurface() {
+        //glfw can do all this for me plus all other platforms and i won't to decide between anything
+
+        VkXcbSurfaceCreateInfoKHR createInfo{};
+        createInfo.sType = VK_STRUCTURE_TYPE_XCB_SURFACE_CREATE_INFO_KHR;
+        createInfo.window = glfwGetX11Window(window);
+        createInfo.connection = xcb_connect(NULL, NULL);
+
+        if (vkCreateXcbSurfaceKHR(instance, &createInfo, nullptr, &surface) != VK_SUCCESS) {
+            throw std::runtime_error("surface could not be created");
         }
     }
 

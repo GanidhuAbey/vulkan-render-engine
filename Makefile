@@ -4,7 +4,7 @@ CC = g++
 CFLAGS = -std=c++17 -O2
 
 #linker flags
-LDLFLAGS = -lglfw -lvulkan -ldl -lpthread -lX11 -lXxf86vm -lXrandr -lXi
+LDLFLAGS = -lglfw -lvulkan -ldl -lpthread -lX11 -lXxf86vm -lXrandr -lXi `pkg-config --cflags --libs xcb`
 
 #name of script(s)
 OBJS = main.cpp
@@ -13,7 +13,7 @@ OBJS = main.cpp
 OBJ_NAME = Vulkan
 
 all: $(OBJS)
-	$(CC) $(CFLAGS) $(OBJS) $(LDLFLAGS) -o $(OBJ_NAME)
+	$(CC) $(CFLAGS) $(OBJS) -o $(OBJ_NAME) $(LDLFLAGS)
 
 clean:
 	rm -f $(OBJ_NAME)
