@@ -23,6 +23,8 @@
 #include <string>
 #include <map>
 #include <optional>
+#include <set>
+#include <algorithm>
 
 #include <xcb/xcb.h>
 
@@ -39,11 +41,19 @@ const std::vector<const char*> validationLayers = {
     "VK_LAYER_KHRONOS_validation"
 };
 
+const std::vector<const char*> deviceExtensions = {
+    VK_KHR_SWAPCHAIN_EXTENSION_NAME
+};
+
 #ifdef NDEBUG
     const bool enableValidationLayers = false;
 #else
     const bool enableValidationLayers = true;
 #endif
+
+void glfwErrorCallback(int code, const char* description) {
+    std::cerr << "GLFW Error " << code << ": " << description << std::endl;
+}
 
 VkResult CreateDebugUtilsMessengerEXT(VkInstance instance, 
 const VkDebugUtilsMessengerCreateInfoEXT* pCreateInfo, 
@@ -63,6 +73,7 @@ VkDebugUtilsMessengerEXT* pDebugMessenger) {
     }
 
 }
+
 
 void DestroyDebugUtilsMessengerEXT(VkInstance instance,
 VkDebugUtilsMessengerEXT pDebugMessenger,
@@ -100,15 +111,27 @@ private:
     VkDevice device;
     //Graphics Queue
     VkQueue graphicsQueue;
-
+    //Presentation Queue
+    VkQueue presentQueue;
     //Window surface which vulkan draws on
     VkSurfaceKHR surface;
+    //SwapChain: handles an image queue allowing one image to be presented to the display while simultaneously rendering another image in the background
+    VkSwapchainKHR swapChain;
+    std::vector<VkImage> swapChainImages;
+
+    VkFormat swapChainImageFormat;
+    VkExtent2D swapChainExtent;
 
 private:
     void initWindow() {
         //initializes glfw
         //add check for initialize failure
         glfwInit();
+
+        //setup debug callback if user enabled debug layers.
+        if (enableValidationLayers) {
+            glfwSetErrorCallback(glfwErrorCallback);
+        }
 
         //turn off opengl context
         glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
@@ -127,8 +150,8 @@ private:
         //pick graphics card that meet required vulkan features
         //TODO: add a method for the user to control this?
         pickPhysicalDevice();
-
         createLogicalDevice();
+        createSwapChain();
     }
 
     void mainLoop() {
@@ -144,8 +167,11 @@ private:
         if (enableValidationLayers) {
             DestroyDebugUtilsMessengerEXT(instance, debugMessenger, nullptr);
         }
-        vkDestroySurfaceKHR(instance, surface, nullptr);
+        vkDestroySwapchainKHR(device, swapChain, nullptr);
+
         vkDestroyDevice(device, nullptr);
+
+        vkDestroySurfaceKHR(instance, surface, nullptr);
         //destroy vulkan instance
         vkDestroyInstance(instance, nullptr);
 
@@ -197,19 +223,19 @@ private:
         //if not place inside the if statement, this debug info will run out of scope and be freed from memory, when it 
         //is still needed to be able to create an instance.
         VkDebugUtilsMessengerCreateInfoEXT createDebugInfo{};
-        
+
         //setup debug layers and extensions for instance#define VK_USE_PLATFORM_WIN32_KHR
         if (enableValidationLayers) {
             //convert size int to uint32_t
             createInfo.enabledLayerCount = static_cast<uint32_t>( validationLayers.size() );
             createInfo.ppEnabledLayerNames = validationLayers.data();
 
-            
+
             populateDebugMessengerCreateInfo(createDebugInfo);
             //do you need to do this?
             //TODO: see how removing this cast changes things once we draw triangle
             createInfo.pNext = (VkDebugUtilsMessengerCreateInfoEXT*) &createDebugInfo;
-        } 
+        }
         //don't need to do this but it will probably be useful to be as descriptive as possible
         else {
             createInfo.enabledLayerCount = 0;
@@ -226,63 +252,26 @@ private:
     void createSurface() {
         //glfw can do all this for me plus all other platforms and i won't to decide between anything
 
-        VkXcbSurfaceCreateInfoKHR createInfo{};
-        createInfo.sType = VK_STRUCTURE_TYPE_XCB_SURFACE_CREATE_INFO_KHR;
-        createInfo.window = glfwGetX11Window(window);
-        createInfo.connection = xcb_connect(NULL, NULL);
-
-        if (vkCreateXcbSurfaceKHR(instance, &createInfo, nullptr, &surface) != VK_SUCCESS) {
+        if (glfwCreateWindowSurface(instance, window, nullptr, &surface) != VK_SUCCESS) {
             throw std::runtime_error("surface could not be created");
         }
     }
 
-    void createLogicalDevice() {
-        QueueFamilyIndices indices = findQueueFamilies(physicalDevice);
+    void setupDebugMessenger() {
+        if (!enableValidationLayers) return;
 
-        VkDeviceQueueCreateInfo createQInfo{};
-        createQInfo.sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
-        //.value() can access the actual type from std::optional<type> variables
-        createQInfo.queueFamilyIndex = indices.graphicsFamily.value();
-        createQInfo.queueCount = 1;
+        //fill in object struct
+        VkDebugUtilsMessengerCreateInfoEXT createInfo{};
+        
+        populateDebugMessengerCreateInfo(createInfo);
 
-        //because we're only dealing with 1 queue giving a float value to this parameter is the same as providing an array of one value
-        float queuePriority = 1.0f;
-        createQInfo.pQueuePriorities = &queuePriority;
-
-        //this defined a struct of features that we can use, right now its set to all VK_FALSE meaning no features are needed
-        //later on we will need geometry shaders from these device features (which is why we already queried for it in the pickPhysicalDevice() option)
-        VkPhysicalDeviceFeatures deviceFeatures{};
-
-        //filling in the struct for the logical device
-        VkDeviceCreateInfo createLInfo{};
-        createLInfo.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
-        //this is written as an array in the documentation, but that is because their can be multiple queues and logical devices. In our case their is only a single value
-        createLInfo.pQueueCreateInfos = &createQInfo;
-        createLInfo.queueCreateInfoCount = 1;
-
-        createLInfo.pEnabledFeatures = &deviceFeatures;
-
-        //NOTE: creating logical devices also allows us to enable extensions to extend the functionality of Vulkan
-        //examples of this would be VK_KHR_swapchain which is a device specific extension designed to present rendered images to the screen.
-
-        //this part is not required for newer versions of vulkan, but older versions still rely on this
-        if (enableValidationLayers) {
-            //set up device layers for this logical device
-            createLInfo.enabledLayerCount = static_cast<uint32_t>( validationLayers.size() );
-            createLInfo.ppEnabledLayerNames = validationLayers.data();
+        //functions that are part of extensions (like this one) are  not not loaded automatically.
+        //inorder to load functions like these we have to use vkGetInstanceProcAddr
+        //create object
+        if (CreateDebugUtilsMessengerEXT(instance, &createInfo, nullptr, &debugMessenger) != VK_SUCCESS) {
+            throw std::runtime_error("could not create debug messenger");
         }
-        else {
-            createLInfo.enabledLayerCount = 0;
-        }
-
-        if (vkCreateDevice(physicalDevice, &createLInfo, nullptr, &device) != VK_SUCCESS) {
-            throw std::runtime_error("could not create logical device");
-        }
-
-        //TODO: not sure where to put this...
-        //grab queue from device
-        vkGetDeviceQueue(device, indices.graphicsFamily.value(), 0, &graphicsQueue);
-
+        
     }
 
     void pickPhysicalDevice() {
@@ -315,6 +304,137 @@ private:
         //findQueueFamilies(physicalDevice);
     }
 
+    void createLogicalDevice() {
+        QueueFamilyIndices indices = findQueueFamilies(physicalDevice);
+
+
+        //TODO: can save time here if i ran a check to see if graphics family and present family were the same
+
+        //Load Queues
+        std::vector<VkDeviceQueueCreateInfo> queueCreateInfos;
+        std::set<uint32_t> queueIndices = {indices.graphicsFamily.value(), indices.presentFamily.value()};
+
+        //iterate through queuefamilies and fill in struct data
+        float queuePriority = 1.0f;
+        for (uint32_t i : queueIndices) {
+            VkDeviceQueueCreateInfo queueCreateInfo{};
+            queueCreateInfo.sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
+            queueCreateInfo.queueFamilyIndex = i;
+            queueCreateInfo.queueCount = 1;
+            queueCreateInfo.pQueuePriorities = &queuePriority;
+
+            queueCreateInfos.push_back(queueCreateInfo);
+        }
+
+        //this defined a struct of features that we can use, right now its set to all VK_FALSE meaning no features are needed
+        //later on we will need geometry shaders from these device features (which is why we already queried for it in the pickPhysicalDevice() option)
+        VkPhysicalDeviceFeatures deviceFeatures{};
+
+        //filling in the struct for the logical device
+        VkDeviceCreateInfo createLInfo{};
+        createLInfo.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
+        createLInfo.queueCreateInfoCount = static_cast<uint32_t>( queueCreateInfos.size() );
+        //documentation writes this as an array but when only dealing with a single queue, you can just put a single value and its fine.
+        createLInfo.pQueueCreateInfos = queueCreateInfos.data();
+        createLInfo.pEnabledFeatures = &deviceFeatures;
+
+        //NOTE: creating logical devices also allows us to enable extensions to extend the functionality of Vulkan
+        //examples of this would be VK_KHR_swapchain which is a device specific extension designed to present rendered images to the screen.
+
+        //this part is not required for newer versions of vulkan, but older versions still rely on this
+        if (enableValidationLayers) {
+            //set up device layers for this logical device
+            createLInfo.enabledLayerCount = static_cast<uint32_t>( validationLayers.size() );
+            createLInfo.ppEnabledLayerNames = validationLayers.data();
+        }
+        else {
+            createLInfo.enabledLayerCount = 0;
+        }
+
+        //enable VK_KHR_SWAPCHAIN extension
+        createLInfo.enabledExtensionCount = static_cast<uint32_t>( deviceExtensions.size() );
+        createLInfo.ppEnabledExtensionNames = deviceExtensions.data();
+
+        if (vkCreateDevice(physicalDevice, &createLInfo, nullptr, &device) != VK_SUCCESS) {
+            throw std::runtime_error("could not create logical device");
+        }
+
+        //TODO: not sure where to put this...
+        //grab queue from device
+        vkGetDeviceQueue(device, indices.graphicsFamily.value(), 0, &graphicsQueue);
+        vkGetDeviceQueue(device, indices.presentFamily.value(), 0, &presentQueue);
+
+    }
+
+    void createSwapChain() {
+        SwapChainSupportDetails details = querySwapChainSupport(physicalDevice);
+
+        VkSurfaceFormatKHR surfaceFormat = chooseSwapChainFormat(details.formats);
+        VkPresentModeKHR presentMode = chooseSwapChainPresentation(details.presentModes);
+        VkExtent2D extent = chooseSwapExtent(details.capabilities);
+
+        //dont try max, the swap chain can always create more than this, we're just giving the absolute minimum it can produce without crashing.
+        //if we set to max it will probably always crash.
+        uint32_t imageQueue = details.capabilities.minImageCount + 1;
+
+        uint32_t maxCount = details.capabilities.maxImageCount;
+        if (maxCount > 0 && imageQueue > maxCount) {
+            imageQueue = maxCount;
+        }
+
+        //create swapchain vulkan object
+        VkSwapchainCreateInfoKHR createInfo{};
+        createInfo.sType = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR;
+        createInfo.pNext = nullptr;
+        createInfo.surface = surface;
+        createInfo.minImageCount = imageQueue;
+        createInfo.imageFormat = surfaceFormat.format;
+        createInfo.imageColorSpace = surfaceFormat.colorSpace;
+        createInfo.imageExtent = extent;
+        createInfo.imageArrayLayers = 1;
+        createInfo.imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
+        createInfo.presentMode = presentMode;
+        //TODO: try with false later
+        createInfo.clipped = VK_TRUE;
+
+        QueueFamilyIndices indices = findQueueFamilies(physicalDevice);
+        uint32_t queueIndices[] = {indices.graphicsFamily.value(), indices.presentFamily.value()};
+
+        if (indices.graphicsFamily.value() != indices.presentFamily.value()) {
+            
+
+            createInfo.imageSharingMode = VK_SHARING_MODE_CONCURRENT;
+            createInfo.queueFamilyIndexCount = 2;
+            createInfo.pQueueFamilyIndices = queueIndices;
+        } else {
+            createInfo.imageSharingMode = VK_SHARING_MODE_EXCLUSIVE;
+            createInfo.queueFamilyIndexCount = 0;
+            createInfo.pQueueFamilyIndices = nullptr;
+        }
+
+        createInfo.preTransform = details.capabilities.currentTransform;
+        createInfo.compositeAlpha = VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR;
+        createInfo.oldSwapchain = VK_NULL_HANDLE;
+
+        if (vkCreateSwapchainKHR(device, &createInfo, nullptr, &swapChain) != VK_SUCCESS) {
+            throw std::runtime_error("could not initialize the swap chain");
+        };
+
+        //grab swapchain images
+        uint32_t numImages = 0;
+        vkGetSwapchainImagesKHR(device, swapChain, &numImages, nullptr);
+
+        //i dont think numImages can ever be 0 so this should be fine
+        //if an error does occur it should probably get caught in the validation layer before we get undefined behaviour
+        swapChainImages.resize(numImages);
+        vkGetSwapchainImagesKHR(device, swapChain, &numImages, swapChainImages.data());
+
+
+        swapChainImageFormat = surfaceFormat.format;
+        swapChainExtent = extent;
+
+    }
+
     int rateDeviceSuitabilty(VkPhysicalDevice device) {
         int score = 0;
 
@@ -336,24 +456,151 @@ private:
         if (!deviceFeatures.geometryShader) {
             return 0;
         }
+        
+        //check if needed extensions are supported by device
+        if (!checkDeviceExtensionSupport(device)) {
+            return 0;
+        }
 
         QueueFamilyIndices indices = findQueueFamilies(device);
 
         //the '.' operator is used when dealing with the actual object not a pointer to it.
         //can use the isComplete() function but want to keep the above note
-        if (indices.graphicsFamily.has_value() == false) {
+        if (!indices.isComplete()) {
+            return 0;
+        }
+
+        //check swapchain support
+        bool extensionsSupported = checkDeviceExtensionSupport(device);
+        bool swapChainAdequate = false;
+        if (extensionsSupported) {
+            SwapChainSupportDetails details = querySwapChainSupport(device);
+            swapChainAdequate = !details.formats.empty() && !details.presentModes.empty();
+        }
+
+        if (!extensionsSupported || !swapChainAdequate) {
             return 0;
         }
 
         return score;
     }
+    //checks if the needed device extensions are supported
+    bool checkDeviceExtensionSupport(VkPhysicalDevice device) {
+        uint32_t deviceExtCount = 0;
+        vkEnumerateDeviceExtensionProperties(device, nullptr, &deviceExtCount, nullptr);
 
+        if (deviceExtCount == 0) {
+            return false;
+        }
+
+        std::vector<VkExtensionProperties> supportedDeviceExtensions(deviceExtCount);
+
+        vkEnumerateDeviceExtensionProperties(device, nullptr, &deviceExtCount, supportedDeviceExtensions.data());
+
+        for (const auto& deviceExt1 : deviceExtensions) {
+            bool found = false;
+            for (const auto& deviceExt2 : supportedDeviceExtensions) {
+                if (strcmp(deviceExt1, deviceExt2.extensionName)) {
+                    found = true;
+                }
+            }
+            if (!found) {
+                return false;
+            }
+        }
+        return true;
+    }
+    //data struct to hold information on the capabilities of the swapchain
+    struct SwapChainSupportDetails {
+        VkSurfaceCapabilitiesKHR capabilities;
+        std::vector<VkSurfaceFormatKHR> formats;
+        std::vector<VkPresentModeKHR> presentModes;
+    };
+
+    SwapChainSupportDetails querySwapChainSupport(VkPhysicalDevice device)  {
+        SwapChainSupportDetails swapchainDetails;
+
+        //get surface capabilities
+        vkGetPhysicalDeviceSurfaceCapabilitiesKHR(device, surface, &swapchainDetails.capabilities);
+
+        //get formats
+        uint32_t formatCount = 0;
+        vkGetPhysicalDeviceSurfaceFormatsKHR(device, surface, &formatCount, nullptr);
+
+        if (formatCount > 0) {
+            swapchainDetails.formats.resize(formatCount);
+            vkGetPhysicalDeviceSurfaceFormatsKHR(device, surface, &formatCount, swapchainDetails.formats.data());
+        }
+        //get presentation modes
+        uint32_t modeCount = 0;
+        vkGetPhysicalDeviceSurfacePresentModesKHR(device, surface, &modeCount, nullptr);
+
+        if (modeCount > 0) {
+            swapchainDetails.presentModes.resize(modeCount);
+            vkGetPhysicalDeviceSurfacePresentModesKHR(device, surface, &modeCount, swapchainDetails.presentModes.data());
+        }
+
+        return swapchainDetails;
+    }
+
+    //Searches for the best available format (color space and color support for pixels)
+    VkSurfaceFormatKHR chooseSwapChainFormat(const std::vector<VkSurfaceFormatKHR>& availableFormats) {
+        for (const auto& availableFormat : availableFormats) {
+            if (availableFormat.format == VK_FORMAT_B8G8R8A8_SRGB && availableFormat.colorSpace == VK_COLOR_SPACE_SRGB_NONLINEAR_KHR) {
+                return availableFormat;
+            }
+        }
+
+        //could do some system to rank the other formats, but honestly i have no idea what the difference are so
+        return availableFormats[0];
+    }
+
+    //find the best swap chain method, that is the method by which the images being presented to the screen that images being drawn are being swapped.
+    VkPresentModeKHR chooseSwapChainPresentation(const std::vector<VkPresentModeKHR>& availablePresentations) {
+        for (const auto& availablePresentation : availablePresentations) {
+            //the most ideal method is VK_PRESENT_MODE_MAILBOX_KHR which pushes images into a queue where they are presented one by one to the display on each refresh
+            //of the monitor, and when the queue is full it overides the move recent image added to to the queue
+            if (availablePresentation == VK_PRESENT_MODE_MAILBOX_KHR) {
+                return availablePresentation;
+            }
+        }
+
+        //apparently this is guaranteed to be available.
+        //this presentation method pushes images into a queue to be displayed as well but when the queue is full it blocks other images from being added till
+        //there is space in the queue. 
+        return VK_PRESENT_MODE_FIFO_KHR;
+    }
+
+
+    VkExtent2D chooseSwapExtent(const VkSurfaceCapabilitiesKHR& capabilities) {
+        if (capabilities.currentExtent.width != UINT32_MAX) {
+            return capabilities.currentExtent;
+        } else {
+            int width, height;
+            glfwGetFramebufferSize(window, &width, &height);
+
+            VkExtent2D surfaceExtent {
+                static_cast<uint32_t>(width),
+                static_cast<uint32_t>(height)
+            };
+
+            //by using clamp we can guarantee that surfaceExtent will be within the max and min values
+            surfaceExtent.width = std::clamp(surfaceExtent.width, capabilities.minImageExtent.width, capabilities.maxImageExtent.width);
+            surfaceExtent.height = std::clamp(surfaceExtent.height, capabilities.minImageExtent.height, capabilities.maxImageExtent.height);
+
+            return surfaceExtent;
+        }
+    }
+
+    //data struct to hold information on needed queues
     struct QueueFamilyIndices {
         //now until graphicsFamily is assigned a value it will appear as if a value does not exist when graphicsFamily.has_value() is called
         std::optional<uint32_t> graphicsFamily;
+        //presentation queues are sometimes not held in the same queue as graphics, therefore we need to query for presentation queues as well
+        std::optional<uint32_t> presentFamily;
 
         bool isComplete() {
-            return graphicsFamily.has_value();
+            return graphicsFamily.has_value() && presentFamily.has_value();
         }
     };
 
@@ -369,7 +616,14 @@ private:
 
         //NOTE: the reason for the const auto& is to specify that the data being read from the for loop is NOT being modified
         int i = 0;
+        
         for (const auto& queue : queueFamilies) {
+            VkBool32 presentSupport = false;
+            vkGetPhysicalDeviceSurfaceSupportKHR(device, i, surface, &presentSupport);
+
+            if (presentSupport) {
+                indices.presentFamily = i;
+            }
             if (queue.queueFlags & VK_QUEUE_GRAPHICS_BIT) {
                 indices.graphicsFamily = i;
             }
@@ -459,23 +713,6 @@ private:
         }
 
         return extensions;
-    }
-
-    void setupDebugMessenger() {
-        if (!enableValidationLayers) return;
-
-        //fill in object struct
-        VkDebugUtilsMessengerCreateInfoEXT createInfo{};
-        
-        populateDebugMessengerCreateInfo(createInfo);
-
-        //functions that are part of extensions (like this one) are  not not loaded automatically.
-        //inorder to load functions like these we have to use vkGetInstanceProcAddr
-        //create object
-        if (CreateDebugUtilsMessengerEXT(instance, &createInfo, nullptr, &debugMessenger) != VK_SUCCESS) {
-            throw std::runtime_error("could not create debug messenger");
-        }
-        
     }
     //the '&' in function arguements acts largely like a '*' except its entry cannot be null
     void populateDebugMessengerCreateInfo(VkDebugUtilsMessengerCreateInfoEXT& createInfo) {

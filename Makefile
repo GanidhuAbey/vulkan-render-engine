@@ -1,7 +1,7 @@
 CC = g++
 
-#compiler flags
-CFLAGS = -std=c++17 -O2
+#compiler flags include -O2 in the release verion
+CFLAGS = -std=c++17 #-O2
 
 #linker flags
 LDLFLAGS = -lglfw -lvulkan -ldl -lpthread -lX11 -lXxf86vm -lXrandr -lXi `pkg-config --cflags --libs xcb`
