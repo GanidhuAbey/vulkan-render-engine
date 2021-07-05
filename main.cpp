@@ -118,9 +118,11 @@ private:
     //SwapChain: handles an image queue allowing one image to be presented to the display while simultaneously rendering another image in the background
     VkSwapchainKHR swapChain;
     std::vector<VkImage> swapChainImages;
-
     VkFormat swapChainImageFormat;
     VkExtent2D swapChainExtent;
+
+    //this will basically grab data from the actual images and will be what interacts with our code to update the images
+    std::vector<VkImageView> swapChainImageViews;
 
 private:
     void initWindow() {
@@ -152,6 +154,7 @@ private:
         pickPhysicalDevice();
         createLogicalDevice();
         createSwapChain();
+        createImageViews();
     }
 
     void mainLoop() {
@@ -167,8 +170,12 @@ private:
         if (enableValidationLayers) {
             DestroyDebugUtilsMessengerEXT(instance, debugMessenger, nullptr);
         }
+        for (const auto& imageView : swapChainImageViews) {
+            vkDestroyImageView(device, imageView, nullptr);
+        }
+        
         vkDestroySwapchainKHR(device, swapChain, nullptr);
-
+        
         vkDestroyDevice(device, nullptr);
 
         vkDestroySurfaceKHR(instance, surface, nullptr);
@@ -433,6 +440,40 @@ private:
         swapChainImageFormat = surfaceFormat.format;
         swapChainExtent = extent;
 
+    }
+
+    void createImageViews() {
+        swapChainImageViews.resize(swapChainImages.size());
+
+        for (int i = 0; i < swapChainImageViews.size(); i++) {
+            //setup create struct for image views
+            VkImageViewCreateInfo createInfo{};
+            createInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
+            createInfo.image = swapChainImages[i];
+            createInfo.viewType = VK_IMAGE_VIEW_TYPE_2D;
+            createInfo.format = swapChainImageFormat;
+
+            
+            //this changes the colour output of the image, currently set to standard colours
+            createInfo.components.r = VK_COMPONENT_SWIZZLE_IDENTITY;
+            createInfo.components.g = VK_COMPONENT_SWIZZLE_IDENTITY;
+            createInfo.components.b = VK_COMPONENT_SWIZZLE_IDENTITY;
+            createInfo.components.a = VK_COMPONENT_SWIZZLE_IDENTITY;
+
+            //deciding on how many layers are in the image, and if we're using any mipmap levels.
+            //TODO: come back here when you know what those mean
+            //layers are used for steroscopic 3d applications in which you would provide multiple images to each eye, creating a 3D effect.
+            //mipmap levels are an optimization made so that lower quality textures are used when further away to save resources.
+            createInfo.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+            createInfo.subresourceRange.baseMipLevel = 0;
+            createInfo.subresourceRange.levelCount = 1;
+            createInfo.subresourceRange.baseArrayLayer = 0;
+            createInfo.subresourceRange.layerCount = 1;
+
+            if (vkCreateImageView(device, &createInfo, nullptr, &swapChainImageViews[i]) != VK_SUCCESS) {
+                throw std::runtime_error("one of the image views could not be created");
+            }
+        }
     }
 
     int rateDeviceSuitabilty(VkPhysicalDevice device) {
