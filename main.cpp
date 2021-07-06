@@ -125,6 +125,8 @@ private:
     VkPipelineLayout pipelineLayout;
     VkRenderPass renderPass;
 
+    VkPipeline graphicsPipeline;
+
 private:
     void initWindow() {
         //initializes glfw
@@ -177,8 +179,9 @@ private:
             vkDestroyImageView(device, imageView, nullptr);
         }
 
-        vkDestroySwapchainKHR(device, swapChain, nullptr);        
+        vkDestroySwapchainKHR(device, swapChain, nullptr);
 
+        vkDestroyPipeline(device, graphicsPipeline, nullptr);
         vkDestroyPipelineLayout(device, pipelineLayout, nullptr);
 
         vkDestroyRenderPass(device, renderPass, nullptr);
@@ -537,9 +540,6 @@ private:
     }
 
     void createGraphicsPipeline()  {
-        VkGraphicsPipelineCreateInfo createGraphicsPipelineInfo{};
-        createGraphicsPipelineInfo.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
-        
         //load in the appropriate shader code for a triangle
         auto vertShaderCode = readFile("shaders/spirv/vert.spv");
         auto fragShaderCode = readFile("shaders/spirv/frag.spv");
@@ -648,7 +648,24 @@ private:
             throw std::runtime_error("could not create pipeline layout");
         }
 
-    
+        VkGraphicsPipelineCreateInfo createGraphicsPipelineInfo{};
+        createGraphicsPipelineInfo.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
+        createGraphicsPipelineInfo.stageCount = 2;
+        createGraphicsPipelineInfo.pStages = shaderStages;
+        createGraphicsPipelineInfo.pVertexInputState = &vertexInputInfo;
+        createGraphicsPipelineInfo.pInputAssemblyState = &inputAssemblyInfo;
+        createGraphicsPipelineInfo.pViewportState = &viewportInfo;
+        createGraphicsPipelineInfo.pRasterizationState = &rasterizationInfo;
+        createGraphicsPipelineInfo.pMultisampleState = &multisampling;
+        createGraphicsPipelineInfo.pColorBlendState = &colorBlendInfo;
+        createGraphicsPipelineInfo.pDynamicState = nullptr;
+        createGraphicsPipelineInfo.layout = pipelineLayout;
+        createGraphicsPipelineInfo.renderPass = renderPass;
+        createGraphicsPipelineInfo.subpass = 0; 
+
+        if (vkCreateGraphicsPipelines(device, VK_NULL_HANDLE, 1, &createGraphicsPipelineInfo, nullptr, &graphicsPipeline) != VK_SUCCESS) {
+            throw std::runtime_error("could not create graphics pipeline");
+        }
 
         //destroy the used shader object
         vkDestroyShaderModule(device, vertShader, nullptr);
