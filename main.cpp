@@ -477,6 +477,9 @@ private:
     }
 
     void createGraphicsPipeline()  {
+        VkGraphicsPipelineCreateInfo createGraphicsPipelineInfo{};
+        createGraphicsPipelineInfo.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
+        
         //load in the appropriate shader code for a triangle
         auto vertShaderCode = readFile("shaders/spirv/vert.spv");
         auto fragShaderCode = readFile("shaders/spirv/frag.spv");
@@ -488,6 +491,19 @@ private:
         //create shader stage of the graphics pipeline
         VkPipelineShaderStageCreateInfo createVertShaderInfo = fillShaderStageStruct(VK_SHADER_STAGE_VERTEX_BIT, vertShader);
         VkPipelineShaderStageCreateInfo createFragShaderInfo = fillShaderStageStruct(VK_SHADER_STAGE_FRAGMENT_BIT, fragShader);
+
+        VkPipelineShaderStageCreateInfo shaderStages[] = {createVertShaderInfo, createFragShaderInfo};
+
+        createGraphicsPipelineInfo.stageCount = 2;
+
+        VkPipelineVertexInputStateCreateInfo vertexInputInfo{};
+        vertexInputInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
+        vertexInputInfo.vertexBindingDescriptionCount = 0;
+        vertexInputInfo.pVertexBindingDescriptions = nullptr;
+        vertexInputInfo.vertexAttributeDescriptionCount = 0;
+        vertexInputInfo.pVertexAttributeDescriptions = nullptr;
+
+
 
 
         //destroy the used shader object
