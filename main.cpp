@@ -25,8 +25,7 @@
 #include <optional>
 #include <set>
 #include <algorithm>
-
-#include <xcb/xcb.h>
+#include <fstream>  
 
 
 //TODO: can i change this to a #define?
@@ -155,6 +154,7 @@ private:
         createLogicalDevice();
         createSwapChain();
         createImageViews();
+        createGraphicsPipeline();
     }
 
     void mainLoop() {
@@ -173,7 +173,7 @@ private:
         for (const auto& imageView : swapChainImageViews) {
             vkDestroyImageView(device, imageView, nullptr);
         }
-        
+
         vkDestroySwapchainKHR(device, swapChain, nullptr);
         
         vkDestroyDevice(device, nullptr);
@@ -474,6 +474,74 @@ private:
                 throw std::runtime_error("one of the image views could not be created");
             }
         }
+    }
+
+    void createGraphicsPipeline()  {
+        //load in the appropriate shader code for a triangle
+        auto vertShaderCode = readFile("shaders/spirv/vert.spv");
+        auto fragShaderCode = readFile("shaders/spirv/frag.spv");
+
+        //convert the shader code into a vulkan object
+        VkShaderModule vertShader = createShaderModule(vertShaderCode);
+        VkShaderModule fragShader = createShaderModule(fragShaderCode);
+
+        //create shader stage of the graphics pipeline
+        VkPipelineShaderStageCreateInfo createVertShaderInfo = fillShaderStageStruct(VK_SHADER_STAGE_VERTEX_BIT, vertShader);
+        VkPipelineShaderStageCreateInfo createFragShaderInfo = fillShaderStageStruct(VK_SHADER_STAGE_FRAGMENT_BIT, fragShader);
+
+
+        //destroy the used shader object
+        vkDestroyShaderModule(device, vertShader, nullptr);
+        vkDestroyShaderModule(device, fragShader, nullptr);
+
+        //std::cout << vertShaderCode.size() << std::endl;
+    }
+    VkPipelineShaderStageCreateInfo fillShaderStageStruct(VkShaderStageFlagBits stage, VkShaderModule shaderModule) {
+        VkPipelineShaderStageCreateInfo createInfo{};
+        createInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
+        createInfo.stage = stage;
+        createInfo.module = shaderModule;
+        createInfo.pName = "main";
+
+        return createInfo;
+    }
+
+    VkShaderModule createShaderModule(std::vector<char> shaderCode) {
+        VkShaderModule shaderModule;
+        
+        VkShaderModuleCreateInfo createInfo{};
+        createInfo.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
+        createInfo.codeSize = static_cast<uint32_t>( shaderCode.size() );
+        
+        const uint32_t* shaderFormatted = reinterpret_cast<const uint32_t*>(shaderCode.data());
+
+        createInfo.pCode = shaderFormatted;
+
+        if (vkCreateShaderModule(device, &createInfo, nullptr, &shaderModule) != VK_SUCCESS) {
+            throw std::runtime_error("could not create shader module");
+        }
+
+        return shaderModule;
+    }
+
+    static std::vector<char> readFile(const std::string& filename) {
+        std::ifstream file(filename, std::ios::ate | std::ios::binary); 
+
+        if (!file.is_open()) {
+            throw std::runtime_error("could not open file");
+        }
+
+        size_t fileSize = (size_t) file.tellg();
+        std::vector<char> buffer(fileSize);
+
+        file.seekg(0);
+        file.read(buffer.data(), fileSize);
+
+        //std::cout << fileSize << std::endl;
+
+        file.close();
+
+        return buffer;
     }
 
     int rateDeviceSuitabilty(VkPhysicalDevice device) {
