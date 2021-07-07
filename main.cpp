@@ -864,7 +864,7 @@ private:
             vkCmdBindPipeline(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, graphicsPipeline);
 
             //time for the draw calls
-            vkCmdDraw(commandBuffers[i], 3, 1, 0, 0);
+            vkCmdDraw(commandBuffers[i], 6, 1, 0, 0);
 
             vkCmdEndRenderPass(commandBuffers[i]);
 
