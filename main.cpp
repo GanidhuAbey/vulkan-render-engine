@@ -780,6 +780,7 @@ private:
             throw std::runtime_error("could not attach data to vertex memory");
         }
         memcpy(data, vertices.data(), bufferInfo.size);
+        vkUnmapMemory(device, vertexMemory);
     }
     uint32_t findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties) {
         VkPhysicalDeviceMemoryProperties memoryProperties;
