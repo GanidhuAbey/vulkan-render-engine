@@ -274,7 +274,7 @@ private:
 
         createSwapChain(VK_NULL_HANDLE); //
 
-        vkDestroySwapchainKHR(device, swapChain, nullptr);
+        //vkDestroySwapchainKHR(device, swapChain, nullptr);
         //vkDestroyPipeline(device, graphicsPipeline, nullptr);
         //vkDestroyPipelineLayout(device, pipelineLayout, nullptr);
 
@@ -289,6 +289,7 @@ private:
 
     void cleanupSwapChain(bool destroyAll) {
         vkDeviceWaitIdle(device);
+
         vkFreeCommandBuffers(device, commandPool, static_cast<uint32_t>(commandBuffers.size()), commandBuffers.data());
         for (const auto& framebuffer : swapChainFramebuffers) {
             vkDestroyFramebuffer(device, framebuffer, nullptr);
