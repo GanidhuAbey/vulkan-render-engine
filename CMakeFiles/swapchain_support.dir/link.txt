@@ -1,0 +1,2 @@
+/usr/bin/ar qc libswapchain_support.a  CMakeFiles/swapchain_support.dir/lib/swapchain_support.cpp.o
+/usr/bin/ranlib libswapchain_support.a

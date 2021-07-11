@@ -1,0 +1,1 @@
+/usr/bin/c++     CMakeFiles/cmake-good.dir/main.cpp.o  -o cmake-good  libengine_main.a libengine_window.a libengine_init.a libengine_graphics.a liberror_setup.a libqueue_data.a libswapchain_support.a -lglfw -lvulkan -ldl -lpthread -lX11 -lXxf86vm -lXrandr -lXi 

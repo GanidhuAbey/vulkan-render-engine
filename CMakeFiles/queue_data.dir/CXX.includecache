@@ -1,0 +1,20 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/ganidhu/Desktop/engine/inc/queue.hpp
+GLFW/glfw3.h
+-
+vector
+-
+optional
+-
+
+/home/ganidhu/Desktop/engine/lib/queue.cpp
+../inc/queue.hpp
+/home/ganidhu/Desktop/engine/inc/queue.hpp
+

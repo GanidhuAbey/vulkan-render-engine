@@ -1,0 +1,18 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/ganidhu/Desktop/engine/inc/swapchain_support.hpp
+GLFW/glfw3.h
+-
+vector
+-
+
+/home/ganidhu/Desktop/engine/lib/swapchain_support.cpp
+../inc/swapchain_support.hpp
+/home/ganidhu/Desktop/engine/inc/swapchain_support.hpp
+

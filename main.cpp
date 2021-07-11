@@ -1,3 +1,6 @@
+#include "inc/engine.hpp"
+
+/*
 //DOCUMENTATION: https://vulkan.lunarg.com/doc/view/latest/windows/apispec.html#_vkcmdbeginquery3
 
 //Questions: What exactly can you do we pNext?
@@ -178,9 +181,6 @@ private:
     };
 
 private:
-
-
-
     void initWindow() {
         //initializes glfw
         //add check for initialize failure
@@ -413,8 +413,7 @@ private:
 
         //TODO: move all this into the checkSupportedExtension()
         //check supported extensions
-        bool supported = checkSupportedExtensions(extensions);
-        if (!supported) {
+        if (!checkSupportedExtensions(extensions)) {
             throw std::runtime_error("required vulkan extensions are not supported!");
         }
 
@@ -1350,12 +1349,10 @@ private:
     //challenge function to compare extensions returned by glfw versus the supported extensions
     bool checkSupportedExtensions(std::vector<const char*> requiredExtensions) {
         //debugging: print out all supported extensions
-        /*
         std::cout << "supported extensions:" << std::endl;
         for (const auto& extension : supportedExtensions) {
             std::cout << '\t' << extension.extensionName << std::endl;
         }
-        */
 
         //grab the number of supported extensions
         uint32_t extensionCount = 0;
@@ -1446,16 +1443,26 @@ private:
         return VK_FALSE;
     }   
 };
-
+*/
 int main() {
+    /*
     HelloTriangleApplication app;
-
     try {
         app.run();
     } catch (const std::exception& e) {
         std::cerr << e.what() << std::endl;
         return EXIT_FAILURE;
     }
+    */
+
+    //initialize engine
+    create::Engine engine(800, 600, "hello world");
+    
+    while (!engine.userWindow.closeRequest()) {
+        engine.drawSquare();
+        //std::cout << window.closeRequest() << std::endl;
+    }
+    //vkDeviceWaitIdle(device);
 
     return EXIT_SUCCESS;
 }

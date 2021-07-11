@@ -1,0 +1,26 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/ganidhu/Desktop/engine/inc/eng_window.hpp
+GLFW/glfw3.h
+-
+error_setup.hpp
+/home/ganidhu/Desktop/engine/inc/error_setup.hpp
+
+/home/ganidhu/Desktop/engine/inc/error_setup.hpp
+GLFW/glfw3.h
+-
+iostream
+-
+
+/home/ganidhu/Desktop/engine/lib/eng_window.cpp
+../inc/eng_window.hpp
+/home/ganidhu/Desktop/engine/inc/eng_window.hpp
+GLFW/glfw3.h
+-
+
