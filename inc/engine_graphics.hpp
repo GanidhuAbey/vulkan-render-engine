@@ -5,6 +5,7 @@
 
 #include "swapchain_support.hpp"
 #include "queue.hpp"
+#include "data_formats.hpp"
 
 #include "engine_init.hpp"
 
@@ -16,9 +17,17 @@
 
 const int MAX_FRAMES_IN_FLIGHT = 2;
 
-namespace create {
+namespace graphics {
 
 class EngineGraphics {
+    public:
+        VkPipeline graphicsPipeline;
+        uint32_t bindingCount = 1;
+        VkBuffer vertexBuffer;
+        VkDeviceMemory vertexMemory;
+        uint32_t bufferSize = 0;
+        std::vector<data::Vertex2D> oldVertices;
+        std::vector<VkCommandBuffer> commandBuffers;
     private:
         VkFormat swapChainImageFormat;
         VkExtent2D swapChainExtent;
@@ -29,32 +38,14 @@ class EngineGraphics {
         std::vector<VkImageView> swapChainImageViews;
 
         VkSwapchainKHR swapChain;
-        VkBuffer vertexBuffer;
-        VkDeviceMemory vertexMemory;
 
-        EngineInit* engineInit;
-
-        struct Vertex {
-            glm::vec2 position;
-            glm::vec3 colour;
-        };
-
-        const std::vector<Vertex> vertices = {
-            {{0.5, -0.5},  {1.0, 0.0, 0.0}},
-            {{0.5, 0.5},   {0.0, 1.0, 0.0}},
-            {{-0.5, 0.5},  {0.0, 0.0, 1.0}},
-            {{0.5, -0.5},  {1.0, 0.0, 0.0}},
-            {{-0.5, 0.5},  {0.0, 0.0, 1.0}},
-            {{-0.5, -0.5}, {0.0, 1.0, 0.0}},
-        };
+        create::EngineInit* engineInit;
 
         uint32_t attributeCount = 2;
 
         VkPipelineLayout pipelineLayout;
-        VkPipeline graphicsPipeline;
 
         std::vector<VkFramebuffer> swapChainFramebuffers;
-        std::vector<VkCommandBuffer> commandBuffers;
 
         //this one signals when an image has been presented and is available for rendering
         std::vector<VkSemaphore> imageAvailableSemaphores;
@@ -84,22 +75,23 @@ class EngineGraphics {
 
     public:
         //EngineGraphics(EngineInit* initEngine);
-        void initialize(EngineInit* initEngine);
+        void initialize(create::EngineInit* initEngine);
         ~EngineGraphics();
     
     private:
         void createSwapChain(); //
         void createImageViews(); //
         void createRenderPass(); //
-        void createVertexBuffer();
         void createGraphicsPipeline(); //
         void createFrameBuffers(); //
-        void createCommandBuffers();
         void createSemaphores();
         void createFences();
 
     public:
+        void createVertexBuffer(std::vector<data::Vertex2D> vertices);
+        void createCommandBuffers(std::vector<data::Vertex2D> vertices);
         void drawFrame();
+        void cleanupRender();
 };
 
 }

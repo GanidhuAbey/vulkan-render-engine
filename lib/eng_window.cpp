@@ -6,6 +6,7 @@
 
 namespace create {
     EngWindow::~EngWindow() {
+        //std::cout << "window destruction..." << std::endl;
         glfwDestroyWindow(window);
         glfwTerminate();
     }

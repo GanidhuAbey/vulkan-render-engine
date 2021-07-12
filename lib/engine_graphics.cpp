@@ -1,6 +1,6 @@
 #include "../inc/engine_graphics.hpp"
 
-namespace create {
+namespace graphics {
     void EngineGraphics::recreateSwapChain() {
         //probably shouldn't recreate any of these till the device has caught up to the most recent call
         vkDeviceWaitIdle(engineInit->device);
@@ -17,7 +17,7 @@ namespace create {
         createRenderPass(); //
         //createGraphicsPipeline(); //
         createFrameBuffers(); //
-        createCommandBuffers(); //
+        //createCommandBuffers(); //
     }
 
     void EngineGraphics::cleanupSwapChain(bool destroyAll) {
@@ -152,16 +152,16 @@ namespace create {
 
     }
 
-    void EngineGraphics::initialize(EngineInit* initEngine) {
+    void EngineGraphics::initialize(create::EngineInit* initEngine) {
         engineInit = initEngine;
 
         createSwapChain(); //
         createImageViews(); //
         createRenderPass(); //
-        createVertexBuffer();
+        //createVertexBuffer();
         createGraphicsPipeline(); //
         createFrameBuffers(); //
-        createCommandBuffers();
+        //createCommandBuffers();
         createSemaphores();
         createFences();
     }
@@ -169,17 +169,22 @@ namespace create {
     EngineGraphics::~EngineGraphics() {
         vkDeviceWaitIdle(engineInit->device);
 
-        vkFreeMemory(engineInit->device, vertexMemory, nullptr);
-        vkDestroyBuffer(engineInit->device, vertexBuffer, nullptr);
+        std::cout << "graphics destruction..." << std::endl;
 
-        vkFreeCommandBuffers(engineInit->device, engineInit->commandPool, static_cast<uint32_t>(commandBuffers.size()), commandBuffers.data());
+        //vkFreeMemory(engineInit->device, vertexMemory, nullptr);
+        //vkDestroyBuffer(engineInit->device, vertexBuffer, nullptr);
+
+        //vkFreeCommandBuffers(engineInit->device, engineInit->commandPool, static_cast<uint32_t>(commandBuffers.size()), commandBuffers.data());
+
         for (const auto& framebuffer : swapChainFramebuffers) {
             vkDestroyFramebuffer(engineInit->device, framebuffer, nullptr);
         }
         for (const auto& imageView : swapChainImageViews) {
             vkDestroyImageView(engineInit->device, imageView, nullptr);
         }
-            
+        
+        //TODO: rewriting code here already found in cleanupSwapChain()
+
         vkDestroySwapchainKHR(engineInit->device, swapChain, nullptr);
         vkDestroyPipeline(engineInit->device, graphicsPipeline, nullptr);
         vkDestroyPipelineLayout(engineInit->device, pipelineLayout, nullptr);
@@ -195,8 +200,17 @@ namespace create {
         //delete engineInit;
     }
 
+    void EngineGraphics::cleanupRender() {
+        vkDeviceWaitIdle(engineInit->device);
+
+        vkFreeMemory(engineInit->device, vertexMemory, nullptr);
+        vkDestroyBuffer(engineInit->device, vertexBuffer, nullptr);
+
+        vkFreeCommandBuffers(engineInit->device, engineInit->commandPool, static_cast<uint32_t>(commandBuffers.size()), commandBuffers.data());
+    }
+
     void EngineGraphics::createSwapChain() {
-        SwapChainSupport details(engineInit->physicalDevice, engineInit->surface);
+        create::SwapChainSupport details(engineInit->physicalDevice, engineInit->surface);
 
         VkSurfaceFormatKHR surfaceFormat = chooseSwapChainFormat(details.formats);
         VkPresentModeKHR presentMode = chooseSwapChainPresentation(details.presentModes);
@@ -226,7 +240,7 @@ namespace create {
         //TODO: try with false later
         createInfo.clipped = VK_TRUE;
 
-        QueueData indices(engineInit->physicalDevice, engineInit->surface);
+        create::QueueData indices(engineInit->physicalDevice, engineInit->surface);
 
         uint32_t queueIndices[] = {indices.graphicsFamily.value(), indices.presentFamily.value()};
 
@@ -361,8 +375,8 @@ namespace create {
 
     }
 
-    void EngineGraphics::createVertexBuffer() {
-        QueueData indices(engineInit->physicalDevice, engineInit->surface);
+    void EngineGraphics::createVertexBuffer(std::vector<data::Vertex2D> vertices) {
+        create::QueueData indices(engineInit->physicalDevice, engineInit->surface);
 
 
         VkBufferCreateInfo bufferInfo{};
@@ -370,7 +384,8 @@ namespace create {
         //bufferInfo.flags = VK_BUFFER_USAGE_VERTEX_BUFFER_BIT;
         //TODO: currently hard coding the buffer allocation, this needs to change
         //cannot determine the amount of data the user will use from the beginning so this buffer needs to be able to change size
-        bufferInfo.size = sizeof(vertices[0]) * vertices.size();
+        bufferSize = sizeof(vertices[0]) * vertices.size();
+        bufferInfo.size = bufferSize;
         bufferInfo.usage = VK_BUFFER_USAGE_VERTEX_BUFFER_BIT;
         //vertex buffer only needs to be accessed by graphics queue right now to draw.
         bufferInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
@@ -407,6 +422,8 @@ namespace create {
         }
         memcpy(data, vertices.data(), bufferInfo.size);
         vkUnmapMemory(engineInit->device, vertexMemory);
+
+        oldVertices = vertices;
     }
 
     void EngineGraphics::createGraphicsPipeline()  {
@@ -426,25 +443,27 @@ namespace create {
 
         VkPipelineVertexInputStateCreateInfo vertexInputInfo{};
         vertexInputInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
+        vertexInputInfo.vertexBindingDescriptionCount = bindingCount;
 
-        vertexInputInfo.vertexBindingDescriptionCount = 1;
         VkVertexInputBindingDescription bindingDescrip{};
         bindingDescrip.binding = 0;
-        bindingDescrip.stride = sizeof(Vertex);
+        bindingDescrip.stride = sizeof(data::Vertex2D);
         bindingDescrip.inputRate = VK_VERTEX_INPUT_RATE_VERTEX;
         vertexInputInfo.pVertexBindingDescriptions = &bindingDescrip;
 
-        vertexInputInfo.vertexAttributeDescriptionCount = attributeCount;
+        vertexInputInfo.vertexAttributeDescriptionCount = 2;    
+        
         VkVertexInputAttributeDescription posAttribute{};
         posAttribute.location = 0;
         posAttribute.binding = 0;
         posAttribute.format = VK_FORMAT_R32G32_SFLOAT;
         posAttribute.offset = 0;
+
         VkVertexInputAttributeDescription colorAttribute{};
         colorAttribute.location = 1;
         colorAttribute.binding = 0;
         colorAttribute.format = VK_FORMAT_R32G32B32_SFLOAT;
-        colorAttribute.offset = offsetof(Vertex, colour);
+        colorAttribute.offset = offsetof(data::Vertex2D, color);
 
         VkVertexInputAttributeDescription attributeDescriptions[] = {posAttribute, colorAttribute};
 
@@ -589,7 +608,7 @@ namespace create {
         }
     }
 
-    void EngineGraphics::createCommandBuffers() {
+    void EngineGraphics::createCommandBuffers(std::vector<data::Vertex2D> vertices) {
         //allocate memory for command buffer, you have to create a draw command for each image
         commandBuffers.resize(swapChainFramebuffers.size());
         
@@ -651,7 +670,7 @@ namespace create {
             //time for the draw calls
             const VkDeviceSize offsets[] = {0, 8};
             vkCmdBindVertexBuffers(commandBuffers[i], 0, 1, &vertexBuffer, offsets);
-            vkCmdDraw(commandBuffers[i], 6, 1, 0, 0);
+            vkCmdDraw(commandBuffers[i], (int) vertices.size(), 1, 0, 0);
 
             vkCmdEndRenderPass(commandBuffers[i]);
 

@@ -124,6 +124,19 @@ cmake-good/fast:
 .PHONY : cmake-good/fast
 
 #=============================================================================
+# Target rules for targets named engine_draw
+
+# Build rule for target.
+engine_draw: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 engine_draw
+.PHONY : engine_draw
+
+# fast build rule for target.
+engine_draw/fast:
+	$(MAKE) -f CMakeFiles/engine_draw.dir/build.make CMakeFiles/engine_draw.dir/build
+.PHONY : engine_draw/fast
+
+#=============================================================================
 # Target rules for targets named swapchain_support
 
 # Build rule for target.
@@ -267,6 +280,33 @@ lib/engine.s: lib/engine.cpp.s
 lib/engine.cpp.s:
 	$(MAKE) -f CMakeFiles/engine_main.dir/build.make CMakeFiles/engine_main.dir/lib/engine.cpp.s
 .PHONY : lib/engine.cpp.s
+
+lib/engine_draw.o: lib/engine_draw.cpp.o
+
+.PHONY : lib/engine_draw.o
+
+# target to build an object file
+lib/engine_draw.cpp.o:
+	$(MAKE) -f CMakeFiles/engine_draw.dir/build.make CMakeFiles/engine_draw.dir/lib/engine_draw.cpp.o
+.PHONY : lib/engine_draw.cpp.o
+
+lib/engine_draw.i: lib/engine_draw.cpp.i
+
+.PHONY : lib/engine_draw.i
+
+# target to preprocess a source file
+lib/engine_draw.cpp.i:
+	$(MAKE) -f CMakeFiles/engine_draw.dir/build.make CMakeFiles/engine_draw.dir/lib/engine_draw.cpp.i
+.PHONY : lib/engine_draw.cpp.i
+
+lib/engine_draw.s: lib/engine_draw.cpp.s
+
+.PHONY : lib/engine_draw.s
+
+# target to generate assembly for a file
+lib/engine_draw.cpp.s:
+	$(MAKE) -f CMakeFiles/engine_draw.dir/build.make CMakeFiles/engine_draw.dir/lib/engine_draw.cpp.s
+.PHONY : lib/engine_draw.cpp.s
 
 lib/engine_graphics.o: lib/engine_graphics.cpp.o
 
@@ -438,6 +478,7 @@ help:
 	@echo "... depend"
 	@echo "... edit_cache"
 	@echo "... cmake-good"
+	@echo "... engine_draw"
 	@echo "... swapchain_support"
 	@echo "... error_setup"
 	@echo "... engine_graphics"
@@ -452,6 +493,9 @@ help:
 	@echo "... lib/engine.o"
 	@echo "... lib/engine.i"
 	@echo "... lib/engine.s"
+	@echo "... lib/engine_draw.o"
+	@echo "... lib/engine_draw.i"
+	@echo "... lib/engine_draw.s"
 	@echo "... lib/engine_graphics.o"
 	@echo "... lib/engine_graphics.i"
 	@echo "... lib/engine_graphics.s"

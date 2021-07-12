@@ -86,6 +86,7 @@ cmake-good: libengine_graphics.a
 cmake-good: liberror_setup.a
 cmake-good: libqueue_data.a
 cmake-good: libswapchain_support.a
+cmake-good: libengine_draw.a
 cmake-good: CMakeFiles/cmake-good.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/ganidhu/Desktop/engine/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Linking CXX executable cmake-good"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/cmake-good.dir/link.txt --verbose=$(VERBOSE)

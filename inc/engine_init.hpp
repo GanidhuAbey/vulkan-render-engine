@@ -7,6 +7,7 @@
 #include "queue.hpp"
 #include "swapchain_support.hpp"
 #include "error_setup.hpp"
+#include "data_formats.hpp"
 
 #include "glm/glm.hpp"
 
@@ -31,12 +32,6 @@ class EngineInit {
     private:
         VkInstance instance;
         VkDebugUtilsMessengerEXT debugMessenger;
-
-
-        struct Vertex {
-            glm::vec2 position;
-            glm::vec3 colour;
-        };
     
     public:
         void initialize(GLFWwindow* userWindow);

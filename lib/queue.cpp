@@ -1,5 +1,7 @@
 #include "../inc/queue.hpp"
 
+//TODO: move this into a header file, too small and waste compile time
+
 namespace create {
     QueueData::QueueData(VkPhysicalDevice device, VkSurfaceKHR surface) {
         findQueueFamilies(device, surface);

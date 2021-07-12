@@ -106,7 +106,7 @@ namespace create {
         //TODO: this is a kind of check you do when you know what you'll be drawing,
         //but we should figure out some general parameters to make sure the device we pull can draw at most things
         //std::cout << sizeof(Vertex) <<  " : " << deviceProperties.limits.maxVertexInputBindings << std::endl;
-        if (deviceProperties.limits.maxVertexInputBindings < 1 || deviceProperties.limits.maxVertexInputBindingStride < sizeof(Vertex)) {
+        if (deviceProperties.limits.maxVertexInputBindings < 1 || deviceProperties.limits.maxVertexInputBindingStride < sizeof(data::Vertex2D)) {
             return 0;
         }
         score += 10*deviceProperties.limits.maxVertexInputBindings;
@@ -203,6 +203,8 @@ namespace create {
 
     EngineInit::~EngineInit() {
         vkDeviceWaitIdle(device);
+
+        std::cout << "engine instance destruction.." << std::endl;
     
         if (enableValidationLayers) {
             debug::DestroyDebugUtilsMessengerEXT(instance, debugMessenger, nullptr);

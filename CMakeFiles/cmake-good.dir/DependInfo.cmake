@@ -21,6 +21,7 @@ set(CMAKE_TARGET_LINKED_INFO_FILES
   "/home/ganidhu/Desktop/engine/CMakeFiles/error_setup.dir/DependInfo.cmake"
   "/home/ganidhu/Desktop/engine/CMakeFiles/queue_data.dir/DependInfo.cmake"
   "/home/ganidhu/Desktop/engine/CMakeFiles/swapchain_support.dir/DependInfo.cmake"
+  "/home/ganidhu/Desktop/engine/CMakeFiles/engine_draw.dir/DependInfo.cmake"
   )
 
 # Fortran module output directory.

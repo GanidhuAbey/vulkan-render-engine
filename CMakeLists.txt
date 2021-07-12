@@ -50,6 +50,12 @@ add_library(
     lib/swapchain_support.cpp
 )
 
+add_library(
+    engine_draw
+    inc/engine_draw.hpp
+    lib/engine_draw.cpp
+)
+
 add_executable(cmake-good main.cpp)
 
 
@@ -61,6 +67,7 @@ target_link_libraries(cmake-good PRIVATE engine_graphics)
 target_link_libraries(cmake-good PRIVATE error_setup)
 target_link_libraries(cmake-good PRIVATE queue_data)
 target_link_libraries(cmake-good PRIVATE swapchain_support)
+target_link_libraries(cmake-good PRIVATE engine_draw)
 
 target_link_libraries(cmake-good PRIVATE -lglfw -lvulkan -ldl -lpthread -lX11 -lXxf86vm -lXrandr -lXi)
 

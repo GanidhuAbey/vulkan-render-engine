@@ -54,6 +54,7 @@ CMAKE_BINARY_DIR = /home/ganidhu/Desktop/engine
 
 # The main recursive "all" target.
 all: CMakeFiles/cmake-good.dir/all
+all: CMakeFiles/engine_draw.dir/all
 all: CMakeFiles/swapchain_support.dir/all
 all: CMakeFiles/error_setup.dir/all
 all: CMakeFiles/engine_graphics.dir/all
@@ -71,6 +72,7 @@ preinstall:
 
 # The main recursive "clean" target.
 clean: CMakeFiles/cmake-good.dir/clean
+clean: CMakeFiles/engine_draw.dir/clean
 clean: CMakeFiles/swapchain_support.dir/clean
 clean: CMakeFiles/error_setup.dir/clean
 clean: CMakeFiles/engine_graphics.dir/clean
@@ -85,6 +87,7 @@ clean: CMakeFiles/engine_main.dir/clean
 # Target rules for target CMakeFiles/cmake-good.dir
 
 # All Build rule for target.
+CMakeFiles/cmake-good.dir/all: CMakeFiles/engine_draw.dir/all
 CMakeFiles/cmake-good.dir/all: CMakeFiles/swapchain_support.dir/all
 CMakeFiles/cmake-good.dir/all: CMakeFiles/error_setup.dir/all
 CMakeFiles/cmake-good.dir/all: CMakeFiles/engine_graphics.dir/all
@@ -99,7 +102,7 @@ CMakeFiles/cmake-good.dir/all: CMakeFiles/engine_main.dir/all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/cmake-good.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/ganidhu/Desktop/engine/CMakeFiles 16
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/ganidhu/Desktop/engine/CMakeFiles 18
 	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/cmake-good.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/ganidhu/Desktop/engine/CMakeFiles 0
 .PHONY : CMakeFiles/cmake-good.dir/rule
@@ -115,13 +118,40 @@ CMakeFiles/cmake-good.dir/clean:
 .PHONY : CMakeFiles/cmake-good.dir/clean
 
 #=============================================================================
+# Target rules for target CMakeFiles/engine_draw.dir
+
+# All Build rule for target.
+CMakeFiles/engine_draw.dir/all:
+	$(MAKE) -f CMakeFiles/engine_draw.dir/build.make CMakeFiles/engine_draw.dir/depend
+	$(MAKE) -f CMakeFiles/engine_draw.dir/build.make CMakeFiles/engine_draw.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/ganidhu/Desktop/engine/CMakeFiles --progress-num=3,4 "Built target engine_draw"
+.PHONY : CMakeFiles/engine_draw.dir/all
+
+# Build rule for subdir invocation for target.
+CMakeFiles/engine_draw.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/ganidhu/Desktop/engine/CMakeFiles 2
+	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/engine_draw.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/ganidhu/Desktop/engine/CMakeFiles 0
+.PHONY : CMakeFiles/engine_draw.dir/rule
+
+# Convenience name for target.
+engine_draw: CMakeFiles/engine_draw.dir/rule
+
+.PHONY : engine_draw
+
+# clean rule for target.
+CMakeFiles/engine_draw.dir/clean:
+	$(MAKE) -f CMakeFiles/engine_draw.dir/build.make CMakeFiles/engine_draw.dir/clean
+.PHONY : CMakeFiles/engine_draw.dir/clean
+
+#=============================================================================
 # Target rules for target CMakeFiles/swapchain_support.dir
 
 # All Build rule for target.
 CMakeFiles/swapchain_support.dir/all:
 	$(MAKE) -f CMakeFiles/swapchain_support.dir/build.make CMakeFiles/swapchain_support.dir/depend
 	$(MAKE) -f CMakeFiles/swapchain_support.dir/build.make CMakeFiles/swapchain_support.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/ganidhu/Desktop/engine/CMakeFiles --progress-num=15,16 "Built target swapchain_support"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/ganidhu/Desktop/engine/CMakeFiles --progress-num=17,18 "Built target swapchain_support"
 .PHONY : CMakeFiles/swapchain_support.dir/all
 
 # Build rule for subdir invocation for target.
@@ -148,7 +178,7 @@ CMakeFiles/swapchain_support.dir/clean:
 CMakeFiles/error_setup.dir/all:
 	$(MAKE) -f CMakeFiles/error_setup.dir/build.make CMakeFiles/error_setup.dir/depend
 	$(MAKE) -f CMakeFiles/error_setup.dir/build.make CMakeFiles/error_setup.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/ganidhu/Desktop/engine/CMakeFiles --progress-num=11,12 "Built target error_setup"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/ganidhu/Desktop/engine/CMakeFiles --progress-num=13,14 "Built target error_setup"
 .PHONY : CMakeFiles/error_setup.dir/all
 
 # Build rule for subdir invocation for target.
@@ -175,7 +205,7 @@ CMakeFiles/error_setup.dir/clean:
 CMakeFiles/engine_graphics.dir/all:
 	$(MAKE) -f CMakeFiles/engine_graphics.dir/build.make CMakeFiles/engine_graphics.dir/depend
 	$(MAKE) -f CMakeFiles/engine_graphics.dir/build.make CMakeFiles/engine_graphics.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/ganidhu/Desktop/engine/CMakeFiles --progress-num=3,4 "Built target engine_graphics"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/ganidhu/Desktop/engine/CMakeFiles --progress-num=5,6 "Built target engine_graphics"
 .PHONY : CMakeFiles/engine_graphics.dir/all
 
 # Build rule for subdir invocation for target.
@@ -202,7 +232,7 @@ CMakeFiles/engine_graphics.dir/clean:
 CMakeFiles/engine_init.dir/all:
 	$(MAKE) -f CMakeFiles/engine_init.dir/build.make CMakeFiles/engine_init.dir/depend
 	$(MAKE) -f CMakeFiles/engine_init.dir/build.make CMakeFiles/engine_init.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/ganidhu/Desktop/engine/CMakeFiles --progress-num=5,6 "Built target engine_init"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/ganidhu/Desktop/engine/CMakeFiles --progress-num=7,8 "Built target engine_init"
 .PHONY : CMakeFiles/engine_init.dir/all
 
 # Build rule for subdir invocation for target.
@@ -229,7 +259,7 @@ CMakeFiles/engine_init.dir/clean:
 CMakeFiles/queue_data.dir/all:
 	$(MAKE) -f CMakeFiles/queue_data.dir/build.make CMakeFiles/queue_data.dir/depend
 	$(MAKE) -f CMakeFiles/queue_data.dir/build.make CMakeFiles/queue_data.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/ganidhu/Desktop/engine/CMakeFiles --progress-num=13,14 "Built target queue_data"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/ganidhu/Desktop/engine/CMakeFiles --progress-num=15,16 "Built target queue_data"
 .PHONY : CMakeFiles/queue_data.dir/all
 
 # Build rule for subdir invocation for target.
@@ -256,7 +286,7 @@ CMakeFiles/queue_data.dir/clean:
 CMakeFiles/engine_window.dir/all:
 	$(MAKE) -f CMakeFiles/engine_window.dir/build.make CMakeFiles/engine_window.dir/depend
 	$(MAKE) -f CMakeFiles/engine_window.dir/build.make CMakeFiles/engine_window.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/ganidhu/Desktop/engine/CMakeFiles --progress-num=9,10 "Built target engine_window"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/ganidhu/Desktop/engine/CMakeFiles --progress-num=11,12 "Built target engine_window"
 .PHONY : CMakeFiles/engine_window.dir/all
 
 # Build rule for subdir invocation for target.
@@ -283,7 +313,7 @@ CMakeFiles/engine_window.dir/clean:
 CMakeFiles/engine_main.dir/all:
 	$(MAKE) -f CMakeFiles/engine_main.dir/build.make CMakeFiles/engine_main.dir/depend
 	$(MAKE) -f CMakeFiles/engine_main.dir/build.make CMakeFiles/engine_main.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/ganidhu/Desktop/engine/CMakeFiles --progress-num=7,8 "Built target engine_main"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/ganidhu/Desktop/engine/CMakeFiles --progress-num=9,10 "Built target engine_main"
 .PHONY : CMakeFiles/engine_main.dir/all
 
 # Build rule for subdir invocation for target.
