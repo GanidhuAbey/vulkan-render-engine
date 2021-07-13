@@ -138,20 +138,6 @@ namespace graphics {
         }
     }
 
-    uint32_t EngineGraphics::findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties) {
-        VkPhysicalDeviceMemoryProperties memoryProperties;
-        vkGetPhysicalDeviceMemoryProperties(engineInit->physicalDevice, &memoryProperties);
-
-        //uint32_t suitableMemoryForBuffer = 0;
-        for (uint32_t i = 0; i < memoryProperties.memoryTypeCount; i++) {
-            if (typeFilter & (1 << i) && (memoryProperties.memoryTypes[i].propertyFlags & properties == properties)) {
-                return i;
-            }
-        }
-        throw std::runtime_error("could not find appropriate memory type");
-
-    }
-
     void EngineGraphics::initialize(create::EngineInit* initEngine) {
         engineInit = initEngine;
 
@@ -375,57 +361,6 @@ namespace graphics {
 
     }
 
-    void EngineGraphics::createVertexBuffer(std::vector<data::Vertex2D> vertices) {
-        create::QueueData indices(engineInit->physicalDevice, engineInit->surface);
-
-
-        VkBufferCreateInfo bufferInfo{};
-        bufferInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
-        //bufferInfo.flags = VK_BUFFER_USAGE_VERTEX_BUFFER_BIT;
-        //TODO: currently hard coding the buffer allocation, this needs to change
-        //cannot determine the amount of data the user will use from the beginning so this buffer needs to be able to change size
-        bufferSize = sizeof(vertices[0]) * vertices.size();
-        bufferInfo.size = bufferSize;
-        bufferInfo.usage = VK_BUFFER_USAGE_VERTEX_BUFFER_BIT;
-        //vertex buffer only needs to be accessed by graphics queue right now to draw.
-        bufferInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
-        bufferInfo.queueFamilyIndexCount = 1;
-        bufferInfo.queueFamilyIndexCount = indices.graphicsFamily.value();  
-
-        if (vkCreateBuffer(engineInit->device, &bufferInfo, nullptr, &vertexBuffer) != VK_SUCCESS) {
-            throw std::runtime_error("could not create vertex buffer");
-        }
-
-        //get memory requirements for buffer
-        VkMemoryRequirements memRequirements;
-        vkGetBufferMemoryRequirements(engineInit->device, vertexBuffer, &memRequirements);
-
-        //allocate memory for buffer
-        VkMemoryAllocateInfo memoryInfo{};
-        memoryInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
-        memoryInfo.allocationSize = memRequirements.size;
-        //too lazy to even check if this exists will do later TODO
-        memoryInfo.memoryTypeIndex = findMemoryType(memRequirements.memoryTypeBits, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | 
-        VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
-
-        if (vkAllocateMemory(engineInit->device, &memoryInfo, nullptr, &vertexMemory) != VK_SUCCESS) {
-            throw std::runtime_error("could not allocate memory for vertexMemory");
-        }
-        if (vkBindBufferMemory(engineInit->device, vertexBuffer, vertexMemory, 0) != VK_SUCCESS) {
-            throw std::runtime_error("could not bind vertexMemory to vertexBuffer");
-        }
-
-        void* data;
-        //now i should have done everything needed to attach memory to the buffer.
-        if (vkMapMemory(engineInit->device, vertexMemory, 0, bufferInfo.size, 0, &data) != VK_SUCCESS) {
-            throw std::runtime_error("could not attach data to vertex memory");
-        }
-        memcpy(data, vertices.data(), bufferInfo.size);
-        vkUnmapMemory(engineInit->device, vertexMemory);
-
-        oldVertices = vertices;
-    }
-
     void EngineGraphics::createGraphicsPipeline()  {
         //load in the appropriate shader code for a triangle
         auto vertShaderCode = readFile("shaders/spirv/vert.spv");
@@ -607,8 +542,62 @@ namespace graphics {
             }
         }
     }
+    //TODO: use seperate command pool for memory optimizations
+    void EngineGraphics::copyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size) {
+        //create command buffer
+        VkCommandBuffer transferBuffer;
 
-    void EngineGraphics::createCommandBuffers(std::vector<data::Vertex2D> vertices) {
+        VkCommandBufferAllocateInfo bufferAllocate{};
+        bufferAllocate.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
+        bufferAllocate.commandPool = engineInit->commandPool;
+        bufferAllocate.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
+        bufferAllocate.commandBufferCount = 1;
+
+        if (vkAllocateCommandBuffers(engineInit->device, &bufferAllocate, &transferBuffer) != VK_SUCCESS) {
+            throw std::runtime_error("could not allocate memory for transfer buffer");
+        }
+
+        //begin command buffer
+        VkCommandBufferBeginInfo beginInfo{};
+        beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
+        beginInfo.flags = 0; // Optional
+        beginInfo.pInheritanceInfo = nullptr;       
+
+        if (vkBeginCommandBuffer(transferBuffer, &beginInfo) != VK_SUCCESS) {
+            throw std::runtime_error("one of the command buffers failed to begin");
+        }  
+
+        //transfer between buffers
+        VkBufferCopy copyData{};
+        copyData.srcOffset = 0;
+        copyData.dstOffset = 0;
+        copyData.size = size;
+
+        vkCmdCopyBuffer(transferBuffer,
+            srcBuffer,
+            dstBuffer,
+            1,
+            &copyData
+        );
+
+        //end command buffer
+        if (vkEndCommandBuffer(transferBuffer) != VK_SUCCESS) {
+            throw std::runtime_error("could not create succesfully end transfer buffer");
+        };
+
+        //destroy transfer buffer, shouldnt need it after copying the data.
+        VkSubmitInfo submitInfo{};
+        submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
+        submitInfo.commandBufferCount = 1;
+        submitInfo.pCommandBuffers = &transferBuffer;
+
+        vkQueueSubmit(engineInit->graphicsQueue, 1, &submitInfo, VK_NULL_HANDLE);
+        vkQueueWaitIdle(engineInit->graphicsQueue);
+
+        vkFreeCommandBuffers(engineInit->device, engineInit->commandPool, 1, &transferBuffer);
+    }
+
+    void EngineGraphics::createCommandBuffers(VkBuffer buffer, std::vector<data::Vertex2D> vertices) {
         //allocate memory for command buffer, you have to create a draw command for each image
         commandBuffers.resize(swapChainFramebuffers.size());
         
@@ -669,7 +658,7 @@ namespace graphics {
 
             //time for the draw calls
             const VkDeviceSize offsets[] = {0, 8};
-            vkCmdBindVertexBuffers(commandBuffers[i], 0, 1, &vertexBuffer, offsets);
+            vkCmdBindVertexBuffers(commandBuffers[i], 0, 1, &buffer, offsets);
             vkCmdDraw(commandBuffers[i], (int) vertices.size(), 1, 0, 0);
 
             vkCmdEndRenderPass(commandBuffers[i]);

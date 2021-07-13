@@ -48,7 +48,7 @@ namespace create {
         primitiveCount++;
 
         draw::EngineDraw engineDraw;
-        engineDraw.initialize(vertices, &engGraphics, primitiveCount);
+        engineDraw.initialize(vertices, &engGraphics, &engInit, primitiveCount);
     }
 
     void Engine::clearScreen() {

@@ -46,12 +46,5 @@ set(CMAKE_MAKEFILE_PRODUCTS
 # Dependency information for all targets:
 set(CMAKE_DEPEND_INFO_FILES
   "CMakeFiles/cmake-good.dir/DependInfo.cmake"
-  "CMakeFiles/engine_draw.dir/DependInfo.cmake"
-  "CMakeFiles/swapchain_support.dir/DependInfo.cmake"
-  "CMakeFiles/error_setup.dir/DependInfo.cmake"
-  "CMakeFiles/engine_graphics.dir/DependInfo.cmake"
-  "CMakeFiles/engine_init.dir/DependInfo.cmake"
-  "CMakeFiles/queue_data.dir/DependInfo.cmake"
-  "CMakeFiles/engine_window.dir/DependInfo.cmake"
-  "CMakeFiles/engine_main.dir/DependInfo.cmake"
+  "CMakeFiles/required_libs.dir/DependInfo.cmake"
   )

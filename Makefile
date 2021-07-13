@@ -48,24 +48,13 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/ganidhu/Desktop/engine
+CMAKE_SOURCE_DIR = /home/ganidhu/Desktop/vulkan-render-engine
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/ganidhu/Desktop/engine
+CMAKE_BINARY_DIR = /home/ganidhu/Desktop/vulkan-render-engine
 
 #=============================================================================
 # Targets provided globally by CMake.
-
-# Special rule for the target edit_cache
-edit_cache:
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "No interactive CMake dialog available..."
-	/usr/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
-.PHONY : edit_cache
-
-# Special rule for the target edit_cache
-edit_cache/fast: edit_cache
-
-.PHONY : edit_cache/fast
 
 # Special rule for the target rebuild_cache
 rebuild_cache:
@@ -78,11 +67,22 @@ rebuild_cache/fast: rebuild_cache
 
 .PHONY : rebuild_cache/fast
 
+# Special rule for the target edit_cache
+edit_cache:
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "No interactive CMake dialog available..."
+	/usr/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
+.PHONY : edit_cache
+
+# Special rule for the target edit_cache
+edit_cache/fast: edit_cache
+
+.PHONY : edit_cache/fast
+
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/ganidhu/Desktop/engine/CMakeFiles /home/ganidhu/Desktop/engine/CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/ganidhu/Desktop/vulkan-render-engine/CMakeFiles /home/ganidhu/Desktop/vulkan-render-engine/CMakeFiles/progress.marks
 	$(MAKE) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/ganidhu/Desktop/engine/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/ganidhu/Desktop/vulkan-render-engine/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
@@ -124,108 +124,17 @@ cmake-good/fast:
 .PHONY : cmake-good/fast
 
 #=============================================================================
-# Target rules for targets named engine_draw
+# Target rules for targets named required_libs
 
 # Build rule for target.
-engine_draw: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 engine_draw
-.PHONY : engine_draw
+required_libs: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 required_libs
+.PHONY : required_libs
 
 # fast build rule for target.
-engine_draw/fast:
-	$(MAKE) -f CMakeFiles/engine_draw.dir/build.make CMakeFiles/engine_draw.dir/build
-.PHONY : engine_draw/fast
-
-#=============================================================================
-# Target rules for targets named swapchain_support
-
-# Build rule for target.
-swapchain_support: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 swapchain_support
-.PHONY : swapchain_support
-
-# fast build rule for target.
-swapchain_support/fast:
-	$(MAKE) -f CMakeFiles/swapchain_support.dir/build.make CMakeFiles/swapchain_support.dir/build
-.PHONY : swapchain_support/fast
-
-#=============================================================================
-# Target rules for targets named error_setup
-
-# Build rule for target.
-error_setup: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 error_setup
-.PHONY : error_setup
-
-# fast build rule for target.
-error_setup/fast:
-	$(MAKE) -f CMakeFiles/error_setup.dir/build.make CMakeFiles/error_setup.dir/build
-.PHONY : error_setup/fast
-
-#=============================================================================
-# Target rules for targets named engine_graphics
-
-# Build rule for target.
-engine_graphics: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 engine_graphics
-.PHONY : engine_graphics
-
-# fast build rule for target.
-engine_graphics/fast:
-	$(MAKE) -f CMakeFiles/engine_graphics.dir/build.make CMakeFiles/engine_graphics.dir/build
-.PHONY : engine_graphics/fast
-
-#=============================================================================
-# Target rules for targets named engine_init
-
-# Build rule for target.
-engine_init: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 engine_init
-.PHONY : engine_init
-
-# fast build rule for target.
-engine_init/fast:
-	$(MAKE) -f CMakeFiles/engine_init.dir/build.make CMakeFiles/engine_init.dir/build
-.PHONY : engine_init/fast
-
-#=============================================================================
-# Target rules for targets named queue_data
-
-# Build rule for target.
-queue_data: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 queue_data
-.PHONY : queue_data
-
-# fast build rule for target.
-queue_data/fast:
-	$(MAKE) -f CMakeFiles/queue_data.dir/build.make CMakeFiles/queue_data.dir/build
-.PHONY : queue_data/fast
-
-#=============================================================================
-# Target rules for targets named engine_window
-
-# Build rule for target.
-engine_window: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 engine_window
-.PHONY : engine_window
-
-# fast build rule for target.
-engine_window/fast:
-	$(MAKE) -f CMakeFiles/engine_window.dir/build.make CMakeFiles/engine_window.dir/build
-.PHONY : engine_window/fast
-
-#=============================================================================
-# Target rules for targets named engine_main
-
-# Build rule for target.
-engine_main: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 engine_main
-.PHONY : engine_main
-
-# fast build rule for target.
-engine_main/fast:
-	$(MAKE) -f CMakeFiles/engine_main.dir/build.make CMakeFiles/engine_main.dir/build
-.PHONY : engine_main/fast
+required_libs/fast:
+	$(MAKE) -f CMakeFiles/required_libs.dir/build.make CMakeFiles/required_libs.dir/build
+.PHONY : required_libs/fast
 
 lib/eng_window.o: lib/eng_window.cpp.o
 
@@ -233,7 +142,7 @@ lib/eng_window.o: lib/eng_window.cpp.o
 
 # target to build an object file
 lib/eng_window.cpp.o:
-	$(MAKE) -f CMakeFiles/engine_window.dir/build.make CMakeFiles/engine_window.dir/lib/eng_window.cpp.o
+	$(MAKE) -f CMakeFiles/required_libs.dir/build.make CMakeFiles/required_libs.dir/lib/eng_window.cpp.o
 .PHONY : lib/eng_window.cpp.o
 
 lib/eng_window.i: lib/eng_window.cpp.i
@@ -242,7 +151,7 @@ lib/eng_window.i: lib/eng_window.cpp.i
 
 # target to preprocess a source file
 lib/eng_window.cpp.i:
-	$(MAKE) -f CMakeFiles/engine_window.dir/build.make CMakeFiles/engine_window.dir/lib/eng_window.cpp.i
+	$(MAKE) -f CMakeFiles/required_libs.dir/build.make CMakeFiles/required_libs.dir/lib/eng_window.cpp.i
 .PHONY : lib/eng_window.cpp.i
 
 lib/eng_window.s: lib/eng_window.cpp.s
@@ -251,7 +160,7 @@ lib/eng_window.s: lib/eng_window.cpp.s
 
 # target to generate assembly for a file
 lib/eng_window.cpp.s:
-	$(MAKE) -f CMakeFiles/engine_window.dir/build.make CMakeFiles/engine_window.dir/lib/eng_window.cpp.s
+	$(MAKE) -f CMakeFiles/required_libs.dir/build.make CMakeFiles/required_libs.dir/lib/eng_window.cpp.s
 .PHONY : lib/eng_window.cpp.s
 
 lib/engine.o: lib/engine.cpp.o
@@ -260,7 +169,7 @@ lib/engine.o: lib/engine.cpp.o
 
 # target to build an object file
 lib/engine.cpp.o:
-	$(MAKE) -f CMakeFiles/engine_main.dir/build.make CMakeFiles/engine_main.dir/lib/engine.cpp.o
+	$(MAKE) -f CMakeFiles/required_libs.dir/build.make CMakeFiles/required_libs.dir/lib/engine.cpp.o
 .PHONY : lib/engine.cpp.o
 
 lib/engine.i: lib/engine.cpp.i
@@ -269,7 +178,7 @@ lib/engine.i: lib/engine.cpp.i
 
 # target to preprocess a source file
 lib/engine.cpp.i:
-	$(MAKE) -f CMakeFiles/engine_main.dir/build.make CMakeFiles/engine_main.dir/lib/engine.cpp.i
+	$(MAKE) -f CMakeFiles/required_libs.dir/build.make CMakeFiles/required_libs.dir/lib/engine.cpp.i
 .PHONY : lib/engine.cpp.i
 
 lib/engine.s: lib/engine.cpp.s
@@ -278,7 +187,7 @@ lib/engine.s: lib/engine.cpp.s
 
 # target to generate assembly for a file
 lib/engine.cpp.s:
-	$(MAKE) -f CMakeFiles/engine_main.dir/build.make CMakeFiles/engine_main.dir/lib/engine.cpp.s
+	$(MAKE) -f CMakeFiles/required_libs.dir/build.make CMakeFiles/required_libs.dir/lib/engine.cpp.s
 .PHONY : lib/engine.cpp.s
 
 lib/engine_draw.o: lib/engine_draw.cpp.o
@@ -287,7 +196,7 @@ lib/engine_draw.o: lib/engine_draw.cpp.o
 
 # target to build an object file
 lib/engine_draw.cpp.o:
-	$(MAKE) -f CMakeFiles/engine_draw.dir/build.make CMakeFiles/engine_draw.dir/lib/engine_draw.cpp.o
+	$(MAKE) -f CMakeFiles/required_libs.dir/build.make CMakeFiles/required_libs.dir/lib/engine_draw.cpp.o
 .PHONY : lib/engine_draw.cpp.o
 
 lib/engine_draw.i: lib/engine_draw.cpp.i
@@ -296,7 +205,7 @@ lib/engine_draw.i: lib/engine_draw.cpp.i
 
 # target to preprocess a source file
 lib/engine_draw.cpp.i:
-	$(MAKE) -f CMakeFiles/engine_draw.dir/build.make CMakeFiles/engine_draw.dir/lib/engine_draw.cpp.i
+	$(MAKE) -f CMakeFiles/required_libs.dir/build.make CMakeFiles/required_libs.dir/lib/engine_draw.cpp.i
 .PHONY : lib/engine_draw.cpp.i
 
 lib/engine_draw.s: lib/engine_draw.cpp.s
@@ -305,7 +214,7 @@ lib/engine_draw.s: lib/engine_draw.cpp.s
 
 # target to generate assembly for a file
 lib/engine_draw.cpp.s:
-	$(MAKE) -f CMakeFiles/engine_draw.dir/build.make CMakeFiles/engine_draw.dir/lib/engine_draw.cpp.s
+	$(MAKE) -f CMakeFiles/required_libs.dir/build.make CMakeFiles/required_libs.dir/lib/engine_draw.cpp.s
 .PHONY : lib/engine_draw.cpp.s
 
 lib/engine_graphics.o: lib/engine_graphics.cpp.o
@@ -314,7 +223,7 @@ lib/engine_graphics.o: lib/engine_graphics.cpp.o
 
 # target to build an object file
 lib/engine_graphics.cpp.o:
-	$(MAKE) -f CMakeFiles/engine_graphics.dir/build.make CMakeFiles/engine_graphics.dir/lib/engine_graphics.cpp.o
+	$(MAKE) -f CMakeFiles/required_libs.dir/build.make CMakeFiles/required_libs.dir/lib/engine_graphics.cpp.o
 .PHONY : lib/engine_graphics.cpp.o
 
 lib/engine_graphics.i: lib/engine_graphics.cpp.i
@@ -323,7 +232,7 @@ lib/engine_graphics.i: lib/engine_graphics.cpp.i
 
 # target to preprocess a source file
 lib/engine_graphics.cpp.i:
-	$(MAKE) -f CMakeFiles/engine_graphics.dir/build.make CMakeFiles/engine_graphics.dir/lib/engine_graphics.cpp.i
+	$(MAKE) -f CMakeFiles/required_libs.dir/build.make CMakeFiles/required_libs.dir/lib/engine_graphics.cpp.i
 .PHONY : lib/engine_graphics.cpp.i
 
 lib/engine_graphics.s: lib/engine_graphics.cpp.s
@@ -332,7 +241,7 @@ lib/engine_graphics.s: lib/engine_graphics.cpp.s
 
 # target to generate assembly for a file
 lib/engine_graphics.cpp.s:
-	$(MAKE) -f CMakeFiles/engine_graphics.dir/build.make CMakeFiles/engine_graphics.dir/lib/engine_graphics.cpp.s
+	$(MAKE) -f CMakeFiles/required_libs.dir/build.make CMakeFiles/required_libs.dir/lib/engine_graphics.cpp.s
 .PHONY : lib/engine_graphics.cpp.s
 
 lib/engine_init.o: lib/engine_init.cpp.o
@@ -341,7 +250,7 @@ lib/engine_init.o: lib/engine_init.cpp.o
 
 # target to build an object file
 lib/engine_init.cpp.o:
-	$(MAKE) -f CMakeFiles/engine_init.dir/build.make CMakeFiles/engine_init.dir/lib/engine_init.cpp.o
+	$(MAKE) -f CMakeFiles/required_libs.dir/build.make CMakeFiles/required_libs.dir/lib/engine_init.cpp.o
 .PHONY : lib/engine_init.cpp.o
 
 lib/engine_init.i: lib/engine_init.cpp.i
@@ -350,7 +259,7 @@ lib/engine_init.i: lib/engine_init.cpp.i
 
 # target to preprocess a source file
 lib/engine_init.cpp.i:
-	$(MAKE) -f CMakeFiles/engine_init.dir/build.make CMakeFiles/engine_init.dir/lib/engine_init.cpp.i
+	$(MAKE) -f CMakeFiles/required_libs.dir/build.make CMakeFiles/required_libs.dir/lib/engine_init.cpp.i
 .PHONY : lib/engine_init.cpp.i
 
 lib/engine_init.s: lib/engine_init.cpp.s
@@ -359,7 +268,7 @@ lib/engine_init.s: lib/engine_init.cpp.s
 
 # target to generate assembly for a file
 lib/engine_init.cpp.s:
-	$(MAKE) -f CMakeFiles/engine_init.dir/build.make CMakeFiles/engine_init.dir/lib/engine_init.cpp.s
+	$(MAKE) -f CMakeFiles/required_libs.dir/build.make CMakeFiles/required_libs.dir/lib/engine_init.cpp.s
 .PHONY : lib/engine_init.cpp.s
 
 lib/error_setup.o: lib/error_setup.cpp.o
@@ -368,7 +277,7 @@ lib/error_setup.o: lib/error_setup.cpp.o
 
 # target to build an object file
 lib/error_setup.cpp.o:
-	$(MAKE) -f CMakeFiles/error_setup.dir/build.make CMakeFiles/error_setup.dir/lib/error_setup.cpp.o
+	$(MAKE) -f CMakeFiles/required_libs.dir/build.make CMakeFiles/required_libs.dir/lib/error_setup.cpp.o
 .PHONY : lib/error_setup.cpp.o
 
 lib/error_setup.i: lib/error_setup.cpp.i
@@ -377,7 +286,7 @@ lib/error_setup.i: lib/error_setup.cpp.i
 
 # target to preprocess a source file
 lib/error_setup.cpp.i:
-	$(MAKE) -f CMakeFiles/error_setup.dir/build.make CMakeFiles/error_setup.dir/lib/error_setup.cpp.i
+	$(MAKE) -f CMakeFiles/required_libs.dir/build.make CMakeFiles/required_libs.dir/lib/error_setup.cpp.i
 .PHONY : lib/error_setup.cpp.i
 
 lib/error_setup.s: lib/error_setup.cpp.s
@@ -386,7 +295,7 @@ lib/error_setup.s: lib/error_setup.cpp.s
 
 # target to generate assembly for a file
 lib/error_setup.cpp.s:
-	$(MAKE) -f CMakeFiles/error_setup.dir/build.make CMakeFiles/error_setup.dir/lib/error_setup.cpp.s
+	$(MAKE) -f CMakeFiles/required_libs.dir/build.make CMakeFiles/required_libs.dir/lib/error_setup.cpp.s
 .PHONY : lib/error_setup.cpp.s
 
 lib/queue.o: lib/queue.cpp.o
@@ -395,7 +304,7 @@ lib/queue.o: lib/queue.cpp.o
 
 # target to build an object file
 lib/queue.cpp.o:
-	$(MAKE) -f CMakeFiles/queue_data.dir/build.make CMakeFiles/queue_data.dir/lib/queue.cpp.o
+	$(MAKE) -f CMakeFiles/required_libs.dir/build.make CMakeFiles/required_libs.dir/lib/queue.cpp.o
 .PHONY : lib/queue.cpp.o
 
 lib/queue.i: lib/queue.cpp.i
@@ -404,7 +313,7 @@ lib/queue.i: lib/queue.cpp.i
 
 # target to preprocess a source file
 lib/queue.cpp.i:
-	$(MAKE) -f CMakeFiles/queue_data.dir/build.make CMakeFiles/queue_data.dir/lib/queue.cpp.i
+	$(MAKE) -f CMakeFiles/required_libs.dir/build.make CMakeFiles/required_libs.dir/lib/queue.cpp.i
 .PHONY : lib/queue.cpp.i
 
 lib/queue.s: lib/queue.cpp.s
@@ -413,7 +322,7 @@ lib/queue.s: lib/queue.cpp.s
 
 # target to generate assembly for a file
 lib/queue.cpp.s:
-	$(MAKE) -f CMakeFiles/queue_data.dir/build.make CMakeFiles/queue_data.dir/lib/queue.cpp.s
+	$(MAKE) -f CMakeFiles/required_libs.dir/build.make CMakeFiles/required_libs.dir/lib/queue.cpp.s
 .PHONY : lib/queue.cpp.s
 
 lib/swapchain_support.o: lib/swapchain_support.cpp.o
@@ -422,7 +331,7 @@ lib/swapchain_support.o: lib/swapchain_support.cpp.o
 
 # target to build an object file
 lib/swapchain_support.cpp.o:
-	$(MAKE) -f CMakeFiles/swapchain_support.dir/build.make CMakeFiles/swapchain_support.dir/lib/swapchain_support.cpp.o
+	$(MAKE) -f CMakeFiles/required_libs.dir/build.make CMakeFiles/required_libs.dir/lib/swapchain_support.cpp.o
 .PHONY : lib/swapchain_support.cpp.o
 
 lib/swapchain_support.i: lib/swapchain_support.cpp.i
@@ -431,7 +340,7 @@ lib/swapchain_support.i: lib/swapchain_support.cpp.i
 
 # target to preprocess a source file
 lib/swapchain_support.cpp.i:
-	$(MAKE) -f CMakeFiles/swapchain_support.dir/build.make CMakeFiles/swapchain_support.dir/lib/swapchain_support.cpp.i
+	$(MAKE) -f CMakeFiles/required_libs.dir/build.make CMakeFiles/required_libs.dir/lib/swapchain_support.cpp.i
 .PHONY : lib/swapchain_support.cpp.i
 
 lib/swapchain_support.s: lib/swapchain_support.cpp.s
@@ -440,7 +349,7 @@ lib/swapchain_support.s: lib/swapchain_support.cpp.s
 
 # target to generate assembly for a file
 lib/swapchain_support.cpp.s:
-	$(MAKE) -f CMakeFiles/swapchain_support.dir/build.make CMakeFiles/swapchain_support.dir/lib/swapchain_support.cpp.s
+	$(MAKE) -f CMakeFiles/required_libs.dir/build.make CMakeFiles/required_libs.dir/lib/swapchain_support.cpp.s
 .PHONY : lib/swapchain_support.cpp.s
 
 main.o: main.cpp.o
@@ -476,17 +385,10 @@ help:
 	@echo "... all (the default if no target is provided)"
 	@echo "... clean"
 	@echo "... depend"
+	@echo "... rebuild_cache"
 	@echo "... edit_cache"
 	@echo "... cmake-good"
-	@echo "... engine_draw"
-	@echo "... swapchain_support"
-	@echo "... error_setup"
-	@echo "... engine_graphics"
-	@echo "... engine_init"
-	@echo "... queue_data"
-	@echo "... engine_window"
-	@echo "... rebuild_cache"
-	@echo "... engine_main"
+	@echo "... required_libs"
 	@echo "... lib/eng_window.o"
 	@echo "... lib/eng_window.i"
 	@echo "... lib/eng_window.s"

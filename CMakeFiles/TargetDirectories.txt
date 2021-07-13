@@ -1,11 +1,4 @@
-/home/ganidhu/Desktop/engine/CMakeFiles/edit_cache.dir
-/home/ganidhu/Desktop/engine/CMakeFiles/cmake-good.dir
-/home/ganidhu/Desktop/engine/CMakeFiles/engine_draw.dir
-/home/ganidhu/Desktop/engine/CMakeFiles/swapchain_support.dir
-/home/ganidhu/Desktop/engine/CMakeFiles/error_setup.dir
-/home/ganidhu/Desktop/engine/CMakeFiles/engine_graphics.dir
-/home/ganidhu/Desktop/engine/CMakeFiles/engine_init.dir
-/home/ganidhu/Desktop/engine/CMakeFiles/queue_data.dir
-/home/ganidhu/Desktop/engine/CMakeFiles/engine_window.dir
-/home/ganidhu/Desktop/engine/CMakeFiles/rebuild_cache.dir
-/home/ganidhu/Desktop/engine/CMakeFiles/engine_main.dir
+/home/ganidhu/Desktop/vulkan-render-engine/CMakeFiles/rebuild_cache.dir
+/home/ganidhu/Desktop/vulkan-render-engine/CMakeFiles/edit_cache.dir
+/home/ganidhu/Desktop/vulkan-render-engine/CMakeFiles/cmake-good.dir
+/home/ganidhu/Desktop/vulkan-render-engine/CMakeFiles/required_libs.dir

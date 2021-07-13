@@ -43,10 +43,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/ganidhu/Desktop/engine
+CMAKE_SOURCE_DIR = /home/ganidhu/Desktop/vulkan-render-engine
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/ganidhu/Desktop/engine
+CMAKE_BINARY_DIR = /home/ganidhu/Desktop/vulkan-render-engine
 
 # Include any dependencies generated for this target.
 include CMakeFiles/engine_main.dir/depend.make
@@ -59,16 +59,16 @@ include CMakeFiles/engine_main.dir/flags.make
 
 CMakeFiles/engine_main.dir/lib/engine.cpp.o: CMakeFiles/engine_main.dir/flags.make
 CMakeFiles/engine_main.dir/lib/engine.cpp.o: lib/engine.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/ganidhu/Desktop/engine/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/engine_main.dir/lib/engine.cpp.o"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/engine_main.dir/lib/engine.cpp.o -c /home/ganidhu/Desktop/engine/lib/engine.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/ganidhu/Desktop/vulkan-render-engine/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/engine_main.dir/lib/engine.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/engine_main.dir/lib/engine.cpp.o -c /home/ganidhu/Desktop/vulkan-render-engine/lib/engine.cpp
 
 CMakeFiles/engine_main.dir/lib/engine.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/engine_main.dir/lib/engine.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/ganidhu/Desktop/engine/lib/engine.cpp > CMakeFiles/engine_main.dir/lib/engine.cpp.i
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/ganidhu/Desktop/vulkan-render-engine/lib/engine.cpp > CMakeFiles/engine_main.dir/lib/engine.cpp.i
 
 CMakeFiles/engine_main.dir/lib/engine.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/engine_main.dir/lib/engine.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/ganidhu/Desktop/engine/lib/engine.cpp -o CMakeFiles/engine_main.dir/lib/engine.cpp.s
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/ganidhu/Desktop/vulkan-render-engine/lib/engine.cpp -o CMakeFiles/engine_main.dir/lib/engine.cpp.s
 
 # Object files for target engine_main
 engine_main_OBJECTS = \
@@ -80,7 +80,7 @@ engine_main_EXTERNAL_OBJECTS =
 libengine_main.a: CMakeFiles/engine_main.dir/lib/engine.cpp.o
 libengine_main.a: CMakeFiles/engine_main.dir/build.make
 libengine_main.a: CMakeFiles/engine_main.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/ganidhu/Desktop/engine/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Linking CXX static library libengine_main.a"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/ganidhu/Desktop/vulkan-render-engine/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Linking CXX static library libengine_main.a"
 	$(CMAKE_COMMAND) -P CMakeFiles/engine_main.dir/cmake_clean_target.cmake
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/engine_main.dir/link.txt --verbose=$(VERBOSE)
 
@@ -94,6 +94,6 @@ CMakeFiles/engine_main.dir/clean:
 .PHONY : CMakeFiles/engine_main.dir/clean
 
 CMakeFiles/engine_main.dir/depend:
-	cd /home/ganidhu/Desktop/engine && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/ganidhu/Desktop/engine /home/ganidhu/Desktop/engine /home/ganidhu/Desktop/engine /home/ganidhu/Desktop/engine /home/ganidhu/Desktop/engine/CMakeFiles/engine_main.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/ganidhu/Desktop/vulkan-render-engine && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/ganidhu/Desktop/vulkan-render-engine /home/ganidhu/Desktop/vulkan-render-engine /home/ganidhu/Desktop/vulkan-render-engine /home/ganidhu/Desktop/vulkan-render-engine /home/ganidhu/Desktop/vulkan-render-engine/CMakeFiles/engine_main.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : CMakeFiles/engine_main.dir/depend
 

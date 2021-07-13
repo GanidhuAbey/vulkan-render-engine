@@ -43,10 +43,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/ganidhu/Desktop/engine
+CMAKE_SOURCE_DIR = /home/ganidhu/Desktop/vulkan-render-engine
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/ganidhu/Desktop/engine
+CMAKE_BINARY_DIR = /home/ganidhu/Desktop/vulkan-render-engine
 
 # Include any dependencies generated for this target.
 include CMakeFiles/queue_data.dir/depend.make
@@ -59,16 +59,16 @@ include CMakeFiles/queue_data.dir/flags.make
 
 CMakeFiles/queue_data.dir/lib/queue.cpp.o: CMakeFiles/queue_data.dir/flags.make
 CMakeFiles/queue_data.dir/lib/queue.cpp.o: lib/queue.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/ganidhu/Desktop/engine/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/queue_data.dir/lib/queue.cpp.o"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/queue_data.dir/lib/queue.cpp.o -c /home/ganidhu/Desktop/engine/lib/queue.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/ganidhu/Desktop/vulkan-render-engine/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/queue_data.dir/lib/queue.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/queue_data.dir/lib/queue.cpp.o -c /home/ganidhu/Desktop/vulkan-render-engine/lib/queue.cpp
 
 CMakeFiles/queue_data.dir/lib/queue.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/queue_data.dir/lib/queue.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/ganidhu/Desktop/engine/lib/queue.cpp > CMakeFiles/queue_data.dir/lib/queue.cpp.i
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/ganidhu/Desktop/vulkan-render-engine/lib/queue.cpp > CMakeFiles/queue_data.dir/lib/queue.cpp.i
 
 CMakeFiles/queue_data.dir/lib/queue.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/queue_data.dir/lib/queue.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/ganidhu/Desktop/engine/lib/queue.cpp -o CMakeFiles/queue_data.dir/lib/queue.cpp.s
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/ganidhu/Desktop/vulkan-render-engine/lib/queue.cpp -o CMakeFiles/queue_data.dir/lib/queue.cpp.s
 
 # Object files for target queue_data
 queue_data_OBJECTS = \
@@ -80,7 +80,7 @@ queue_data_EXTERNAL_OBJECTS =
 libqueue_data.a: CMakeFiles/queue_data.dir/lib/queue.cpp.o
 libqueue_data.a: CMakeFiles/queue_data.dir/build.make
 libqueue_data.a: CMakeFiles/queue_data.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/ganidhu/Desktop/engine/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Linking CXX static library libqueue_data.a"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/ganidhu/Desktop/vulkan-render-engine/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Linking CXX static library libqueue_data.a"
 	$(CMAKE_COMMAND) -P CMakeFiles/queue_data.dir/cmake_clean_target.cmake
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/queue_data.dir/link.txt --verbose=$(VERBOSE)
 
@@ -94,6 +94,6 @@ CMakeFiles/queue_data.dir/clean:
 .PHONY : CMakeFiles/queue_data.dir/clean
 
 CMakeFiles/queue_data.dir/depend:
-	cd /home/ganidhu/Desktop/engine && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/ganidhu/Desktop/engine /home/ganidhu/Desktop/engine /home/ganidhu/Desktop/engine /home/ganidhu/Desktop/engine /home/ganidhu/Desktop/engine/CMakeFiles/queue_data.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/ganidhu/Desktop/vulkan-render-engine && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/ganidhu/Desktop/vulkan-render-engine /home/ganidhu/Desktop/vulkan-render-engine /home/ganidhu/Desktop/vulkan-render-engine /home/ganidhu/Desktop/vulkan-render-engine /home/ganidhu/Desktop/vulkan-render-engine/CMakeFiles/queue_data.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : CMakeFiles/queue_data.dir/depend
 

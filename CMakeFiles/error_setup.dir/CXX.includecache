@@ -6,15 +6,15 @@
 
 #IncludeRegexTransform: 
 
-/home/ganidhu/Desktop/engine/inc/error_setup.hpp
+/home/ganidhu/Desktop/vulkan-render-engine/inc/error_setup.hpp
 GLFW/glfw3.h
 -
 iostream
 -
 
-/home/ganidhu/Desktop/engine/lib/error_setup.cpp
+/home/ganidhu/Desktop/vulkan-render-engine/lib/error_setup.cpp
 GLFW/glfw3.h
 -
 ../inc/error_setup.hpp
-/home/ganidhu/Desktop/engine/inc/error_setup.hpp
+/home/ganidhu/Desktop/vulkan-render-engine/inc/error_setup.hpp
 

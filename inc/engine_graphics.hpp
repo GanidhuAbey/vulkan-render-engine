@@ -71,7 +71,6 @@ class EngineGraphics {
         VkPresentModeKHR chooseSwapChainPresentation(const std::vector<VkPresentModeKHR>& availablePresentations);
         VkExtent2D chooseSwapExtent(const VkSurfaceCapabilitiesKHR& capabilities);
         void fillRequiredValues(VkPhysicalDevice physicalDeviceUser, VkDevice deviceUser, VkSurfaceKHR surfaceUser);
-        uint32_t findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties);
 
     public:
         //EngineGraphics(EngineInit* initEngine);
@@ -88,10 +87,10 @@ class EngineGraphics {
         void createFences();
 
     public:
-        void createVertexBuffer(std::vector<data::Vertex2D> vertices);
-        void createCommandBuffers(std::vector<data::Vertex2D> vertices);
+        void createCommandBuffers(VkBuffer buffer, std::vector<data::Vertex2D> vertices);
         void drawFrame();
         void cleanupRender();
+        void copyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size);
 };
 
 }

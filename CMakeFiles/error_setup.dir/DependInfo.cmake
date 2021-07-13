@@ -4,7 +4,7 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
-  "/home/ganidhu/Desktop/engine/lib/error_setup.cpp" "/home/ganidhu/Desktop/engine/CMakeFiles/error_setup.dir/lib/error_setup.cpp.o"
+  "/home/ganidhu/Desktop/vulkan-render-engine/lib/error_setup.cpp" "/home/ganidhu/Desktop/vulkan-render-engine/CMakeFiles/error_setup.dir/lib/error_setup.cpp.o"
   )
 set(CMAKE_CXX_COMPILER_ID "GNU")
 

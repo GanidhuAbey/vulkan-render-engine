@@ -44,24 +44,17 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/ganidhu/Desktop/engine
+CMAKE_SOURCE_DIR = /home/ganidhu/Desktop/vulkan-render-engine
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/ganidhu/Desktop/engine
+CMAKE_BINARY_DIR = /home/ganidhu/Desktop/vulkan-render-engine
 
 #=============================================================================
 # Directory level rules for the build root directory
 
 # The main recursive "all" target.
 all: CMakeFiles/cmake-good.dir/all
-all: CMakeFiles/engine_draw.dir/all
-all: CMakeFiles/swapchain_support.dir/all
-all: CMakeFiles/error_setup.dir/all
-all: CMakeFiles/engine_graphics.dir/all
-all: CMakeFiles/engine_init.dir/all
-all: CMakeFiles/queue_data.dir/all
-all: CMakeFiles/engine_window.dir/all
-all: CMakeFiles/engine_main.dir/all
+all: CMakeFiles/required_libs.dir/all
 
 .PHONY : all
 
@@ -72,14 +65,7 @@ preinstall:
 
 # The main recursive "clean" target.
 clean: CMakeFiles/cmake-good.dir/clean
-clean: CMakeFiles/engine_draw.dir/clean
-clean: CMakeFiles/swapchain_support.dir/clean
-clean: CMakeFiles/error_setup.dir/clean
-clean: CMakeFiles/engine_graphics.dir/clean
-clean: CMakeFiles/engine_init.dir/clean
-clean: CMakeFiles/queue_data.dir/clean
-clean: CMakeFiles/engine_window.dir/clean
-clean: CMakeFiles/engine_main.dir/clean
+clean: CMakeFiles/required_libs.dir/clean
 
 .PHONY : clean
 
@@ -87,24 +73,17 @@ clean: CMakeFiles/engine_main.dir/clean
 # Target rules for target CMakeFiles/cmake-good.dir
 
 # All Build rule for target.
-CMakeFiles/cmake-good.dir/all: CMakeFiles/engine_draw.dir/all
-CMakeFiles/cmake-good.dir/all: CMakeFiles/swapchain_support.dir/all
-CMakeFiles/cmake-good.dir/all: CMakeFiles/error_setup.dir/all
-CMakeFiles/cmake-good.dir/all: CMakeFiles/engine_graphics.dir/all
-CMakeFiles/cmake-good.dir/all: CMakeFiles/engine_init.dir/all
-CMakeFiles/cmake-good.dir/all: CMakeFiles/queue_data.dir/all
-CMakeFiles/cmake-good.dir/all: CMakeFiles/engine_window.dir/all
-CMakeFiles/cmake-good.dir/all: CMakeFiles/engine_main.dir/all
+CMakeFiles/cmake-good.dir/all: CMakeFiles/required_libs.dir/all
 	$(MAKE) -f CMakeFiles/cmake-good.dir/build.make CMakeFiles/cmake-good.dir/depend
 	$(MAKE) -f CMakeFiles/cmake-good.dir/build.make CMakeFiles/cmake-good.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/ganidhu/Desktop/engine/CMakeFiles --progress-num=1,2 "Built target cmake-good"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/ganidhu/Desktop/vulkan-render-engine/CMakeFiles --progress-num=1,2 "Built target cmake-good"
 .PHONY : CMakeFiles/cmake-good.dir/all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/cmake-good.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/ganidhu/Desktop/engine/CMakeFiles 18
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/ganidhu/Desktop/vulkan-render-engine/CMakeFiles 11
 	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/cmake-good.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/ganidhu/Desktop/engine/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/ganidhu/Desktop/vulkan-render-engine/CMakeFiles 0
 .PHONY : CMakeFiles/cmake-good.dir/rule
 
 # Convenience name for target.
@@ -118,220 +97,31 @@ CMakeFiles/cmake-good.dir/clean:
 .PHONY : CMakeFiles/cmake-good.dir/clean
 
 #=============================================================================
-# Target rules for target CMakeFiles/engine_draw.dir
+# Target rules for target CMakeFiles/required_libs.dir
 
 # All Build rule for target.
-CMakeFiles/engine_draw.dir/all:
-	$(MAKE) -f CMakeFiles/engine_draw.dir/build.make CMakeFiles/engine_draw.dir/depend
-	$(MAKE) -f CMakeFiles/engine_draw.dir/build.make CMakeFiles/engine_draw.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/ganidhu/Desktop/engine/CMakeFiles --progress-num=3,4 "Built target engine_draw"
-.PHONY : CMakeFiles/engine_draw.dir/all
+CMakeFiles/required_libs.dir/all:
+	$(MAKE) -f CMakeFiles/required_libs.dir/build.make CMakeFiles/required_libs.dir/depend
+	$(MAKE) -f CMakeFiles/required_libs.dir/build.make CMakeFiles/required_libs.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/ganidhu/Desktop/vulkan-render-engine/CMakeFiles --progress-num=3,4,5,6,7,8,9,10,11 "Built target required_libs"
+.PHONY : CMakeFiles/required_libs.dir/all
 
 # Build rule for subdir invocation for target.
-CMakeFiles/engine_draw.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/ganidhu/Desktop/engine/CMakeFiles 2
-	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/engine_draw.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/ganidhu/Desktop/engine/CMakeFiles 0
-.PHONY : CMakeFiles/engine_draw.dir/rule
+CMakeFiles/required_libs.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/ganidhu/Desktop/vulkan-render-engine/CMakeFiles 9
+	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/required_libs.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/ganidhu/Desktop/vulkan-render-engine/CMakeFiles 0
+.PHONY : CMakeFiles/required_libs.dir/rule
 
 # Convenience name for target.
-engine_draw: CMakeFiles/engine_draw.dir/rule
+required_libs: CMakeFiles/required_libs.dir/rule
 
-.PHONY : engine_draw
-
-# clean rule for target.
-CMakeFiles/engine_draw.dir/clean:
-	$(MAKE) -f CMakeFiles/engine_draw.dir/build.make CMakeFiles/engine_draw.dir/clean
-.PHONY : CMakeFiles/engine_draw.dir/clean
-
-#=============================================================================
-# Target rules for target CMakeFiles/swapchain_support.dir
-
-# All Build rule for target.
-CMakeFiles/swapchain_support.dir/all:
-	$(MAKE) -f CMakeFiles/swapchain_support.dir/build.make CMakeFiles/swapchain_support.dir/depend
-	$(MAKE) -f CMakeFiles/swapchain_support.dir/build.make CMakeFiles/swapchain_support.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/ganidhu/Desktop/engine/CMakeFiles --progress-num=17,18 "Built target swapchain_support"
-.PHONY : CMakeFiles/swapchain_support.dir/all
-
-# Build rule for subdir invocation for target.
-CMakeFiles/swapchain_support.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/ganidhu/Desktop/engine/CMakeFiles 2
-	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/swapchain_support.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/ganidhu/Desktop/engine/CMakeFiles 0
-.PHONY : CMakeFiles/swapchain_support.dir/rule
-
-# Convenience name for target.
-swapchain_support: CMakeFiles/swapchain_support.dir/rule
-
-.PHONY : swapchain_support
+.PHONY : required_libs
 
 # clean rule for target.
-CMakeFiles/swapchain_support.dir/clean:
-	$(MAKE) -f CMakeFiles/swapchain_support.dir/build.make CMakeFiles/swapchain_support.dir/clean
-.PHONY : CMakeFiles/swapchain_support.dir/clean
-
-#=============================================================================
-# Target rules for target CMakeFiles/error_setup.dir
-
-# All Build rule for target.
-CMakeFiles/error_setup.dir/all:
-	$(MAKE) -f CMakeFiles/error_setup.dir/build.make CMakeFiles/error_setup.dir/depend
-	$(MAKE) -f CMakeFiles/error_setup.dir/build.make CMakeFiles/error_setup.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/ganidhu/Desktop/engine/CMakeFiles --progress-num=13,14 "Built target error_setup"
-.PHONY : CMakeFiles/error_setup.dir/all
-
-# Build rule for subdir invocation for target.
-CMakeFiles/error_setup.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/ganidhu/Desktop/engine/CMakeFiles 2
-	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/error_setup.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/ganidhu/Desktop/engine/CMakeFiles 0
-.PHONY : CMakeFiles/error_setup.dir/rule
-
-# Convenience name for target.
-error_setup: CMakeFiles/error_setup.dir/rule
-
-.PHONY : error_setup
-
-# clean rule for target.
-CMakeFiles/error_setup.dir/clean:
-	$(MAKE) -f CMakeFiles/error_setup.dir/build.make CMakeFiles/error_setup.dir/clean
-.PHONY : CMakeFiles/error_setup.dir/clean
-
-#=============================================================================
-# Target rules for target CMakeFiles/engine_graphics.dir
-
-# All Build rule for target.
-CMakeFiles/engine_graphics.dir/all:
-	$(MAKE) -f CMakeFiles/engine_graphics.dir/build.make CMakeFiles/engine_graphics.dir/depend
-	$(MAKE) -f CMakeFiles/engine_graphics.dir/build.make CMakeFiles/engine_graphics.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/ganidhu/Desktop/engine/CMakeFiles --progress-num=5,6 "Built target engine_graphics"
-.PHONY : CMakeFiles/engine_graphics.dir/all
-
-# Build rule for subdir invocation for target.
-CMakeFiles/engine_graphics.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/ganidhu/Desktop/engine/CMakeFiles 2
-	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/engine_graphics.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/ganidhu/Desktop/engine/CMakeFiles 0
-.PHONY : CMakeFiles/engine_graphics.dir/rule
-
-# Convenience name for target.
-engine_graphics: CMakeFiles/engine_graphics.dir/rule
-
-.PHONY : engine_graphics
-
-# clean rule for target.
-CMakeFiles/engine_graphics.dir/clean:
-	$(MAKE) -f CMakeFiles/engine_graphics.dir/build.make CMakeFiles/engine_graphics.dir/clean
-.PHONY : CMakeFiles/engine_graphics.dir/clean
-
-#=============================================================================
-# Target rules for target CMakeFiles/engine_init.dir
-
-# All Build rule for target.
-CMakeFiles/engine_init.dir/all:
-	$(MAKE) -f CMakeFiles/engine_init.dir/build.make CMakeFiles/engine_init.dir/depend
-	$(MAKE) -f CMakeFiles/engine_init.dir/build.make CMakeFiles/engine_init.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/ganidhu/Desktop/engine/CMakeFiles --progress-num=7,8 "Built target engine_init"
-.PHONY : CMakeFiles/engine_init.dir/all
-
-# Build rule for subdir invocation for target.
-CMakeFiles/engine_init.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/ganidhu/Desktop/engine/CMakeFiles 2
-	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/engine_init.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/ganidhu/Desktop/engine/CMakeFiles 0
-.PHONY : CMakeFiles/engine_init.dir/rule
-
-# Convenience name for target.
-engine_init: CMakeFiles/engine_init.dir/rule
-
-.PHONY : engine_init
-
-# clean rule for target.
-CMakeFiles/engine_init.dir/clean:
-	$(MAKE) -f CMakeFiles/engine_init.dir/build.make CMakeFiles/engine_init.dir/clean
-.PHONY : CMakeFiles/engine_init.dir/clean
-
-#=============================================================================
-# Target rules for target CMakeFiles/queue_data.dir
-
-# All Build rule for target.
-CMakeFiles/queue_data.dir/all:
-	$(MAKE) -f CMakeFiles/queue_data.dir/build.make CMakeFiles/queue_data.dir/depend
-	$(MAKE) -f CMakeFiles/queue_data.dir/build.make CMakeFiles/queue_data.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/ganidhu/Desktop/engine/CMakeFiles --progress-num=15,16 "Built target queue_data"
-.PHONY : CMakeFiles/queue_data.dir/all
-
-# Build rule for subdir invocation for target.
-CMakeFiles/queue_data.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/ganidhu/Desktop/engine/CMakeFiles 2
-	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/queue_data.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/ganidhu/Desktop/engine/CMakeFiles 0
-.PHONY : CMakeFiles/queue_data.dir/rule
-
-# Convenience name for target.
-queue_data: CMakeFiles/queue_data.dir/rule
-
-.PHONY : queue_data
-
-# clean rule for target.
-CMakeFiles/queue_data.dir/clean:
-	$(MAKE) -f CMakeFiles/queue_data.dir/build.make CMakeFiles/queue_data.dir/clean
-.PHONY : CMakeFiles/queue_data.dir/clean
-
-#=============================================================================
-# Target rules for target CMakeFiles/engine_window.dir
-
-# All Build rule for target.
-CMakeFiles/engine_window.dir/all:
-	$(MAKE) -f CMakeFiles/engine_window.dir/build.make CMakeFiles/engine_window.dir/depend
-	$(MAKE) -f CMakeFiles/engine_window.dir/build.make CMakeFiles/engine_window.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/ganidhu/Desktop/engine/CMakeFiles --progress-num=11,12 "Built target engine_window"
-.PHONY : CMakeFiles/engine_window.dir/all
-
-# Build rule for subdir invocation for target.
-CMakeFiles/engine_window.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/ganidhu/Desktop/engine/CMakeFiles 2
-	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/engine_window.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/ganidhu/Desktop/engine/CMakeFiles 0
-.PHONY : CMakeFiles/engine_window.dir/rule
-
-# Convenience name for target.
-engine_window: CMakeFiles/engine_window.dir/rule
-
-.PHONY : engine_window
-
-# clean rule for target.
-CMakeFiles/engine_window.dir/clean:
-	$(MAKE) -f CMakeFiles/engine_window.dir/build.make CMakeFiles/engine_window.dir/clean
-.PHONY : CMakeFiles/engine_window.dir/clean
-
-#=============================================================================
-# Target rules for target CMakeFiles/engine_main.dir
-
-# All Build rule for target.
-CMakeFiles/engine_main.dir/all:
-	$(MAKE) -f CMakeFiles/engine_main.dir/build.make CMakeFiles/engine_main.dir/depend
-	$(MAKE) -f CMakeFiles/engine_main.dir/build.make CMakeFiles/engine_main.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/ganidhu/Desktop/engine/CMakeFiles --progress-num=9,10 "Built target engine_main"
-.PHONY : CMakeFiles/engine_main.dir/all
-
-# Build rule for subdir invocation for target.
-CMakeFiles/engine_main.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/ganidhu/Desktop/engine/CMakeFiles 2
-	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/engine_main.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/ganidhu/Desktop/engine/CMakeFiles 0
-.PHONY : CMakeFiles/engine_main.dir/rule
-
-# Convenience name for target.
-engine_main: CMakeFiles/engine_main.dir/rule
-
-.PHONY : engine_main
-
-# clean rule for target.
-CMakeFiles/engine_main.dir/clean:
-	$(MAKE) -f CMakeFiles/engine_main.dir/build.make CMakeFiles/engine_main.dir/clean
-.PHONY : CMakeFiles/engine_main.dir/clean
+CMakeFiles/required_libs.dir/clean:
+	$(MAKE) -f CMakeFiles/required_libs.dir/build.make CMakeFiles/required_libs.dir/clean
+.PHONY : CMakeFiles/required_libs.dir/clean
 
 #=============================================================================
 # Special targets to cleanup operation of make.
