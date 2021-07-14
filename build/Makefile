@@ -298,6 +298,33 @@ lib/error_setup.cpp.s:
 	$(MAKE) -f CMakeFiles/required_libs.dir/build.make CMakeFiles/required_libs.dir/lib/error_setup.cpp.s
 .PHONY : lib/error_setup.cpp.s
 
+lib/memory_allocator.o: lib/memory_allocator.cpp.o
+
+.PHONY : lib/memory_allocator.o
+
+# target to build an object file
+lib/memory_allocator.cpp.o:
+	$(MAKE) -f CMakeFiles/required_libs.dir/build.make CMakeFiles/required_libs.dir/lib/memory_allocator.cpp.o
+.PHONY : lib/memory_allocator.cpp.o
+
+lib/memory_allocator.i: lib/memory_allocator.cpp.i
+
+.PHONY : lib/memory_allocator.i
+
+# target to preprocess a source file
+lib/memory_allocator.cpp.i:
+	$(MAKE) -f CMakeFiles/required_libs.dir/build.make CMakeFiles/required_libs.dir/lib/memory_allocator.cpp.i
+.PHONY : lib/memory_allocator.cpp.i
+
+lib/memory_allocator.s: lib/memory_allocator.cpp.s
+
+.PHONY : lib/memory_allocator.s
+
+# target to generate assembly for a file
+lib/memory_allocator.cpp.s:
+	$(MAKE) -f CMakeFiles/required_libs.dir/build.make CMakeFiles/required_libs.dir/lib/memory_allocator.cpp.s
+.PHONY : lib/memory_allocator.cpp.s
+
 lib/queue.o: lib/queue.cpp.o
 
 .PHONY : lib/queue.o
@@ -407,6 +434,9 @@ help:
 	@echo "... lib/error_setup.o"
 	@echo "... lib/error_setup.i"
 	@echo "... lib/error_setup.s"
+	@echo "... lib/memory_allocator.o"
+	@echo "... lib/memory_allocator.i"
+	@echo "... lib/memory_allocator.s"
 	@echo "... lib/queue.o"
 	@echo "... lib/queue.i"
 	@echo "... lib/queue.s"

@@ -36,7 +36,12 @@ class Engine {
         EngWindow userWindow;
         EngineInit engInit;
         graphics::EngineGraphics engGraphics;
-        mem::MemoryPool memoryPool;
+
+
+        mem::MaMemory gpuMemory;
+        //vertex buffer that the memory will be allocated to.
+        VkBuffer vertexBuffer;
+
         //draw::EngineDraw engineDraw;
 
     public:
@@ -46,6 +51,11 @@ class Engine {
     public:
         void drawRect(int x, int y, int w, int h, Color c);
         void clearScreen();
+
+    private:
+        void createVertexBuffer(VkBuffer* vertexBuffer, mem::MaMemory* gpuMemory);
+        mem::MaMemory createBuffer(VkBuffer* buffer, VkBufferUsageFlags usage,
+        VkMemoryPropertyFlags properties);
 
 };
 }

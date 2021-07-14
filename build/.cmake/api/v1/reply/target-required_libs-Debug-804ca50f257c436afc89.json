@@ -52,7 +52,8 @@
 				4,
 				5,
 				6,
-				7
+				7,
+				8
 			]
 		}
 	],
@@ -77,7 +78,8 @@
 				4,
 				5,
 				6,
-				7
+				7,
+				8
 			]
 		}
 	],
@@ -117,6 +119,12 @@
 			"backtrace" : 1,
 			"compileGroupIndex" : 0,
 			"path" : "lib/error_setup.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "lib/memory_allocator.cpp",
 			"sourceGroupIndex" : 0
 		},
 		{

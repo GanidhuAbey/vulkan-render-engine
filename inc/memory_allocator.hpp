@@ -11,50 +11,38 @@
 #include <math.h>
 #include <algorithm>
 
-const uint32_t ALLOCATION_BARRIER = 600000000;
+//100 mb of data per allocation
+//TODO: need to create a information struct in the style of vulkan to let user manipulate this data
+//VkDeviceSize allocationSize = 5e8;
 
 namespace mem {
-    class MemoryPool {
-        public:
-            //TODO: offset should probably be VkDeviceSize
-            struct MemoryData {
-                VkDeviceSize offset;
-                VkDeviceMemory memory;
-                VkDeviceSize resourceSize;
-                size_t poolIndex;
-                size_t poolOffsetIndex;
-            };
+struct MaMemoryInfo {
+    VkDeviceSize allocationSize;
+    VkBufferUsageFlags bufferUsage;
+    VkMemoryPropertyFlags memoryProperties;
+    uint32_t queueFamilyIndexCount;
 
-            struct Pool {
-                std::vector<VkDeviceSize> sizes;
-                std::vector<VkDeviceSize> offsets;
-                uint32_t memoryTypeIndex;
-                VkDeviceMemory memory;
-            };
+};
 
-            std::vector<Pool> pools;
-            size_t poolCount = 0;
-            //100 mb of data per allocation
-            //TODO: need to create a information struct in the style of vulkan to let user manipulate this data
-            VkDeviceSize allocationSize = 1e8;
+struct MaMemory {
+    VkDeviceMemory memoryHandle;
+    std::vector<VkDeviceSize> sizes;
+    std::vector<VkDeviceSize> offsets;
+    VkDeviceSize alignmentMultiple;
+};
 
-        public:
-            //this would handle allocating the pool for you
-            MemoryPool();
-            //this would free all the memory pools allocated
-            ~MemoryPool();
-            //this would allocate your desired memory for you
-            MemoryData allocate(VkPhysicalDevice physicalDevice, VkDevice device, VkMemoryPropertyFlags properties, VkBuffer& buffer);
-            //this would deallocate your desired memory for you
-            void deallocate(VkDevice device, VkBuffer buffer, MemoryData memoryData);
+struct MaMemoryData {
+    VkDeviceMemory memoryHandle;
+    VkDeviceSize offset;
+    VkDeviceSize resourceSize;
+    size_t offsetIndex;
+};
 
-        private:
-            void createMemoryPool(VkPhysicalDevice physicalDevice, VkDevice device, Pool* pool);
-            void destroyMemoryPool(VkDevice device, MemoryPool memoryPool);
-    };
+uint32_t findMemoryType(VkPhysicalDevice physicalDevice, uint32_t typeFilter, VkMemoryPropertyFlags properties);
 
-    uint32_t findMemoryType(VkPhysicalDevice physicalDevice, uint32_t typeFilter, VkMemoryPropertyFlags properties);
+void maCreateMemory(VkPhysicalDevice physicalDevice, VkDevice device, MaMemoryInfo* poolInfo, VkBuffer* buffer, MaMemory* maMemory);
+MaMemory maAllocateMemory(MaMemory maMemory, VkDeviceSize resourceSize, MaMemoryData* memoryData);
+void maFreeMemory(MaMemory* maMemory, MaMemoryData memoryData);
+void maDestroyMemory(VkDevice device, MaMemory maMemory, VkBuffer buffer);
 
-    void destroyMemoryPool(VkDevice device, MemoryPool memoryPools, const VkAllocationCallbacks* pAllocator);
-
-}
+} // namespace mem
