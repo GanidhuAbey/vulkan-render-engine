@@ -26,3 +26,17 @@ int main() {
 
     return 1;
 }
+
+/*
+    void MemoryPool::deallocate(VkDevice device, VkBuffer buffer, MemoryData memoryData) {
+        //instead of actually deallocating the memory and wasting time, allocating it later
+        //we'll just tell the user we deallocated the data while keeping it to write new data later.
+        pools[memoryData.poolIndex].offsets[memoryData.poolOffsetIndex] = memoryData.offset;
+        
+        //TODO: this is inefficient as fuck and i dont see it scaling very well
+        pools[memoryData.poolIndex].sizes[memoryData.poolOffsetIndex] += memoryData.resourceSize;
+
+        //delete buffer now
+        vkDestroyBuffer(device, buffer, nullptr);
+    }
+*/

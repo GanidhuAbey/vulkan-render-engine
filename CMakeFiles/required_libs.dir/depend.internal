@@ -13,6 +13,7 @@ CMakeFiles/required_libs.dir/lib/engine.cpp.o
  /home/ganidhu/Desktop/vulkan-render-engine/inc/engine_graphics.hpp
  /home/ganidhu/Desktop/vulkan-render-engine/inc/engine_init.hpp
  /home/ganidhu/Desktop/vulkan-render-engine/inc/error_setup.hpp
+ /home/ganidhu/Desktop/vulkan-render-engine/inc/memory_allocator.hpp
  /home/ganidhu/Desktop/vulkan-render-engine/inc/queue.hpp
  /home/ganidhu/Desktop/vulkan-render-engine/inc/swapchain_support.hpp
  /home/ganidhu/Desktop/vulkan-render-engine/lib/engine.cpp
@@ -23,6 +24,7 @@ CMakeFiles/required_libs.dir/lib/engine_draw.cpp.o
  /home/ganidhu/Desktop/vulkan-render-engine/inc/engine_graphics.hpp
  /home/ganidhu/Desktop/vulkan-render-engine/inc/engine_init.hpp
  /home/ganidhu/Desktop/vulkan-render-engine/inc/error_setup.hpp
+ /home/ganidhu/Desktop/vulkan-render-engine/inc/memory_allocator.hpp
  /home/ganidhu/Desktop/vulkan-render-engine/inc/queue.hpp
  /home/ganidhu/Desktop/vulkan-render-engine/inc/swapchain_support.hpp
  /home/ganidhu/Desktop/vulkan-render-engine/lib/engine_draw.cpp
@@ -46,6 +48,16 @@ CMakeFiles/required_libs.dir/lib/engine_init.cpp.o
 CMakeFiles/required_libs.dir/lib/error_setup.cpp.o
  /home/ganidhu/Desktop/vulkan-render-engine/inc/error_setup.hpp
  /home/ganidhu/Desktop/vulkan-render-engine/lib/error_setup.cpp
+CMakeFiles/required_libs.dir/lib/memory_allocator.cpp.o
+ /home/ganidhu/Desktop/vulkan-render-engine/inc/data_formats.hpp
+ /home/ganidhu/Desktop/vulkan-render-engine/inc/eng_window.hpp
+ /home/ganidhu/Desktop/vulkan-render-engine/inc/engine_graphics.hpp
+ /home/ganidhu/Desktop/vulkan-render-engine/inc/engine_init.hpp
+ /home/ganidhu/Desktop/vulkan-render-engine/inc/error_setup.hpp
+ /home/ganidhu/Desktop/vulkan-render-engine/inc/memory_allocator.hpp
+ /home/ganidhu/Desktop/vulkan-render-engine/inc/queue.hpp
+ /home/ganidhu/Desktop/vulkan-render-engine/inc/swapchain_support.hpp
+ /home/ganidhu/Desktop/vulkan-render-engine/lib/memory_allocator.cpp
 CMakeFiles/required_libs.dir/lib/queue.cpp.o
  /home/ganidhu/Desktop/vulkan-render-engine/inc/queue.hpp
  /home/ganidhu/Desktop/vulkan-render-engine/lib/queue.cpp

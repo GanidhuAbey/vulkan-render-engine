@@ -70,6 +70,22 @@ GLFW/glfw3.h
 iostream
 -
 
+/home/ganidhu/Desktop/vulkan-render-engine/inc/memory_allocator.hpp
+GLFW/glfw3.h
+-
+engine_graphics.hpp
+/home/ganidhu/Desktop/vulkan-render-engine/inc/engine_graphics.hpp
+stdexcept
+-
+iostream
+-
+vector
+-
+math.h
+-
+algorithm
+-
+
 /home/ganidhu/Desktop/vulkan-render-engine/inc/queue.hpp
 GLFW/glfw3.h
 -
@@ -86,7 +102,7 @@ GLFW/glfw3.h
 vector
 -
 
-/home/ganidhu/Desktop/vulkan-render-engine/lib/engine_graphics.cpp
-../inc/engine_graphics.hpp
-/home/ganidhu/Desktop/vulkan-render-engine/inc/engine_graphics.hpp
+/home/ganidhu/Desktop/vulkan-render-engine/lib/memory_allocator.cpp
+../inc/memory_allocator.hpp
+/home/ganidhu/Desktop/vulkan-render-engine/inc/memory_allocator.hpp
 

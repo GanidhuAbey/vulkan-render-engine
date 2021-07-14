@@ -13,6 +13,7 @@ namespace create {
     }
 
     Engine::~Engine() {
+        mem::destroyMemoryPool(engInit.device, memoryPool, nullptr);
         //nothing to do now, maybe in the future we can add a check to see if memory is leaking
         std::cout << "program exectuted and closed" << std::endl;
     }
@@ -48,7 +49,7 @@ namespace create {
         primitiveCount++;
 
         draw::EngineDraw engineDraw;
-        engineDraw.initialize(vertices, &engGraphics, &engInit, primitiveCount);
+        engineDraw.initialize(vertices, &engGraphics, &memoryPool, &engInit, primitiveCount);
     }
 
     void Engine::clearScreen() {

@@ -4,6 +4,7 @@
 #include "eng_window.hpp"
 #include "engine_graphics.hpp"
 #include "engine_draw.hpp"
+#include "memory_allocator.hpp"
 
 #include "data_formats.hpp"
 
@@ -35,6 +36,7 @@ class Engine {
         EngWindow userWindow;
         EngineInit engInit;
         graphics::EngineGraphics engGraphics;
+        mem::MemoryPool memoryPool;
         //draw::EngineDraw engineDraw;
 
     public:

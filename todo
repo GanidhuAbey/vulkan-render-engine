@@ -21,3 +21,7 @@ TODO: RENDER ENGINE
 - RENDER TRIANGLE
 - RENDER SQUARE
 - VERTEX BUFFER
+
+[QUESTIONS]
+- How can I reuse existing, allocatee memory
+  -- Do I save the buffers associated with the memory and create a call for a new buffer everytime I need it?

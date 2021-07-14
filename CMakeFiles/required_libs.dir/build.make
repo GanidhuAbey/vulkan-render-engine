@@ -135,9 +135,22 @@ CMakeFiles/required_libs.dir/lib/error_setup.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/required_libs.dir/lib/error_setup.cpp.s"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/ganidhu/Desktop/vulkan-render-engine/lib/error_setup.cpp -o CMakeFiles/required_libs.dir/lib/error_setup.cpp.s
 
+CMakeFiles/required_libs.dir/lib/memory_allocator.cpp.o: CMakeFiles/required_libs.dir/flags.make
+CMakeFiles/required_libs.dir/lib/memory_allocator.cpp.o: lib/memory_allocator.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/ganidhu/Desktop/vulkan-render-engine/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object CMakeFiles/required_libs.dir/lib/memory_allocator.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/required_libs.dir/lib/memory_allocator.cpp.o -c /home/ganidhu/Desktop/vulkan-render-engine/lib/memory_allocator.cpp
+
+CMakeFiles/required_libs.dir/lib/memory_allocator.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/required_libs.dir/lib/memory_allocator.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/ganidhu/Desktop/vulkan-render-engine/lib/memory_allocator.cpp > CMakeFiles/required_libs.dir/lib/memory_allocator.cpp.i
+
+CMakeFiles/required_libs.dir/lib/memory_allocator.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/required_libs.dir/lib/memory_allocator.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/ganidhu/Desktop/vulkan-render-engine/lib/memory_allocator.cpp -o CMakeFiles/required_libs.dir/lib/memory_allocator.cpp.s
+
 CMakeFiles/required_libs.dir/lib/queue.cpp.o: CMakeFiles/required_libs.dir/flags.make
 CMakeFiles/required_libs.dir/lib/queue.cpp.o: lib/queue.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/ganidhu/Desktop/vulkan-render-engine/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object CMakeFiles/required_libs.dir/lib/queue.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/ganidhu/Desktop/vulkan-render-engine/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building CXX object CMakeFiles/required_libs.dir/lib/queue.cpp.o"
 	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/required_libs.dir/lib/queue.cpp.o -c /home/ganidhu/Desktop/vulkan-render-engine/lib/queue.cpp
 
 CMakeFiles/required_libs.dir/lib/queue.cpp.i: cmake_force
@@ -150,7 +163,7 @@ CMakeFiles/required_libs.dir/lib/queue.cpp.s: cmake_force
 
 CMakeFiles/required_libs.dir/lib/swapchain_support.cpp.o: CMakeFiles/required_libs.dir/flags.make
 CMakeFiles/required_libs.dir/lib/swapchain_support.cpp.o: lib/swapchain_support.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/ganidhu/Desktop/vulkan-render-engine/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building CXX object CMakeFiles/required_libs.dir/lib/swapchain_support.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/ganidhu/Desktop/vulkan-render-engine/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Building CXX object CMakeFiles/required_libs.dir/lib/swapchain_support.cpp.o"
 	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/required_libs.dir/lib/swapchain_support.cpp.o -c /home/ganidhu/Desktop/vulkan-render-engine/lib/swapchain_support.cpp
 
 CMakeFiles/required_libs.dir/lib/swapchain_support.cpp.i: cmake_force
@@ -169,6 +182,7 @@ required_libs_OBJECTS = \
 "CMakeFiles/required_libs.dir/lib/engine_graphics.cpp.o" \
 "CMakeFiles/required_libs.dir/lib/engine_init.cpp.o" \
 "CMakeFiles/required_libs.dir/lib/error_setup.cpp.o" \
+"CMakeFiles/required_libs.dir/lib/memory_allocator.cpp.o" \
 "CMakeFiles/required_libs.dir/lib/queue.cpp.o" \
 "CMakeFiles/required_libs.dir/lib/swapchain_support.cpp.o"
 
@@ -181,11 +195,12 @@ librequired_libs.a: CMakeFiles/required_libs.dir/lib/engine_draw.cpp.o
 librequired_libs.a: CMakeFiles/required_libs.dir/lib/engine_graphics.cpp.o
 librequired_libs.a: CMakeFiles/required_libs.dir/lib/engine_init.cpp.o
 librequired_libs.a: CMakeFiles/required_libs.dir/lib/error_setup.cpp.o
+librequired_libs.a: CMakeFiles/required_libs.dir/lib/memory_allocator.cpp.o
 librequired_libs.a: CMakeFiles/required_libs.dir/lib/queue.cpp.o
 librequired_libs.a: CMakeFiles/required_libs.dir/lib/swapchain_support.cpp.o
 librequired_libs.a: CMakeFiles/required_libs.dir/build.make
 librequired_libs.a: CMakeFiles/required_libs.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/ganidhu/Desktop/vulkan-render-engine/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Linking CXX static library librequired_libs.a"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/ganidhu/Desktop/vulkan-render-engine/CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Linking CXX static library librequired_libs.a"
 	$(CMAKE_COMMAND) -P CMakeFiles/required_libs.dir/cmake_clean_target.cmake
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/required_libs.dir/link.txt --verbose=$(VERBOSE)
 

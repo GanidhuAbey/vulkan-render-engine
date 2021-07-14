@@ -10,6 +10,7 @@ set(CMAKE_DEPENDS_CHECK_CXX
   "/home/ganidhu/Desktop/vulkan-render-engine/lib/engine_graphics.cpp" "/home/ganidhu/Desktop/vulkan-render-engine/CMakeFiles/required_libs.dir/lib/engine_graphics.cpp.o"
   "/home/ganidhu/Desktop/vulkan-render-engine/lib/engine_init.cpp" "/home/ganidhu/Desktop/vulkan-render-engine/CMakeFiles/required_libs.dir/lib/engine_init.cpp.o"
   "/home/ganidhu/Desktop/vulkan-render-engine/lib/error_setup.cpp" "/home/ganidhu/Desktop/vulkan-render-engine/CMakeFiles/required_libs.dir/lib/error_setup.cpp.o"
+  "/home/ganidhu/Desktop/vulkan-render-engine/lib/memory_allocator.cpp" "/home/ganidhu/Desktop/vulkan-render-engine/CMakeFiles/required_libs.dir/lib/memory_allocator.cpp.o"
   "/home/ganidhu/Desktop/vulkan-render-engine/lib/queue.cpp" "/home/ganidhu/Desktop/vulkan-render-engine/CMakeFiles/required_libs.dir/lib/queue.cpp.o"
   "/home/ganidhu/Desktop/vulkan-render-engine/lib/swapchain_support.cpp" "/home/ganidhu/Desktop/vulkan-render-engine/CMakeFiles/required_libs.dir/lib/swapchain_support.cpp.o"
   )

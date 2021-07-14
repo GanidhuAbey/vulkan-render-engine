@@ -8,23 +8,11 @@ namespace draw {
         return false;
     }
 
-    uint32_t EngineDraw::findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties) {
-        VkPhysicalDeviceMemoryProperties memoryProperties;
-        vkGetPhysicalDeviceMemoryProperties(engineInit->physicalDevice, &memoryProperties);
-
-        //uint32_t suitableMemoryForBuffer = 0;
-        for (uint32_t i = 0; i < memoryProperties.memoryTypeCount; i++) {
-            if (typeFilter & (1 << i) && (memoryProperties.memoryTypes[i].propertyFlags & properties == properties)) {
-                return i;
-            }
-        }
-        throw std::runtime_error("could not find appropriate memory type");
-
-    }
-
-    void EngineDraw::initialize(std::vector<data::Vertex2D> vertices, graphics::EngineGraphics* userGraphics, create::EngineInit* userInit, uint32_t primitiveCount) {
+    void EngineDraw::initialize(std::vector<data::Vertex2D> vertices, graphics::EngineGraphics* userGraphics, mem::MemoryPool* userPool, 
+        create::EngineInit* userInit, uint32_t primitiveCount) {
         engGraphics = userGraphics;
         engineInit =  userInit;
+        memoryPool = userPool;
         //check if pipeline exists
         if (checkPipelineSuitability(primitiveCount)) {
             //create new graphics pipeline
@@ -33,9 +21,9 @@ namespace draw {
         //TODO: can save a lot of performance by doing a check for if the vertex buffer has the same memory allocated, but lets
         //      first see what the performance would look like to see how viable this method is
 
-        //check if vertex buffer exists and if its appropriate
+        //check if vertex buffer exists and if its appropriates
         VkDeviceSize bufferSize = sizeof(vertices[0]) * vertices.size();
-        createVertexBuffer(vertices, bufferSize, &vertexBuffer, &vertexMemory);
+        createVertexBuffer(vertices, bufferSize, &vertexBuffer, &gpuMemory);
         
         engGraphics->createCommandBuffers(vertexBuffer, vertices);
         engGraphics->drawFrame();
@@ -45,15 +33,16 @@ namespace draw {
         //std::cout << "draw destruction..." << std::endl;
         vkDeviceWaitIdle(engineInit->device);
 
-        vkFreeMemory(engineInit->device, vertexMemory, nullptr);
-        vkDestroyBuffer(engineInit->device, vertexBuffer, nullptr);
+        memoryPool->deallocate(engineInit->device, vertexBuffer, gpuMemory);
 
         //engGraphics->cleanupRender();
     }
 
     //TODO: put output variables as the last parameters
-    void EngineDraw::createBuffer(VkBuffer* buffer, VkDeviceMemory* memory, VkDeviceSize bufferSize, VkBufferUsageFlags usage,
-        VkMemoryPropertyFlags properties) {
+    mem::MemoryPool::MemoryData EngineDraw::createBuffer(VkBuffer* buffer, VkDeviceSize bufferSize, VkBufferUsageFlags usage,
+    VkMemoryPropertyFlags properties) {
+        
+        
         create::QueueData indices(engineInit->physicalDevice, engineInit->surface);
 
         VkBufferCreateInfo bufferInfo{};
@@ -74,53 +63,43 @@ namespace draw {
             throw std::runtime_error("could not create vertex buffer");
         }
 
-        //get memory requirements for buffer
-        VkMemoryRequirements memRequirements;
-        vkGetBufferMemoryRequirements(engineInit->device, *buffer, &memRequirements);
+        mem::MemoryPool::MemoryData memoryData = memoryPool->allocate(engineInit->physicalDevice, engineInit->device, properties, *buffer);
 
-        //allocate memory for buffer
-        VkMemoryAllocateInfo memoryInfo{};
-        memoryInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
-        memoryInfo.allocationSize = memRequirements.size;
-        //too lazy to even check if this exists will do later TODO
-        memoryInfo.memoryTypeIndex = findMemoryType(memRequirements.memoryTypeBits, properties);
+        //now bind buffer and pass this data further back to the create vertex buffer function
+        if (vkBindBufferMemory(engineInit->device, *buffer, memoryData.memory, memoryData.offset) != VK_SUCCESS) {
+            throw std::runtime_error("could not bind allocated memory to buffer");
+        }
 
-        if (vkAllocateMemory(engineInit->device, &memoryInfo, nullptr, memory) != VK_SUCCESS) {
-            throw std::runtime_error("could not allocate memory for memory");
-        }
-        if (vkBindBufferMemory(engineInit->device, *buffer, *memory, 0) != VK_SUCCESS) {
-            throw std::runtime_error("could not bind memory to buffer");
-        }
+        return memoryData;
     }
 
-    void EngineDraw::createVertexBuffer(std::vector<data::Vertex2D> vertices, VkDeviceSize bufferSize, VkBuffer* vertexBuffer, VkDeviceMemory* vertexMemory) {
+    void EngineDraw::createVertexBuffer(std::vector<data::Vertex2D> vertices, VkDeviceSize bufferSize, VkBuffer* vertexBuffer, mem::MemoryPool::MemoryData* gpuMemory) {
         //create CPU accesible buffer
         VkBuffer cpuVertexBuffer;
-        VkDeviceMemory cpuVertexMemory;
 
         //the source transfer bit allows this buffer to transfer its data to other buffers that have the destination bit flag.
-        createBuffer(&cpuVertexBuffer, &cpuVertexMemory, bufferSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT | VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, 
+        mem::MemoryPool::MemoryData cpuMemory = createBuffer(&cpuVertexBuffer, bufferSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT | VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, 
         VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
 
         void* data;
         //now i should have done everything needed to attach memory to the buffer.
-        if (vkMapMemory(engineInit->device, cpuVertexMemory, 0, bufferSize, 0, &data) != VK_SUCCESS) {
+        if (vkMapMemory(engineInit->device, cpuMemory.memory, cpuMemory.offset, bufferSize, 0, &data) != VK_SUCCESS) {
             throw std::runtime_error("could not attach data to vertex memory");
         }
         memcpy(data, vertices.data(), bufferSize);
-        vkUnmapMemory(engineInit->device, cpuVertexMemory);
+        vkUnmapMemory(engineInit->device, cpuMemory.memory);
 
         //the transfer usage flag specifies that the buffer can be the destination of a transfer command
         //you can essentially copy data from other buffers into this buffer.
 
         //the property usage flag designates that only the gpu can read and write to this buffer, the cpu cannot touch this buffer in anyway.
-        createBuffer(vertexBuffer, vertexMemory, bufferSize, VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
+        *gpuMemory = createBuffer(vertexBuffer, bufferSize, VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_VERTEX_BUFFER_BIT,
+        VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
 
         engGraphics->copyBuffer(cpuVertexBuffer, *vertexBuffer, bufferSize);
 
         //destroy temporary buffer
-        vkFreeMemory(engineInit->device, cpuVertexMemory, nullptr);
-        vkDestroyBuffer(engineInit->device, cpuVertexBuffer, nullptr);
+        memoryPool->deallocate(engineInit->device, cpuVertexBuffer, cpuMemory);
     }
 
 }

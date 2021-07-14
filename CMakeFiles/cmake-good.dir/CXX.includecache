@@ -25,6 +25,8 @@ engine_graphics.hpp
 /home/ganidhu/Desktop/vulkan-render-engine/inc/engine_graphics.hpp
 engine_draw.hpp
 /home/ganidhu/Desktop/vulkan-render-engine/inc/engine_draw.hpp
+memory_allocator.hpp
+/home/ganidhu/Desktop/vulkan-render-engine/inc/memory_allocator.hpp
 data_formats.hpp
 /home/ganidhu/Desktop/vulkan-render-engine/inc/data_formats.hpp
 glm/glm.hpp
@@ -39,6 +41,8 @@ engine_graphics.hpp
 /home/ganidhu/Desktop/vulkan-render-engine/inc/engine_graphics.hpp
 queue.hpp
 /home/ganidhu/Desktop/vulkan-render-engine/inc/queue.hpp
+memory_allocator.hpp
+/home/ganidhu/Desktop/vulkan-render-engine/inc/memory_allocator.hpp
 vector
 -
 
@@ -94,6 +98,22 @@ map
 GLFW/glfw3.h
 -
 iostream
+-
+
+/home/ganidhu/Desktop/vulkan-render-engine/inc/memory_allocator.hpp
+GLFW/glfw3.h
+-
+engine_graphics.hpp
+/home/ganidhu/Desktop/vulkan-render-engine/inc/engine_graphics.hpp
+stdexcept
+-
+iostream
+-
+vector
+-
+math.h
+-
+algorithm
 -
 
 /home/ganidhu/Desktop/vulkan-render-engine/inc/queue.hpp

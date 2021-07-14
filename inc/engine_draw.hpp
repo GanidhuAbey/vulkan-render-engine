@@ -7,6 +7,7 @@
 
 #include "engine_graphics.hpp"
 #include "queue.hpp"
+#include "memory_allocator.hpp"
 
 #include <vector>
 
@@ -15,18 +16,22 @@ class EngineDraw {
     private:
         create::EngineInit* engineInit;
         graphics::EngineGraphics* engGraphics;
+        mem::MemoryPool* memoryPool;
 
         VkBuffer vertexBuffer;
-        VkDeviceMemory vertexMemory;
+        //instead of a vertex memory we'll hold this to manage the memory of the vertex buffer
+        mem::MemoryPool::MemoryData gpuMemory;
 
     public:
-        void initialize(std::vector<data::Vertex2D> vertices, graphics::EngineGraphics* userGraphics, create::EngineInit* userInit, uint32_t primitiveCount);
+        void initialize(std::vector<data::Vertex2D> vertices, graphics::EngineGraphics* userGraphics, mem::MemoryPool* userPool, 
+        create::EngineInit* userInit, uint32_t primitiveCount);
         ~EngineDraw();
 
     private:
         bool checkPipelineSuitability(uint32_t primitiveCount);
-        void createBuffer(VkBuffer* buffer, VkDeviceMemory* memory, VkDeviceSize bufferSize, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties);
-        void createVertexBuffer(std::vector<data::Vertex2D> vertices, VkDeviceSize bufferSize, VkBuffer* vertexBuffer, VkDeviceMemory* vertexMemory);
+        mem::MemoryPool::MemoryData createBuffer(VkBuffer* buffer, VkDeviceSize bufferSize, VkBufferUsageFlags usage,
+        VkMemoryPropertyFlags properties);
+        void createVertexBuffer(std::vector<data::Vertex2D> vertices, VkDeviceSize bufferSize, VkBuffer* vertexBuffer, mem::MemoryPool::MemoryData* gpuMemory);
         uint32_t findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties);
 };
 }
