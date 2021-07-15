@@ -16,6 +16,20 @@ GLFW/glfw3.h
 error_setup.hpp
 /home/ganidhu/Desktop/vulkan-render-engine/inc/error_setup.hpp
 
+/home/ganidhu/Desktop/vulkan-render-engine/inc/engine_draw.hpp
+GLFW/glfw3.h
+-
+data_formats.hpp
+/home/ganidhu/Desktop/vulkan-render-engine/inc/data_formats.hpp
+engine_graphics.hpp
+/home/ganidhu/Desktop/vulkan-render-engine/inc/engine_graphics.hpp
+queue.hpp
+/home/ganidhu/Desktop/vulkan-render-engine/inc/queue.hpp
+memory_allocator.hpp
+/home/ganidhu/Desktop/vulkan-render-engine/inc/memory_allocator.hpp
+vector
+-
+
 /home/ganidhu/Desktop/vulkan-render-engine/inc/engine_graphics.hpp
 GLFW/glfw3.h
 -
@@ -102,7 +116,7 @@ GLFW/glfw3.h
 vector
 -
 
-/home/ganidhu/Desktop/vulkan-render-engine/lib/memory_allocator.cpp
-../inc/memory_allocator.hpp
-/home/ganidhu/Desktop/vulkan-render-engine/inc/memory_allocator.hpp
+/home/ganidhu/Desktop/vulkan-render-engine/lib/engine_draw.cpp
+../inc/engine_draw.hpp
+/home/ganidhu/Desktop/vulkan-render-engine/inc/engine_draw.hpp
 

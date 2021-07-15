@@ -28,7 +28,7 @@ struct MaMemory {
     VkDeviceMemory memoryHandle;
     std::vector<VkDeviceSize> sizes;
     std::vector<VkDeviceSize> offsets;
-    VkDeviceSize alignmentMultiple;
+    VkDeviceSize alignmentMultiple = 0;
 };
 
 struct MaMemoryData {

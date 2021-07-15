@@ -4,41 +4,41 @@
 #define GLFW_INCLUDE_VULKAN
 #include <GLFW/glfw3.h>
 
-namespace create {
-    EngWindow::~EngWindow() {
-        //std::cout << "window destruction..." << std::endl;
-        glfwDestroyWindow(window);
-        glfwTerminate();
+using namespace create;
+
+EngWindow::~EngWindow() {
+    std::cout << "window destruction..." << std::endl;
+    glfwDestroyWindow(window);
+    glfwTerminate();
+}
+
+GLFWwindow* EngWindow::initWindow(int w, int h, const char* name) {
+    width = w;
+    height = h;
+    title = name;
+
+    glfwInit();
+    glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
+    
+    if (enableValidationLayers) {
+        glfwSetErrorCallback(debug::glfwErrorCallback);
     }
 
-    GLFWwindow* EngWindow::initWindow(int w, int h, const char* name) {
-        width = w;
-        height = h;
-        title = name;
+    //create window
+    window = glfwCreateWindow(width, height, title, nullptr,  nullptr);
 
-        glfwInit();
-        glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
-        
-        if (enableValidationLayers) {
-            glfwSetErrorCallback(debug::glfwErrorCallback);
-        }
+    return window;
+}
 
-        //create window
-        window = glfwCreateWindow(width, height, title, nullptr,  nullptr);
+//=======================================================================
+//user interact functions
+//closeRequest() - returns true when user makes request to close window
+//                 abstraction of the glfw functions for user.
+//parameters:
+//  NONE
+//returns : bool - user window close request
+bool EngWindow::closeRequest() {
+    glfwPollEvents();
 
-        return window;
-    }
-
-    //=======================================================================
-    //user interact functions
-    //closeRequest() - returns true when user makes request to close window
-    //                 abstraction of the glfw functions for user.
-    //parameters:
-    //  NONE
-    //returns : bool - user window close request
-    bool EngWindow::closeRequest() {
-        glfwPollEvents();
-
-        return glfwWindowShouldClose(window);
-    }
+    return glfwWindowShouldClose(window);
 }

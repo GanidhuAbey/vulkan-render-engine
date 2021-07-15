@@ -86,7 +86,7 @@ VkMemoryPropertyFlags properties) {
     memoryInfo.memoryProperties = properties;
     memoryInfo.queueFamilyIndexCount = indices.graphicsFamily.value();
 
-    mem::MaMemory memoryObj;
+    mem::MaMemory memoryObj{};
     mem::maCreateMemory(engInit.physicalDevice, engInit.device, &memoryInfo, buffer, &memoryObj);
 
     return memoryObj;
