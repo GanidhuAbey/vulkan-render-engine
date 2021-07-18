@@ -4,20 +4,22 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
-  "/home/ganidhu/Desktop/vulkan-render-engine/lib/eng_window.cpp" "/home/ganidhu/Desktop/vulkan-render-engine/CMakeFiles/required_libs.dir/lib/eng_window.cpp.o"
-  "/home/ganidhu/Desktop/vulkan-render-engine/lib/engine.cpp" "/home/ganidhu/Desktop/vulkan-render-engine/CMakeFiles/required_libs.dir/lib/engine.cpp.o"
-  "/home/ganidhu/Desktop/vulkan-render-engine/lib/engine_draw.cpp" "/home/ganidhu/Desktop/vulkan-render-engine/CMakeFiles/required_libs.dir/lib/engine_draw.cpp.o"
-  "/home/ganidhu/Desktop/vulkan-render-engine/lib/engine_graphics.cpp" "/home/ganidhu/Desktop/vulkan-render-engine/CMakeFiles/required_libs.dir/lib/engine_graphics.cpp.o"
-  "/home/ganidhu/Desktop/vulkan-render-engine/lib/engine_init.cpp" "/home/ganidhu/Desktop/vulkan-render-engine/CMakeFiles/required_libs.dir/lib/engine_init.cpp.o"
-  "/home/ganidhu/Desktop/vulkan-render-engine/lib/error_setup.cpp" "/home/ganidhu/Desktop/vulkan-render-engine/CMakeFiles/required_libs.dir/lib/error_setup.cpp.o"
-  "/home/ganidhu/Desktop/vulkan-render-engine/lib/memory_allocator.cpp" "/home/ganidhu/Desktop/vulkan-render-engine/CMakeFiles/required_libs.dir/lib/memory_allocator.cpp.o"
-  "/home/ganidhu/Desktop/vulkan-render-engine/lib/queue.cpp" "/home/ganidhu/Desktop/vulkan-render-engine/CMakeFiles/required_libs.dir/lib/queue.cpp.o"
-  "/home/ganidhu/Desktop/vulkan-render-engine/lib/swapchain_support.cpp" "/home/ganidhu/Desktop/vulkan-render-engine/CMakeFiles/required_libs.dir/lib/swapchain_support.cpp.o"
+  "/home/ganidhu/Desktop/old_engine/vulkan-render-engine/lib/eng_window.cpp" "/home/ganidhu/Desktop/old_engine/vulkan-render-engine/CMakeFiles/required_libs.dir/lib/eng_window.cpp.o"
+  "/home/ganidhu/Desktop/old_engine/vulkan-render-engine/lib/engine.cpp" "/home/ganidhu/Desktop/old_engine/vulkan-render-engine/CMakeFiles/required_libs.dir/lib/engine.cpp.o"
+  "/home/ganidhu/Desktop/old_engine/vulkan-render-engine/lib/engine_draw.cpp" "/home/ganidhu/Desktop/old_engine/vulkan-render-engine/CMakeFiles/required_libs.dir/lib/engine_draw.cpp.o"
+  "/home/ganidhu/Desktop/old_engine/vulkan-render-engine/lib/engine_graphics.cpp" "/home/ganidhu/Desktop/old_engine/vulkan-render-engine/CMakeFiles/required_libs.dir/lib/engine_graphics.cpp.o"
+  "/home/ganidhu/Desktop/old_engine/vulkan-render-engine/lib/engine_init.cpp" "/home/ganidhu/Desktop/old_engine/vulkan-render-engine/CMakeFiles/required_libs.dir/lib/engine_init.cpp.o"
+  "/home/ganidhu/Desktop/old_engine/vulkan-render-engine/lib/error_setup.cpp" "/home/ganidhu/Desktop/old_engine/vulkan-render-engine/CMakeFiles/required_libs.dir/lib/error_setup.cpp.o"
+  "/home/ganidhu/Desktop/old_engine/vulkan-render-engine/lib/game_objects.cpp" "/home/ganidhu/Desktop/old_engine/vulkan-render-engine/CMakeFiles/required_libs.dir/lib/game_objects.cpp.o"
+  "/home/ganidhu/Desktop/old_engine/vulkan-render-engine/lib/memory_allocator.cpp" "/home/ganidhu/Desktop/old_engine/vulkan-render-engine/CMakeFiles/required_libs.dir/lib/memory_allocator.cpp.o"
+  "/home/ganidhu/Desktop/old_engine/vulkan-render-engine/lib/queue.cpp" "/home/ganidhu/Desktop/old_engine/vulkan-render-engine/CMakeFiles/required_libs.dir/lib/queue.cpp.o"
+  "/home/ganidhu/Desktop/old_engine/vulkan-render-engine/lib/swapchain_support.cpp" "/home/ganidhu/Desktop/old_engine/vulkan-render-engine/CMakeFiles/required_libs.dir/lib/swapchain_support.cpp.o"
   )
 set(CMAKE_CXX_COMPILER_ID "GNU")
 
 # The include file search paths:
 set(CMAKE_CXX_TARGET_INCLUDE_PATH
+  "build/../inc"
   )
 
 # Targets to which this target links.

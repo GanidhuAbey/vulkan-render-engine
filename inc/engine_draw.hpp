@@ -17,13 +17,12 @@ class EngineDraw {
         create::EngineInit* engineInit;
         graphics::EngineGraphics* engGraphics;
         mem::MaMemory* memory;
-        mem::MaMemoryData memoryData;
 
     public:
-        void initialize(std::vector<data::Vertex2D> vertices, graphics::EngineGraphics* userGraphics, create::EngineInit* userInit, 
-        VkBuffer* vertexBuffer, mem::MaMemory* gpuMemory);
+        void initialize(std::vector<data::Vertex2D> vertices, std::vector<uint16_t> indices, VkBuffer indexBuffer, 
+        graphics::EngineGraphics* userGraphics, create::EngineInit* userInit, VkBuffer* vertexBuffer, mem::MaMemory* gpuMemory);
         ~EngineDraw();
-        void render(std::vector<data::Vertex2D> vertices, mem::MaMemory* gpuMemory);
+        void render(void* data, VkDeviceSize dataSize, mem::MaMemory* memory);
 
     private:
         bool checkPipelineSuitability(uint32_t primitiveCount);

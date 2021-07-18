@@ -8,6 +8,7 @@ CMakeFiles/cmake-good.dir/main.cpp.o: inc/engine_draw.hpp
 CMakeFiles/cmake-good.dir/main.cpp.o: inc/engine_graphics.hpp
 CMakeFiles/cmake-good.dir/main.cpp.o: inc/engine_init.hpp
 CMakeFiles/cmake-good.dir/main.cpp.o: inc/error_setup.hpp
+CMakeFiles/cmake-good.dir/main.cpp.o: inc/game_objects.hpp
 CMakeFiles/cmake-good.dir/main.cpp.o: inc/memory_allocator.hpp
 CMakeFiles/cmake-good.dir/main.cpp.o: inc/queue.hpp
 CMakeFiles/cmake-good.dir/main.cpp.o: inc/swapchain_support.hpp

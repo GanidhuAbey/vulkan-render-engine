@@ -3,7 +3,7 @@
 #define GLFW_INCLUDE_VULKAN
 #include <GLFW/glfw3.h>
 
-#include "engine_graphics.hpp"
+//#include "engine_graphics.hpp"
 
 #include <stdexcept>
 #include <iostream>
@@ -17,6 +17,7 @@
 
 namespace mem {
 struct MaMemoryInfo {
+    VkDeviceSize bufferSize;
     VkDeviceSize allocationSize;
     VkBufferUsageFlags bufferUsage;
     VkMemoryPropertyFlags memoryProperties;

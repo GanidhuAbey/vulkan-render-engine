@@ -2,7 +2,9 @@ cmake_minimum_required(VERSION 3.16.3)
 project(renderEngine VERSION 1.0.0)
 
 set(CMAKE_CXX_STANDARD 17)
+SET(QTCP_PROJECT_DIR ../)
 
+include_directories(inc/)
 file(GLOB SOURCES lib/*.cpp)
 
 #engine composer
@@ -21,13 +23,13 @@ find_library(
     GLFW
 )
 
-add_executable(cmake-good main.cpp)
+add_executable(main main.cpp)
 
 
 
-target_link_libraries(cmake-good PRIVATE required_libs)
-target_link_libraries(cmake-good PRIVATE vulkan)
-target_link_libraries(cmake-good PRIVATE glfw)
+target_link_libraries(main PRIVATE required_libs)
+target_link_libraries(main PRIVATE vulkan)
+target_link_libraries(main PRIVATE glfw)
 
 
 

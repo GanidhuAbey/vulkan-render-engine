@@ -2,14 +2,16 @@
 
 using namespace draw;
 
+/*
 bool EngineDraw::checkPipelineSuitability(uint32_t primitiveCount) {
     if (&engGraphics->graphicsPipeline == nullptr || engGraphics->bindingCount < primitiveCount)  {
         return true;
     }
     return false;
 }
+*/
 
-void EngineDraw::initialize(std::vector<data::Vertex2D> vertices, graphics::EngineGraphics* userGraphics, create::EngineInit* userInit, 
+void EngineDraw::initialize(std::vector<data::Vertex2D> vertices, std::vector<uint16_t> indices, VkBuffer indexBuffer, graphics::EngineGraphics* userGraphics, create::EngineInit* userInit, 
 VkBuffer* vertexBuffer, mem::MaMemory* gpuMemory) {
     
     engGraphics = userGraphics;
@@ -20,9 +22,10 @@ VkBuffer* vertexBuffer, mem::MaMemory* gpuMemory) {
     //      first see what the performance would look like to see how viable this method is
 
     //allocate vertices into given buffer
-    render(vertices, gpuMemory);
+    //render(vertices.data(), sizeof(vertices[0]) * vertices.size(), gpuMemory);
+
+    //std::cout << "so this works?" << std::endl;
     
-    engGraphics->createCommandBuffers(*vertexBuffer, vertices);
     engGraphics->drawFrame();
 
 }
@@ -30,13 +33,14 @@ EngineDraw::~EngineDraw() {
     //std::cout << "draw destruction..." << std::endl;
     //vkDeviceWaitIdle(engineInit->device);
 
-    mem::maFreeMemory(memory, memoryData);
+    //mem::maFreeMemory(memory, memoryData);
 
     //memoryPool->deallocate(engineInit->device, vertexBuffer, gpuMemory);
 
     //engGraphics->cleanupRender();
 }
 
+/*
 void EngineDraw::render(std::vector<data::Vertex2D> vertices, mem::MaMemory* gpuMemory) {
     //allocate memory
     *gpuMemory = mem::maAllocateMemory(*gpuMemory, sizeof(vertices[0]) * vertices.size(), &memoryData);
@@ -49,3 +53,4 @@ void EngineDraw::render(std::vector<data::Vertex2D> vertices, mem::MaMemory* gpu
     memcpy(data, vertices.data(), memoryData.resourceSize);
     vkUnmapMemory(engineInit->device, memoryData.memoryHandle);
 }
+*/

@@ -48,10 +48,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/ganidhu/Desktop/vulkan-render-engine
+CMAKE_SOURCE_DIR = /home/ganidhu/Desktop/old_engine/vulkan-render-engine
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/ganidhu/Desktop/vulkan-render-engine/build
+CMAKE_BINARY_DIR = /home/ganidhu/Desktop/old_engine/vulkan-render-engine/build
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -80,9 +80,9 @@ edit_cache/fast: edit_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/ganidhu/Desktop/vulkan-render-engine/build/CMakeFiles /home/ganidhu/Desktop/vulkan-render-engine/build/CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/ganidhu/Desktop/old_engine/vulkan-render-engine/build/CMakeFiles /home/ganidhu/Desktop/old_engine/vulkan-render-engine/build/CMakeFiles/progress.marks
 	$(MAKE) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/ganidhu/Desktop/vulkan-render-engine/build/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/ganidhu/Desktop/old_engine/vulkan-render-engine/build/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
@@ -111,17 +111,17 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named cmake-good
+# Target rules for targets named main
 
 # Build rule for target.
-cmake-good: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 cmake-good
-.PHONY : cmake-good
+main: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 main
+.PHONY : main
 
 # fast build rule for target.
-cmake-good/fast:
-	$(MAKE) -f CMakeFiles/cmake-good.dir/build.make CMakeFiles/cmake-good.dir/build
-.PHONY : cmake-good/fast
+main/fast:
+	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/build
+.PHONY : main/fast
 
 #=============================================================================
 # Target rules for targets named required_libs
@@ -298,6 +298,33 @@ lib/error_setup.cpp.s:
 	$(MAKE) -f CMakeFiles/required_libs.dir/build.make CMakeFiles/required_libs.dir/lib/error_setup.cpp.s
 .PHONY : lib/error_setup.cpp.s
 
+lib/game_objects.o: lib/game_objects.cpp.o
+
+.PHONY : lib/game_objects.o
+
+# target to build an object file
+lib/game_objects.cpp.o:
+	$(MAKE) -f CMakeFiles/required_libs.dir/build.make CMakeFiles/required_libs.dir/lib/game_objects.cpp.o
+.PHONY : lib/game_objects.cpp.o
+
+lib/game_objects.i: lib/game_objects.cpp.i
+
+.PHONY : lib/game_objects.i
+
+# target to preprocess a source file
+lib/game_objects.cpp.i:
+	$(MAKE) -f CMakeFiles/required_libs.dir/build.make CMakeFiles/required_libs.dir/lib/game_objects.cpp.i
+.PHONY : lib/game_objects.cpp.i
+
+lib/game_objects.s: lib/game_objects.cpp.s
+
+.PHONY : lib/game_objects.s
+
+# target to generate assembly for a file
+lib/game_objects.cpp.s:
+	$(MAKE) -f CMakeFiles/required_libs.dir/build.make CMakeFiles/required_libs.dir/lib/game_objects.cpp.s
+.PHONY : lib/game_objects.cpp.s
+
 lib/memory_allocator.o: lib/memory_allocator.cpp.o
 
 .PHONY : lib/memory_allocator.o
@@ -385,7 +412,7 @@ main.o: main.cpp.o
 
 # target to build an object file
 main.cpp.o:
-	$(MAKE) -f CMakeFiles/cmake-good.dir/build.make CMakeFiles/cmake-good.dir/main.cpp.o
+	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/main.cpp.o
 .PHONY : main.cpp.o
 
 main.i: main.cpp.i
@@ -394,7 +421,7 @@ main.i: main.cpp.i
 
 # target to preprocess a source file
 main.cpp.i:
-	$(MAKE) -f CMakeFiles/cmake-good.dir/build.make CMakeFiles/cmake-good.dir/main.cpp.i
+	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/main.cpp.i
 .PHONY : main.cpp.i
 
 main.s: main.cpp.s
@@ -403,7 +430,7 @@ main.s: main.cpp.s
 
 # target to generate assembly for a file
 main.cpp.s:
-	$(MAKE) -f CMakeFiles/cmake-good.dir/build.make CMakeFiles/cmake-good.dir/main.cpp.s
+	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/main.cpp.s
 .PHONY : main.cpp.s
 
 # Help Target
@@ -414,7 +441,7 @@ help:
 	@echo "... depend"
 	@echo "... rebuild_cache"
 	@echo "... edit_cache"
-	@echo "... cmake-good"
+	@echo "... main"
 	@echo "... required_libs"
 	@echo "... lib/eng_window.o"
 	@echo "... lib/eng_window.i"
@@ -434,6 +461,9 @@ help:
 	@echo "... lib/error_setup.o"
 	@echo "... lib/error_setup.i"
 	@echo "... lib/error_setup.s"
+	@echo "... lib/game_objects.o"
+	@echo "... lib/game_objects.i"
+	@echo "... lib/game_objects.s"
 	@echo "... lib/memory_allocator.o"
 	@echo "... lib/memory_allocator.i"
 	@echo "... lib/memory_allocator.s"

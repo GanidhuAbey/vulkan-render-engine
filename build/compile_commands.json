@@ -1,52 +1,57 @@
 [
 {
-  "directory": "/home/ganidhu/Desktop/vulkan-render-engine/build",
-  "command": "/bin/x86_64-linux-gnu-g++-9    -g   -std=gnu++17 -o CMakeFiles/cmake-good.dir/main.cpp.o -c /home/ganidhu/Desktop/vulkan-render-engine/main.cpp",
-  "file": "/home/ganidhu/Desktop/vulkan-render-engine/main.cpp"
+  "directory": "/home/ganidhu/Desktop/old_engine/vulkan-render-engine/build",
+  "command": "/bin/x86_64-linux-gnu-g++-9   -I/home/ganidhu/Desktop/old_engine/vulkan-render-engine/inc  -g   -std=gnu++17 -o CMakeFiles/main.dir/main.cpp.o -c /home/ganidhu/Desktop/old_engine/vulkan-render-engine/main.cpp",
+  "file": "/home/ganidhu/Desktop/old_engine/vulkan-render-engine/main.cpp"
 },
 {
-  "directory": "/home/ganidhu/Desktop/vulkan-render-engine/build",
-  "command": "/bin/x86_64-linux-gnu-g++-9    -g   -std=gnu++17 -o CMakeFiles/required_libs.dir/lib/eng_window.cpp.o -c /home/ganidhu/Desktop/vulkan-render-engine/lib/eng_window.cpp",
-  "file": "/home/ganidhu/Desktop/vulkan-render-engine/lib/eng_window.cpp"
+  "directory": "/home/ganidhu/Desktop/old_engine/vulkan-render-engine/build",
+  "command": "/bin/x86_64-linux-gnu-g++-9   -I/home/ganidhu/Desktop/old_engine/vulkan-render-engine/inc  -g   -std=gnu++17 -o CMakeFiles/required_libs.dir/lib/eng_window.cpp.o -c /home/ganidhu/Desktop/old_engine/vulkan-render-engine/lib/eng_window.cpp",
+  "file": "/home/ganidhu/Desktop/old_engine/vulkan-render-engine/lib/eng_window.cpp"
 },
 {
-  "directory": "/home/ganidhu/Desktop/vulkan-render-engine/build",
-  "command": "/bin/x86_64-linux-gnu-g++-9    -g   -std=gnu++17 -o CMakeFiles/required_libs.dir/lib/engine.cpp.o -c /home/ganidhu/Desktop/vulkan-render-engine/lib/engine.cpp",
-  "file": "/home/ganidhu/Desktop/vulkan-render-engine/lib/engine.cpp"
+  "directory": "/home/ganidhu/Desktop/old_engine/vulkan-render-engine/build",
+  "command": "/bin/x86_64-linux-gnu-g++-9   -I/home/ganidhu/Desktop/old_engine/vulkan-render-engine/inc  -g   -std=gnu++17 -o CMakeFiles/required_libs.dir/lib/engine.cpp.o -c /home/ganidhu/Desktop/old_engine/vulkan-render-engine/lib/engine.cpp",
+  "file": "/home/ganidhu/Desktop/old_engine/vulkan-render-engine/lib/engine.cpp"
 },
 {
-  "directory": "/home/ganidhu/Desktop/vulkan-render-engine/build",
-  "command": "/bin/x86_64-linux-gnu-g++-9    -g   -std=gnu++17 -o CMakeFiles/required_libs.dir/lib/engine_draw.cpp.o -c /home/ganidhu/Desktop/vulkan-render-engine/lib/engine_draw.cpp",
-  "file": "/home/ganidhu/Desktop/vulkan-render-engine/lib/engine_draw.cpp"
+  "directory": "/home/ganidhu/Desktop/old_engine/vulkan-render-engine/build",
+  "command": "/bin/x86_64-linux-gnu-g++-9   -I/home/ganidhu/Desktop/old_engine/vulkan-render-engine/inc  -g   -std=gnu++17 -o CMakeFiles/required_libs.dir/lib/engine_draw.cpp.o -c /home/ganidhu/Desktop/old_engine/vulkan-render-engine/lib/engine_draw.cpp",
+  "file": "/home/ganidhu/Desktop/old_engine/vulkan-render-engine/lib/engine_draw.cpp"
 },
 {
-  "directory": "/home/ganidhu/Desktop/vulkan-render-engine/build",
-  "command": "/bin/x86_64-linux-gnu-g++-9    -g   -std=gnu++17 -o CMakeFiles/required_libs.dir/lib/engine_graphics.cpp.o -c /home/ganidhu/Desktop/vulkan-render-engine/lib/engine_graphics.cpp",
-  "file": "/home/ganidhu/Desktop/vulkan-render-engine/lib/engine_graphics.cpp"
+  "directory": "/home/ganidhu/Desktop/old_engine/vulkan-render-engine/build",
+  "command": "/bin/x86_64-linux-gnu-g++-9   -I/home/ganidhu/Desktop/old_engine/vulkan-render-engine/inc  -g   -std=gnu++17 -o CMakeFiles/required_libs.dir/lib/engine_graphics.cpp.o -c /home/ganidhu/Desktop/old_engine/vulkan-render-engine/lib/engine_graphics.cpp",
+  "file": "/home/ganidhu/Desktop/old_engine/vulkan-render-engine/lib/engine_graphics.cpp"
 },
 {
-  "directory": "/home/ganidhu/Desktop/vulkan-render-engine/build",
-  "command": "/bin/x86_64-linux-gnu-g++-9    -g   -std=gnu++17 -o CMakeFiles/required_libs.dir/lib/engine_init.cpp.o -c /home/ganidhu/Desktop/vulkan-render-engine/lib/engine_init.cpp",
-  "file": "/home/ganidhu/Desktop/vulkan-render-engine/lib/engine_init.cpp"
+  "directory": "/home/ganidhu/Desktop/old_engine/vulkan-render-engine/build",
+  "command": "/bin/x86_64-linux-gnu-g++-9   -I/home/ganidhu/Desktop/old_engine/vulkan-render-engine/inc  -g   -std=gnu++17 -o CMakeFiles/required_libs.dir/lib/engine_init.cpp.o -c /home/ganidhu/Desktop/old_engine/vulkan-render-engine/lib/engine_init.cpp",
+  "file": "/home/ganidhu/Desktop/old_engine/vulkan-render-engine/lib/engine_init.cpp"
 },
 {
-  "directory": "/home/ganidhu/Desktop/vulkan-render-engine/build",
-  "command": "/bin/x86_64-linux-gnu-g++-9    -g   -std=gnu++17 -o CMakeFiles/required_libs.dir/lib/error_setup.cpp.o -c /home/ganidhu/Desktop/vulkan-render-engine/lib/error_setup.cpp",
-  "file": "/home/ganidhu/Desktop/vulkan-render-engine/lib/error_setup.cpp"
+  "directory": "/home/ganidhu/Desktop/old_engine/vulkan-render-engine/build",
+  "command": "/bin/x86_64-linux-gnu-g++-9   -I/home/ganidhu/Desktop/old_engine/vulkan-render-engine/inc  -g   -std=gnu++17 -o CMakeFiles/required_libs.dir/lib/error_setup.cpp.o -c /home/ganidhu/Desktop/old_engine/vulkan-render-engine/lib/error_setup.cpp",
+  "file": "/home/ganidhu/Desktop/old_engine/vulkan-render-engine/lib/error_setup.cpp"
 },
 {
-  "directory": "/home/ganidhu/Desktop/vulkan-render-engine/build",
-  "command": "/bin/x86_64-linux-gnu-g++-9    -g   -std=gnu++17 -o CMakeFiles/required_libs.dir/lib/memory_allocator.cpp.o -c /home/ganidhu/Desktop/vulkan-render-engine/lib/memory_allocator.cpp",
-  "file": "/home/ganidhu/Desktop/vulkan-render-engine/lib/memory_allocator.cpp"
+  "directory": "/home/ganidhu/Desktop/old_engine/vulkan-render-engine/build",
+  "command": "/bin/x86_64-linux-gnu-g++-9   -I/home/ganidhu/Desktop/old_engine/vulkan-render-engine/inc  -g   -std=gnu++17 -o CMakeFiles/required_libs.dir/lib/game_objects.cpp.o -c /home/ganidhu/Desktop/old_engine/vulkan-render-engine/lib/game_objects.cpp",
+  "file": "/home/ganidhu/Desktop/old_engine/vulkan-render-engine/lib/game_objects.cpp"
 },
 {
-  "directory": "/home/ganidhu/Desktop/vulkan-render-engine/build",
-  "command": "/bin/x86_64-linux-gnu-g++-9    -g   -std=gnu++17 -o CMakeFiles/required_libs.dir/lib/queue.cpp.o -c /home/ganidhu/Desktop/vulkan-render-engine/lib/queue.cpp",
-  "file": "/home/ganidhu/Desktop/vulkan-render-engine/lib/queue.cpp"
+  "directory": "/home/ganidhu/Desktop/old_engine/vulkan-render-engine/build",
+  "command": "/bin/x86_64-linux-gnu-g++-9   -I/home/ganidhu/Desktop/old_engine/vulkan-render-engine/inc  -g   -std=gnu++17 -o CMakeFiles/required_libs.dir/lib/memory_allocator.cpp.o -c /home/ganidhu/Desktop/old_engine/vulkan-render-engine/lib/memory_allocator.cpp",
+  "file": "/home/ganidhu/Desktop/old_engine/vulkan-render-engine/lib/memory_allocator.cpp"
 },
 {
-  "directory": "/home/ganidhu/Desktop/vulkan-render-engine/build",
-  "command": "/bin/x86_64-linux-gnu-g++-9    -g   -std=gnu++17 -o CMakeFiles/required_libs.dir/lib/swapchain_support.cpp.o -c /home/ganidhu/Desktop/vulkan-render-engine/lib/swapchain_support.cpp",
-  "file": "/home/ganidhu/Desktop/vulkan-render-engine/lib/swapchain_support.cpp"
+  "directory": "/home/ganidhu/Desktop/old_engine/vulkan-render-engine/build",
+  "command": "/bin/x86_64-linux-gnu-g++-9   -I/home/ganidhu/Desktop/old_engine/vulkan-render-engine/inc  -g   -std=gnu++17 -o CMakeFiles/required_libs.dir/lib/queue.cpp.o -c /home/ganidhu/Desktop/old_engine/vulkan-render-engine/lib/queue.cpp",
+  "file": "/home/ganidhu/Desktop/old_engine/vulkan-render-engine/lib/queue.cpp"
+},
+{
+  "directory": "/home/ganidhu/Desktop/old_engine/vulkan-render-engine/build",
+  "command": "/bin/x86_64-linux-gnu-g++-9   -I/home/ganidhu/Desktop/old_engine/vulkan-render-engine/inc  -g   -std=gnu++17 -o CMakeFiles/required_libs.dir/lib/swapchain_support.cpp.o -c /home/ganidhu/Desktop/old_engine/vulkan-render-engine/lib/swapchain_support.cpp",
+  "file": "/home/ganidhu/Desktop/old_engine/vulkan-render-engine/lib/swapchain_support.cpp"
 }
 ]

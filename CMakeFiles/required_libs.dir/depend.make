@@ -16,6 +16,7 @@ CMakeFiles/required_libs.dir/lib/engine.cpp.o: inc/memory_allocator.hpp
 CMakeFiles/required_libs.dir/lib/engine.cpp.o: inc/queue.hpp
 CMakeFiles/required_libs.dir/lib/engine.cpp.o: inc/swapchain_support.hpp
 CMakeFiles/required_libs.dir/lib/engine.cpp.o: lib/engine.cpp
+CMakeFiles/required_libs.dir/lib/engine.cpp.o: inc/common.hpp
 
 CMakeFiles/required_libs.dir/lib/engine_draw.cpp.o: inc/data_formats.hpp
 CMakeFiles/required_libs.dir/lib/engine_draw.cpp.o: inc/eng_window.hpp
@@ -33,6 +34,7 @@ CMakeFiles/required_libs.dir/lib/engine_graphics.cpp.o: inc/eng_window.hpp
 CMakeFiles/required_libs.dir/lib/engine_graphics.cpp.o: inc/engine_graphics.hpp
 CMakeFiles/required_libs.dir/lib/engine_graphics.cpp.o: inc/engine_init.hpp
 CMakeFiles/required_libs.dir/lib/engine_graphics.cpp.o: inc/error_setup.hpp
+CMakeFiles/required_libs.dir/lib/engine_graphics.cpp.o: inc/memory_allocator.hpp
 CMakeFiles/required_libs.dir/lib/engine_graphics.cpp.o: inc/queue.hpp
 CMakeFiles/required_libs.dir/lib/engine_graphics.cpp.o: inc/swapchain_support.hpp
 CMakeFiles/required_libs.dir/lib/engine_graphics.cpp.o: lib/engine_graphics.cpp
@@ -48,14 +50,21 @@ CMakeFiles/required_libs.dir/lib/engine_init.cpp.o: lib/engine_init.cpp
 CMakeFiles/required_libs.dir/lib/error_setup.cpp.o: inc/error_setup.hpp
 CMakeFiles/required_libs.dir/lib/error_setup.cpp.o: lib/error_setup.cpp
 
-CMakeFiles/required_libs.dir/lib/memory_allocator.cpp.o: inc/data_formats.hpp
-CMakeFiles/required_libs.dir/lib/memory_allocator.cpp.o: inc/eng_window.hpp
-CMakeFiles/required_libs.dir/lib/memory_allocator.cpp.o: inc/engine_graphics.hpp
-CMakeFiles/required_libs.dir/lib/memory_allocator.cpp.o: inc/engine_init.hpp
-CMakeFiles/required_libs.dir/lib/memory_allocator.cpp.o: inc/error_setup.hpp
+CMakeFiles/required_libs.dir/lib/game_objects.cpp.o: inc/eng_window.hpp
+CMakeFiles/required_libs.dir/lib/game_objects.cpp.o: inc/engine.hpp
+CMakeFiles/required_libs.dir/lib/game_objects.cpp.o: inc/engine_draw.hpp
+CMakeFiles/required_libs.dir/lib/game_objects.cpp.o: inc/engine_graphics.hpp
+CMakeFiles/required_libs.dir/lib/game_objects.cpp.o: inc/engine_init.hpp
+CMakeFiles/required_libs.dir/lib/game_objects.cpp.o: inc/error_setup.hpp
+CMakeFiles/required_libs.dir/lib/game_objects.cpp.o: inc/game_objects.hpp
+CMakeFiles/required_libs.dir/lib/game_objects.cpp.o: inc/memory_allocator.hpp
+CMakeFiles/required_libs.dir/lib/game_objects.cpp.o: inc/queue.hpp
+CMakeFiles/required_libs.dir/lib/game_objects.cpp.o: inc/swapchain_support.hpp
+CMakeFiles/required_libs.dir/lib/game_objects.cpp.o: lib/game_objects.cpp
+CMakeFiles/required_libs.dir/lib/game_objects.cpp.o: inc/common.hpp
+CMakeFiles/required_libs.dir/lib/game_objects.cpp.o: inc/data_formats.hpp
+
 CMakeFiles/required_libs.dir/lib/memory_allocator.cpp.o: inc/memory_allocator.hpp
-CMakeFiles/required_libs.dir/lib/memory_allocator.cpp.o: inc/queue.hpp
-CMakeFiles/required_libs.dir/lib/memory_allocator.cpp.o: inc/swapchain_support.hpp
 CMakeFiles/required_libs.dir/lib/memory_allocator.cpp.o: lib/memory_allocator.cpp
 
 CMakeFiles/required_libs.dir/lib/queue.cpp.o: inc/queue.hpp

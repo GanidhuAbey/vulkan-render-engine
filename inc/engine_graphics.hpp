@@ -6,14 +6,18 @@
 #include "swapchain_support.hpp"
 #include "queue.hpp"
 #include "data_formats.hpp"
+#include "memory_allocator.hpp"
 
 #include "engine_init.hpp"
 
 #include <cstdlib>
 #include <algorithm>
 #include <fstream>
+#include <chrono>
 
-#include "glm/glm.hpp"
+#define GLM_FORCE_RADIANS
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
 const int MAX_FRAMES_IN_FLIGHT = 2;
 
@@ -23,11 +27,16 @@ class EngineGraphics {
     public:
         VkPipeline graphicsPipeline;
         uint32_t bindingCount = 1;
-        VkBuffer vertexBuffer;
-        VkDeviceMemory vertexMemory;
         uint32_t bufferSize = 0;
         std::vector<data::Vertex2D> oldVertices;
         std::vector<VkCommandBuffer> commandBuffers;
+
+        struct UniformBufferObject {
+            glm::mat4 translation;
+        };
+
+        UniformBufferObject ubo{};
+
     private:
         VkFormat swapChainImageFormat;
         VkExtent2D swapChainExtent;
@@ -43,6 +52,9 @@ class EngineGraphics {
 
         uint32_t attributeCount = 2;
 
+        VkDescriptorSetLayout setLayout;
+        VkDescriptorPool descriptorPool;
+        std::vector<VkDescriptorSet> descriptorSet;
         VkPipelineLayout pipelineLayout;
 
         std::vector<VkFramebuffer> swapChainFramebuffers;
@@ -61,6 +73,14 @@ class EngineGraphics {
         //energy
         std::vector<VkFence> imagesInFlight;
 
+        std::vector<VkBuffer> uniformBuffers;
+        std::vector<mem::MaMemory> uniformMemories;
+
+        std::vector<data::Vertex2D> verts;
+        std::vector<uint16_t> indexes;
+
+        
+
     private:
         void recreateSwapChain();
         void cleanupSwapChain(bool destroyAll);
@@ -71,6 +91,7 @@ class EngineGraphics {
         VkPresentModeKHR chooseSwapChainPresentation(const std::vector<VkPresentModeKHR>& availablePresentations);
         VkExtent2D chooseSwapExtent(const VkSurfaceCapabilitiesKHR& capabilities);
         void fillRequiredValues(VkPhysicalDevice physicalDeviceUser, VkDevice deviceUser, VkSurfaceKHR surfaceUser);
+        void updateUniformBuffers(uint32_t nextImage);
 
     public:
         //EngineGraphics(EngineInit* initEngine);
@@ -81,16 +102,19 @@ class EngineGraphics {
         void createSwapChain(); //
         void createImageViews(); //
         void createRenderPass(); //
+        void createDescriptorSetLayout();
+        void createUniformBuffer();
+        void createDescriptorPools();
         void createGraphicsPipeline(); //
         void createFrameBuffers(); //
         void createSemaphores();
         void createFences();
 
     public:
-        void createCommandBuffers(VkBuffer buffer, std::vector<data::Vertex2D> vertices);
+        void createCommandBuffers(VkBuffer buffer, VkBuffer indexBuffer, std::vector<data::Vertex2D> vertices, std::vector<uint16_t> indices);
         void drawFrame();
-        void cleanupRender();
         void copyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size);
+        void createDescriptorSets(VkBuffer buffer);
 };
 
 }

@@ -1,4 +1,5 @@
 #include "../inc/engine_graphics.hpp"
+#include "common.hpp"
 
 using namespace graphics;
 
@@ -18,7 +19,7 @@ void EngineGraphics::recreateSwapChain() {
     createRenderPass(); //
     //createGraphicsPipeline(); //
     createFrameBuffers(); //
-    //createCommandBuffers(); //
+    createCommandBuffers(vertexBuffer, indexBuffer, vertices, indices); //
 }
 
 void EngineGraphics::cleanupSwapChain(bool destroyAll) {
@@ -146,8 +147,12 @@ void EngineGraphics::initialize(create::EngineInit* initEngine) {
     createImageViews(); //
     createRenderPass(); //
     //createVertexBuffer();
+    createDescriptorSetLayout();
     createGraphicsPipeline(); //
     createFrameBuffers(); //
+    createUniformBuffer();
+    createDescriptorPools();
+    createDescriptorSets(uniformBuffers[0]);
     //createCommandBuffers();
     createSemaphores();
     createFences();
@@ -157,6 +162,13 @@ EngineGraphics::~EngineGraphics() {
     vkDeviceWaitIdle(engineInit->device);
 
     std::cout << "graphics destruction..." << std::endl;
+
+    vkDestroyDescriptorPool(engineInit->device, descriptorPool, nullptr);
+    vkDestroyDescriptorSetLayout(engineInit->device, setLayout,  nullptr);
+
+    for (size_t i = 0; i < uniformBuffers.size(); ++i) {
+        mem::maDestroyMemory(engineInit->device, uniformMemories[i], uniformBuffers[i]);
+    }
 
     //vkFreeMemory(engineInit->device, vertexMemory, nullptr);
     //vkDestroyBuffer(engineInit->device, vertexBuffer, nullptr);
@@ -169,7 +181,7 @@ EngineGraphics::~EngineGraphics() {
     for (const auto& imageView : swapChainImageViews) {
         vkDestroyImageView(engineInit->device, imageView, nullptr);
     }
-    
+
     //TODO: rewriting code here already found in cleanupSwapChain()
 
     vkDestroySwapchainKHR(engineInit->device, swapChain, nullptr);
@@ -185,15 +197,6 @@ EngineGraphics::~EngineGraphics() {
 
 
     //delete engineInit;
-}
-
-void EngineGraphics::cleanupRender() {
-    vkDeviceWaitIdle(engineInit->device);
-
-    vkFreeMemory(engineInit->device, vertexMemory, nullptr);
-    vkDestroyBuffer(engineInit->device, vertexBuffer, nullptr);
-
-    vkFreeCommandBuffers(engineInit->device, engineInit->commandPool, static_cast<uint32_t>(commandBuffers.size()), commandBuffers.data());
 }
 
 void EngineGraphics::createSwapChain() {
@@ -362,10 +365,118 @@ void EngineGraphics::createRenderPass() {
 
 }
 
+void EngineGraphics::createDescriptorSetLayout() {
+    VkDescriptorSetLayoutBinding uboLayoutBinding{};
+    uboLayoutBinding.binding = 0;
+    uboLayoutBinding.descriptorCount = 1;
+    uboLayoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+    uboLayoutBinding.stageFlags = VK_SHADER_STAGE_VERTEX_BIT;
+    uboLayoutBinding.pImmutableSamplers = nullptr;
+
+    VkDescriptorSetLayoutCreateInfo layoutInfo{};
+    layoutInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
+    layoutInfo.bindingCount = 1;
+    layoutInfo.pBindings = &uboLayoutBinding;
+
+    if (vkCreateDescriptorSetLayout(engineInit->device, &layoutInfo, nullptr, &setLayout) != VK_SUCCESS) {
+        throw std::runtime_error("could not create descriptor set");
+    }
+
+}
+
+void EngineGraphics::createUniformBuffer() {
+    create::QueueData indices(engineInit->physicalDevice, engineInit->surface);
+
+    VkDeviceSize bufferSize = sizeof(UniformBufferObject);
+
+    uniformBuffers.resize(swapChainImages.size());
+    uniformMemories.resize(swapChainImages.size());
+
+    mem::MaMemoryInfo memoryInfo{};
+    memoryInfo.allocationSize = bufferSize;
+    memoryInfo.bufferUsage = VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT;
+    memoryInfo.memoryProperties = VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT;
+    memoryInfo.queueFamilyIndexCount = indices.graphicsFamily.value();
+
+    for (size_t i = 0; i < swapChainImages.size(); i++) {
+        mem::maCreateMemory(engineInit->physicalDevice, engineInit->device, &memoryInfo, &uniformBuffers[i], &uniformMemories[i]);
+    }
+
+    /*
+    mem::MaMemoryData memoryData{};
+    uniformMemory = mem::maAllocateMemory(uniformMemory, sizeof(UniformBufferObject), &memoryData);
+
+    
+    ubo.translation = {
+        {1.0, 0.0, 0.0},
+        {0.0, 1.0, 0.0},
+        {0.0, 0.0, 1.0}
+    };
+
+    void* pData;
+    if (vkMapMemory(engineInit->device, memoryData.memoryHandle, memoryData.offset, memoryData.resourceSize, 0, &pData) != VK_SUCCESS) {
+        throw std::runtime_error("could not attach data to vertex memory");
+    }
+    memcpy(pData, &ubo, sizeof(ubo));
+    vkUnmapMemory(engineInit->device, memoryData.memoryHandle);
+    */
+}
+
+void EngineGraphics::createDescriptorPools() {
+    VkDescriptorPoolSize poolSize{};
+    poolSize.type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+    poolSize.descriptorCount = static_cast<uint32_t>(swapChainImages.size());
+
+    VkDescriptorPoolCreateInfo poolInfo{};
+    poolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
+    poolInfo.poolSizeCount = 1;
+    poolInfo.pPoolSizes = &poolSize;
+    poolInfo.maxSets = static_cast<uint32_t>(swapChainImages.size());
+    //poolInfo.flags = 0;
+
+
+    if (vkCreateDescriptorPool(engineInit->device, &poolInfo, nullptr, &descriptorPool) != VK_SUCCESS) {
+        throw std::runtime_error("failed to create descriptor pool!");
+    }
+}
+
+void EngineGraphics::createDescriptorSets(VkBuffer buffer) {
+    std::vector<VkDescriptorSetLayout> layouts(swapChainImages.size(), setLayout);
+
+    VkDescriptorSetAllocateInfo allocateInfo{};
+    allocateInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
+    allocateInfo.descriptorPool = descriptorPool;
+    allocateInfo.descriptorSetCount = static_cast<uint32_t>(swapChainImages.size());
+    allocateInfo.pSetLayouts = layouts.data();
+
+    descriptorSet.resize(swapChainImages.size());
+    if (vkAllocateDescriptorSets(engineInit->device, &allocateInfo, descriptorSet.data()) != VK_SUCCESS) {
+        throw std::runtime_error("failed to allocate descriptor sets!");
+    }
+
+    for (size_t i = 0; i < swapChainImages.size(); i++) {
+        VkDescriptorBufferInfo bufferInfo{};
+        bufferInfo.buffer = uniformBuffers[i];
+        bufferInfo.offset = 0;
+        bufferInfo.range = sizeof(UniformBufferObject);
+
+        VkWriteDescriptorSet writeInfo{};
+        writeInfo.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+        writeInfo.dstBinding = 0;
+        writeInfo.dstSet = descriptorSet[i];
+        writeInfo.descriptorCount = 1;
+        writeInfo.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+        writeInfo.pBufferInfo = &bufferInfo;
+        writeInfo.dstArrayElement = 0;
+
+        vkUpdateDescriptorSets(engineInit->device, 1, &writeInfo, 0, nullptr);
+    }
+}
+
 void EngineGraphics::createGraphicsPipeline()  {
     //load in the appropriate shader code for a triangle
-    auto vertShaderCode = readFile("shaders/spirv/vert.spv");
-    auto fragShaderCode = readFile("shaders/spirv/frag.spv");
+    auto vertShaderCode = readFile("shaders/vert.spv");
+    auto fragShaderCode = readFile("shaders/frag.spv");
 
     //convert the shader code into a vulkan object
     VkShaderModule vertShader = createShaderModule(vertShaderCode);
@@ -487,6 +598,8 @@ void EngineGraphics::createGraphicsPipeline()  {
 
     VkPipelineLayoutCreateInfo pipelineLayoutInfo{};
     pipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
+    pipelineLayoutInfo.setLayoutCount = 1;
+    pipelineLayoutInfo.pSetLayouts = &setLayout;
 
     if (vkCreatePipelineLayout(engineInit->device, &pipelineLayoutInfo, nullptr, &pipelineLayout) != VK_SUCCESS) {
         throw std::runtime_error("could not create pipeline layout");
@@ -598,7 +711,11 @@ void EngineGraphics::copyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDevice
     vkFreeCommandBuffers(engineInit->device, engineInit->commandPool, 1, &transferBuffer);
 }
 
-void EngineGraphics::createCommandBuffers(VkBuffer buffer, std::vector<data::Vertex2D> vertices) {
+void EngineGraphics::createCommandBuffers(VkBuffer buffer, VkBuffer indexBuffer, std::vector<data::Vertex2D> vertices, std::vector<uint16_t> indices) {
+    //store these vertices data for resize
+    verts = vertices;
+    indexes = indices;
+
     //allocate memory for command buffer, you have to create a draw command for each image
     commandBuffers.resize(swapChainFramebuffers.size());
     
@@ -660,7 +777,10 @@ void EngineGraphics::createCommandBuffers(VkBuffer buffer, std::vector<data::Ver
         //time for the draw calls
         const VkDeviceSize offsets[] = {0, 8};
         vkCmdBindVertexBuffers(commandBuffers[i], 0, 1, &buffer, offsets);
-        vkCmdDraw(commandBuffers[i], (int) vertices.size(), 1, 0, 0);
+        vkCmdBindIndexBuffer(commandBuffers[i], indexBuffer, 0, VK_INDEX_TYPE_UINT16);
+        vkCmdBindDescriptorSets(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, 0, 1, &descriptorSet[i], 0, nullptr);
+        //vkCmdDraw(commandBuffers[i], (int) vertices.size(), 1, 0, 0);
+        vkCmdDrawIndexed(commandBuffers[i], static_cast<uint32_t>(indices.size()), 1, 0, 0, 0);
 
         vkCmdEndRenderPass(commandBuffers[i]);
 
@@ -701,6 +821,25 @@ void EngineGraphics::createFences() {
     }
 }
 
+void EngineGraphics::updateUniformBuffers(uint32_t nextImage) {
+    static auto startTime = std::chrono::high_resolution_clock::now();
+
+    auto currentTime = std::chrono::high_resolution_clock::now();
+    float time = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - startTime).count();
+    //can define 
+    //ubo.model = glm::rotate(glm::mat4(1.0f), time * glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+    //ubo.view = glm::lookAt(glm::vec3(2.0f, 2.0f, 2.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+    //ubo.proj = glm::perspective(glm::radians(45.0f), swapChainExtent.width / (float) swapChainExtent.height, 0.1f, 10.0f);
+    //ubo.proj[1][1] *= -1;
+
+    //std::cout << ubo.translation[2][0] << std::endl;
+
+    void* data;
+    vkMapMemory(engineInit->device, uniformMemories[nextImage].memoryHandle, 0, sizeof(ubo), 0, &data);
+        memcpy(data, &ubo, sizeof(ubo));
+    vkUnmapMemory(engineInit->device, uniformMemories[nextImage].memoryHandle);
+}
+
 void EngineGraphics::drawFrame() {
     //don't bother drawing frames when the window isn't there
     if (glfwGetWindowAttrib(engineInit->window, GLFW_ICONIFIED) == 1) {
@@ -723,6 +862,8 @@ void EngineGraphics::drawFrame() {
     else if (result != VK_SUCCESS) {
         throw std::runtime_error("could not aquire image from swapchain");
     }
+
+    updateUniformBuffers(nextImage);
 
     if (imagesInFlight[nextImage] != VK_NULL_HANDLE) {
         vkWaitForFences(engineInit->device, 1, &imagesInFlight[nextImage], VK_TRUE, UINT64_MAX);

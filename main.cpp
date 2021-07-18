@@ -1,4 +1,5 @@
 #include "inc/engine.hpp"
+#include "inc/game_objects.hpp"
 
 #include <chrono>
 #include <iostream>
@@ -10,15 +11,28 @@ int main() {
     //initialize engine
     create::Engine engine(WIDTH, HEIGHT, "hello world");
     
+    //create square object
+    gameObject::Square square(WIDTH/2, HEIGHT/2, 50, Color(0.4, 0.5, 0.1), &engine);
+
+    //engine.Rect(WIDTH/2, HEIGHT/2, 50, 50, Color(0.4, 0.5, 0.1));
+    float xTranslate = 0;
+    int frameCount = 0;
     while (!engine.userWindow.closeRequest()) {
         auto t1 = std::chrono::high_resolution_clock::now();
-        engine.drawRect(0, 0, 50, 50, Color(0.4, 0.5, 0.1));
         //std::cout << window.closeRequest() << std::endl;
         engine.clearScreen();
         auto t2 = std::chrono::high_resolution_clock::now();
 
+        square.translate(xTranslate, 0);
+        //std::cout << "n" << std::endl;
+
+        engine.draw();
+
         std::chrono::duration<double, std::milli> ms_double = t2 - t1;
-        std::cout << "frametime: " << ms_double.count() << "ms" << std::endl;
+
+        xTranslate += 0.1;
+
+        frameCount++;
     }
     //vkDeviceWaitIdle(device);
 
