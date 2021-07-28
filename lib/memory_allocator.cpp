@@ -80,8 +80,6 @@ MaMemory mem::maAllocateMemory(MaMemory maMemory, VkDeviceSize resourceSize, MaM
             break;
         }
     }
-<<<<<<< HEAD
-<<<<<<< HEAD
     //if pool found is false, then the buffer can't fit anymore data
 
     memoryData->memoryHandle = maMemory.memoryHandle;
@@ -99,22 +97,6 @@ MaMemory mem::maAllocateMemory(MaMemory maMemory, VkDeviceSize resourceSize, MaM
     //std::cout << "resource size: " <<  resourceSize <<  std::endl;
     //std::cout << "offset size: " << maMemory.offsets[0] << std::endl;
 
-=======
-=======
->>>>>>> 287851c9b52ae4d54f326ba993a64f7c3be3d4c9
-
-    memoryData->memoryHandle = maMemory.memoryHandle;
-    memoryData->offset = maMemory.offsets[memoryIndex];
-    memoryData->resourceSize = resourceSize;
-    memoryData->offsetIndex = memoryIndex;
-
-    maMemory.offsets[memoryIndex] += floor (memoryData->offset / maMemory.alignmentMultiple) * maMemory.alignmentMultiple;
-    maMemory.sizes[memoryIndex] -= resourceSize;
-
-<<<<<<< HEAD
->>>>>>> 287851c9b52ae4d54f326ba993a64f7c3be3d4c9
-=======
->>>>>>> 287851c9b52ae4d54f326ba993a64f7c3be3d4c9
     return maMemory;
 
 }

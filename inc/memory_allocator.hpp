@@ -30,14 +30,8 @@ struct MaMemory {
     std::vector<VkDeviceSize> sizes;
     std::vector<VkDeviceSize> offsets;
     VkDeviceSize alignmentMultiple = 0;
-<<<<<<< HEAD
-<<<<<<< HEAD
     VkDeviceSize alignmentOffset = 0;
     VkDeviceSize offsetAmt = 0;
-=======
->>>>>>> 287851c9b52ae4d54f326ba993a64f7c3be3d4c9
-=======
->>>>>>> 287851c9b52ae4d54f326ba993a64f7c3be3d4c9
 };
 
 struct MaMemoryData {

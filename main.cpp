@@ -12,8 +12,6 @@ int main() {
     create::Engine engine(WIDTH, HEIGHT, "hello world");
     
     //create square object
-<<<<<<< HEAD
-<<<<<<< HEAD
     gameObject::Cube cube(WIDTH/3, HEIGHT/4, 1, 100, Color(0.4, 0.5, 0.1), &engine);
     gameObject::Light light(0, 0, 1, Color(1.0, 1.0, 1.0), &engine);
 
@@ -34,26 +32,6 @@ int main() {
         auto t2 = std::chrono::high_resolution_clock::now();
         //cube.rotate(angle);
         //square.rotate(angle);
-=======
-=======
->>>>>>> 287851c9b52ae4d54f326ba993a64f7c3be3d4c9
-    gameObject::Square square(WIDTH/2, HEIGHT/2, 50, Color(0.4, 0.5, 0.1), &engine);
-
-    //engine.Rect(WIDTH/2, HEIGHT/2, 50, 50, Color(0.4, 0.5, 0.1));
-    float xTranslate = 0;
-    int frameCount = 0;
-    while (!engine.userWindow.closeRequest()) {
-        auto t1 = std::chrono::high_resolution_clock::now();
-        //std::cout << window.closeRequest() << std::endl;
-        engine.clearScreen();
-        auto t2 = std::chrono::high_resolution_clock::now();
-
-        square.translate(xTranslate, 0);
-        //std::cout << "n" << std::endl;
-<<<<<<< HEAD
->>>>>>> 287851c9b52ae4d54f326ba993a64f7c3be3d4c9
-=======
->>>>>>> 287851c9b52ae4d54f326ba993a64f7c3be3d4c9
 
         engine.draw();
 
@@ -62,15 +40,9 @@ int main() {
         xTranslate += 0.1;
 
         frameCount++;
-<<<<<<< HEAD
-<<<<<<< HEAD
         angle += 0.001;
         //std::cout << frameCount << std::endl;
         //std::cout << ms_double.count() << std::endl;
-=======
->>>>>>> 287851c9b52ae4d54f326ba993a64f7c3be3d4c9
-=======
->>>>>>> 287851c9b52ae4d54f326ba993a64f7c3be3d4c9
     }
     //vkDeviceWaitIdle(device);
 

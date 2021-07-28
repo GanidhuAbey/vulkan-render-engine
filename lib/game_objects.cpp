@@ -1,7 +1,5 @@
 #include "../inc/game_objects.hpp"
 #include "common.hpp"
-<<<<<<< HEAD
-<<<<<<< HEAD
 #include "math.h"
 
 #include "jpeglib.h"
@@ -10,14 +8,6 @@ using namespace gameObject;
 #pragma comment(lib, "libjpeg.lib")
 
 const int DEPTH_CONSTANT = 100;
-=======
-
-using namespace gameObject;
->>>>>>> 287851c9b52ae4d54f326ba993a64f7c3be3d4c9
-=======
-
-using namespace gameObject;
->>>>>>> 287851c9b52ae4d54f326ba993a64f7c3be3d4c9
 
 //Square GameObject  ------------------------------------------------------------------------------------------
 Square::Square(int x, int y, int s, Color c, create::Engine* eng) {
@@ -29,8 +19,6 @@ Square::Square(int x, int y, int s, Color c, create::Engine* eng) {
     float vulkanWidth = engine->screenToVulkan(s, engine->screenWidth, 0);
     float vulkanHeight = engine->screenToVulkan(s, engine->screenHeight, 0);
 
-<<<<<<< HEAD
-<<<<<<< HEAD
     //create appropriate vertices
     //TODO: sort out a method to combine vertices (resize vertices array from current length to add new vertices),
     //      then specify a offset so command buffer can draw all vertices properly.
@@ -49,27 +37,6 @@ Square::Square(int x, int y, int s, Color c, create::Engine* eng) {
     indexCount += indices.size();
     objectCount++;
 
-=======
-=======
->>>>>>> 287851c9b52ae4d54f326ba993a64f7c3be3d4c9
-    //std::cout << vulkanWidth << std::endl;
-
-    //create appropriate vertices
-    vertices = {
-        {{vulkanX - vulkanWidth, vulkanY - vulkanHeight}, {c.red, c.green, c.blue}},
-        {{vulkanX + vulkanWidth, vulkanY - vulkanHeight}, {c.red, c.green, c.blue}},
-        {{vulkanX + vulkanWidth, vulkanY + vulkanHeight}, {c.red, c.green, c.blue}},
-        {{vulkanX - vulkanWidth, vulkanY + vulkanHeight}, {c.red, c.green, c.blue}}
-    };
-
-    indices = {
-        0, 1, 2, 2, 3, 0
-    };
-
-<<<<<<< HEAD
->>>>>>> 287851c9b52ae4d54f326ba993a64f7c3be3d4c9
-=======
->>>>>>> 287851c9b52ae4d54f326ba993a64f7c3be3d4c9
     /*
     for (int i = 0; i < indices.size(); ++i) {
         std::cout << indices[i] << std::endl;
@@ -85,43 +52,21 @@ Square::Square(int x, int y, int s, Color c, create::Engine* eng) {
     }
     */
 
-<<<<<<< HEAD
-<<<<<<< HEAD
     /*
-=======
->>>>>>> 287851c9b52ae4d54f326ba993a64f7c3be3d4c9
-=======
->>>>>>> 287851c9b52ae4d54f326ba993a64f7c3be3d4c9
     engine->engGraphics.ubo.translation = glm::mat4(
         1.0, 0.0, 0.0, 0.0,
         0.0, 1.0, 0.0, 0.0,
         0.0, 0.0, 1.0, 0.0,
         0.0, 0.0, 0.0, 0.0
     );
-<<<<<<< HEAD
-<<<<<<< HEAD
     */
-=======
-
->>>>>>> 287851c9b52ae4d54f326ba993a64f7c3be3d4c9
-=======
-
->>>>>>> 287851c9b52ae4d54f326ba993a64f7c3be3d4c9
 
     //upload the vertices data over here instead
     engine->writeToBuffer(vertices.data(), sizeof(vertices[0]) * vertices.size(), &engine->gpuMemory);
     engine->writeToBuffer(indices.data(), sizeof(indices[0]) * indices.size(), &engine->indexMemory);
 
     //not sure if the best place to put this...
-<<<<<<< HEAD
-<<<<<<< HEAD
     engine->engGraphics.createCommandBuffers(vertexBuffer, indexBuffer, indexCount);
-=======
-    engine->engGraphics.createCommandBuffers(vertexBuffer, indexBuffer, vertices, indices);
->>>>>>> 287851c9b52ae4d54f326ba993a64f7c3be3d4c9
-=======
-    engine->engGraphics.createCommandBuffers(vertexBuffer, indexBuffer, vertices, indices);
->>>>>>> 287851c9b52ae4d54f326ba993a64f7c3be3d4c9
     //engine->engGraphics->createCommandBuffers(*vertexBuffer, indexBuffer, vertices, indices);
     
 }
@@ -132,8 +77,6 @@ Square::~Square() {
 
 void Square::translate(float x, float y) {
     //update the uniform buffer here
-<<<<<<< HEAD
-<<<<<<< HEAD
     float translateX = engine->screenToVulkan(x, engine->screenWidth, 0);
     float translateY = engine->screenToVulkan(y, engine->screenHeight, 0);
 
@@ -280,26 +223,3 @@ Light::Light(int x, int y, int z, Color c, create::Engine* eng) {
 }
 
 Light::~Light() {}
-=======
-=======
->>>>>>> 287851c9b52ae4d54f326ba993a64f7c3be3d4c9
-    float vulkanX = engine->screenToVulkan(x, engine->screenWidth, 0);
-    float vulkanY = engine->screenToVulkan(y, engine->screenHeight, 0);
-
-    engine->engGraphics.ubo.translation = glm::mat4(
-        1.0, 0.0, 0.0, 0.0,
-        0.0, 1.0, 0.0, 0.0,
-        vulkanX, vulkanY, 1.0, 0.0,
-        0.0, 0.0, 0.0, 0.0
-    );
-
-
-    //engine->engGraphics.updateUniformBuffers()
-}
-
-<<<<<<< HEAD
-//-------------------------------------------------------------------------------------------------------------
->>>>>>> 287851c9b52ae4d54f326ba993a64f7c3be3d4c9
-=======
-//-------------------------------------------------------------------------------------------------------------
->>>>>>> 287851c9b52ae4d54f326ba993a64f7c3be3d4c9
