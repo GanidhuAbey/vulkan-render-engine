@@ -1,0 +1,4 @@
+/home/ganidhu/Desktop/old_engine/vulkan-render-engine/CMakeFiles/rebuild_cache.dir
+/home/ganidhu/Desktop/old_engine/vulkan-render-engine/CMakeFiles/edit_cache.dir
+/home/ganidhu/Desktop/old_engine/vulkan-render-engine/CMakeFiles/main.dir
+/home/ganidhu/Desktop/old_engine/vulkan-render-engine/CMakeFiles/required_libs.dir

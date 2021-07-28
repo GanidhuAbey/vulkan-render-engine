@@ -1,0 +1,2 @@
+/usr/bin/ar qc libengine_window.a  CMakeFiles/engine_window.dir/lib/eng_window.cpp.o
+/usr/bin/ranlib libengine_window.a
