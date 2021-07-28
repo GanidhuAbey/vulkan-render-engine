@@ -12,7 +12,11 @@ bool EngineDraw::checkPipelineSuitability(uint32_t primitiveCount) {
 */
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 void EngineDraw::initialize(VkBuffer indexBuffer, graphics::EngineGraphics* userGraphics, create::EngineInit* userInit, 
+=======
+void EngineDraw::initialize(std::vector<data::Vertex2D> vertices, std::vector<uint16_t> indices, VkBuffer indexBuffer, graphics::EngineGraphics* userGraphics, create::EngineInit* userInit, 
+>>>>>>> 287851c9b52ae4d54f326ba993a64f7c3be3d4c9
 =======
 void EngineDraw::initialize(std::vector<data::Vertex2D> vertices, std::vector<uint16_t> indices, VkBuffer indexBuffer, graphics::EngineGraphics* userGraphics, create::EngineInit* userInit, 
 >>>>>>> 287851c9b52ae4d54f326ba993a64f7c3be3d4c9

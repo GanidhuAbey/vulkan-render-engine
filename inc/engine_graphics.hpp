@@ -33,6 +33,7 @@ class EngineGraphics {
 
         struct UniformBufferObject {
 <<<<<<< HEAD
+<<<<<<< HEAD
             glm::mat4 model;
             glm::mat4 view;
             glm::mat4 proj;
@@ -40,10 +41,15 @@ class EngineGraphics {
 
         std::vector<UniformBufferObject> ubos;
 =======
+=======
+>>>>>>> 287851c9b52ae4d54f326ba993a64f7c3be3d4c9
             glm::mat4 translation;
         };
 
         UniformBufferObject ubo{};
+<<<<<<< HEAD
+>>>>>>> 287851c9b52ae4d54f326ba993a64f7c3be3d4c9
+=======
 >>>>>>> 287851c9b52ae4d54f326ba993a64f7c3be3d4c9
 
     private:
@@ -54,8 +60,12 @@ class EngineGraphics {
 
         std::vector<VkImage> swapChainImages;
 <<<<<<< HEAD
+<<<<<<< HEAD
         std::vector<VkImageView> swapChainColorImageViews;
         std::vector<VkImageView> swapChainDepthImageViews;
+=======
+        std::vector<VkImageView> swapChainImageViews;
+>>>>>>> 287851c9b52ae4d54f326ba993a64f7c3be3d4c9
 =======
         std::vector<VkImageView> swapChainImageViews;
 >>>>>>> 287851c9b52ae4d54f326ba993a64f7c3be3d4c9
@@ -115,15 +125,21 @@ class EngineGraphics {
     private:
         void createSwapChain(); //
 <<<<<<< HEAD
+<<<<<<< HEAD
         std::vector<VkImage> createImages(size_t imageNum);
         void createImageViews(VkImageUsageFlags usage, VkFormat format);  //
         void createRenderPass(); //
         void createDescriptorSetLayout();
 =======
+=======
+>>>>>>> 287851c9b52ae4d54f326ba993a64f7c3be3d4c9
         void createImageViews(); //
         void createRenderPass(); //
         void createDescriptorSetLayout();
         void createUniformBuffer();
+<<<<<<< HEAD
+>>>>>>> 287851c9b52ae4d54f326ba993a64f7c3be3d4c9
+=======
 >>>>>>> 287851c9b52ae4d54f326ba993a64f7c3be3d4c9
         void createDescriptorPools();
         void createGraphicsPipeline(); //
@@ -133,16 +149,22 @@ class EngineGraphics {
 
     public:
 <<<<<<< HEAD
+<<<<<<< HEAD
         void createCommandBuffers(VkBuffer buffer, VkBuffer indexBuffer, size_t indexCount);
         void drawFrame();
         void copyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size);
         void createDescriptorSets(VkBuffer buffer);
         void createUniformBuffer(size_t bufferCount);
 =======
+=======
+>>>>>>> 287851c9b52ae4d54f326ba993a64f7c3be3d4c9
         void createCommandBuffers(VkBuffer buffer, VkBuffer indexBuffer, std::vector<data::Vertex2D> vertices, std::vector<uint16_t> indices);
         void drawFrame();
         void copyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size);
         void createDescriptorSets(VkBuffer buffer);
+<<<<<<< HEAD
+>>>>>>> 287851c9b52ae4d54f326ba993a64f7c3be3d4c9
+=======
 >>>>>>> 287851c9b52ae4d54f326ba993a64f7c3be3d4c9
 };
 

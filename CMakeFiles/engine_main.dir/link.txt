@@ -1,2 +1,0 @@
-/usr/bin/ar qc libengine_main.a  CMakeFiles/engine_main.dir/lib/engine.cpp.o
-/usr/bin/ranlib libengine_main.a

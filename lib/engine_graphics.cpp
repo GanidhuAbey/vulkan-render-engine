@@ -1,5 +1,9 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 #include "engine_graphics.hpp"
+=======
+#include "../inc/engine_graphics.hpp"
+>>>>>>> 287851c9b52ae4d54f326ba993a64f7c3be3d4c9
 =======
 #include "../inc/engine_graphics.hpp"
 >>>>>>> 287851c9b52ae4d54f326ba993a64f7c3be3d4c9
@@ -20,6 +24,7 @@ void EngineGraphics::recreateSwapChain() {
     //vkDestroyRenderPass(device, renderPass, nullptr);
 
 <<<<<<< HEAD
+<<<<<<< HEAD
     //createImageViews(&swapChainDepthImageViews, VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT, swapChainImageFormat); //create depth images
     createImageViews(VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT, swapChainImageFormat); //creates color images
     createRenderPass(); //
@@ -27,11 +32,16 @@ void EngineGraphics::recreateSwapChain() {
     createFrameBuffers(); //
     createCommandBuffers(vertexBuffer, indexBuffer, indexCount); //
 =======
+=======
+>>>>>>> 287851c9b52ae4d54f326ba993a64f7c3be3d4c9
     createImageViews(); //
     createRenderPass(); //
     //createGraphicsPipeline(); //
     createFrameBuffers(); //
     createCommandBuffers(vertexBuffer, indexBuffer, vertices, indices); //
+<<<<<<< HEAD
+>>>>>>> 287851c9b52ae4d54f326ba993a64f7c3be3d4c9
+=======
 >>>>>>> 287851c9b52ae4d54f326ba993a64f7c3be3d4c9
 }
 
@@ -43,9 +53,14 @@ void EngineGraphics::cleanupSwapChain(bool destroyAll) {
         vkDestroyFramebuffer(engineInit->device, framebuffer, nullptr);
     }
 <<<<<<< HEAD
+<<<<<<< HEAD
     for (size_t i = 0; i < swapChainImages.size(); i++) {
         vkDestroyImageView(engineInit->device, swapChainColorImageViews[i], nullptr);
         //vkDestroyImageView(engineInit->device, swapChainDepthImageViews[i], nullptr);
+=======
+    for (const auto& imageView : swapChainImageViews) {
+        vkDestroyImageView(engineInit->device, imageView, nullptr);
+>>>>>>> 287851c9b52ae4d54f326ba993a64f7c3be3d4c9
 =======
     for (const auto& imageView : swapChainImageViews) {
         vkDestroyImageView(engineInit->device, imageView, nullptr);
@@ -103,6 +118,12 @@ std::vector<char> EngineGraphics::readFile(const std::string& filename) {
     file.seekg(0);
     file.read(buffer.data(), fileSize);
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+
+    //std::cout << fileSize << std::endl;
+
+>>>>>>> 287851c9b52ae4d54f326ba993a64f7c3be3d4c9
 =======
 
     //std::cout << fileSize << std::endl;
@@ -114,7 +135,10 @@ std::vector<char> EngineGraphics::readFile(const std::string& filename) {
 }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 
+=======
+>>>>>>> 287851c9b52ae4d54f326ba993a64f7c3be3d4c9
 =======
 >>>>>>> 287851c9b52ae4d54f326ba993a64f7c3be3d4c9
 //Searches for the best available format (color space and color support for pixels)
@@ -171,8 +195,12 @@ void EngineGraphics::initialize(create::EngineInit* initEngine) {
 
     createSwapChain(); //
 <<<<<<< HEAD
+<<<<<<< HEAD
     //createImageViews(&swapChainDepthImageViews, VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT, swapChainImageFormat); //create depth images
     createImageViews(VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT, swapChainImageFormat); //creates color images
+=======
+    createImageViews(); //
+>>>>>>> 287851c9b52ae4d54f326ba993a64f7c3be3d4c9
 =======
     createImageViews(); //
 >>>>>>> 287851c9b52ae4d54f326ba993a64f7c3be3d4c9
@@ -182,7 +210,11 @@ void EngineGraphics::initialize(create::EngineInit* initEngine) {
     createGraphicsPipeline(); //
     createFrameBuffers(); //
 <<<<<<< HEAD
+<<<<<<< HEAD
     createUniformBuffer(2);
+=======
+    createUniformBuffer();
+>>>>>>> 287851c9b52ae4d54f326ba993a64f7c3be3d4c9
 =======
     createUniformBuffer();
 >>>>>>> 287851c9b52ae4d54f326ba993a64f7c3be3d4c9
@@ -214,9 +246,14 @@ EngineGraphics::~EngineGraphics() {
         vkDestroyFramebuffer(engineInit->device, framebuffer, nullptr);
     }
 <<<<<<< HEAD
+<<<<<<< HEAD
     for (size_t i = 0; i < swapChainImages.size(); i++) {
         vkDestroyImageView(engineInit->device, swapChainColorImageViews[i], nullptr);
         //vkDestroyImageView(engineInit->device, swapChainDepthImageViews[i], nullptr);
+=======
+    for (const auto& imageView : swapChainImageViews) {
+        vkDestroyImageView(engineInit->device, imageView, nullptr);
+>>>>>>> 287851c9b52ae4d54f326ba993a64f7c3be3d4c9
 =======
     for (const auto& imageView : swapChainImageViews) {
         vkDestroyImageView(engineInit->device, imageView, nullptr);
@@ -310,6 +347,7 @@ void EngineGraphics::createSwapChain() {
     swapChainExtent = extent;
 }
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 std::vector<VkImage> EngineGraphics::createImages(size_t imageNum) {
     std::vector<VkImage> images(imageNum);
@@ -343,6 +381,8 @@ void EngineGraphics::createImageViews(VkImageUsageFlags usage, VkFormat format) 
         createInfo.viewType = VK_IMAGE_VIEW_TYPE_2D;
         createInfo.format = format;
 =======
+=======
+>>>>>>> 287851c9b52ae4d54f326ba993a64f7c3be3d4c9
 void EngineGraphics::createImageViews() {
     swapChainImageViews.resize(swapChainImages.size());
 
@@ -353,6 +393,9 @@ void EngineGraphics::createImageViews() {
         createInfo.image = swapChainImages[i];
         createInfo.viewType = VK_IMAGE_VIEW_TYPE_2D;
         createInfo.format = swapChainImageFormat;
+<<<<<<< HEAD
+>>>>>>> 287851c9b52ae4d54f326ba993a64f7c3be3d4c9
+=======
 >>>>>>> 287851c9b52ae4d54f326ba993a64f7c3be3d4c9
 
         
@@ -373,7 +416,11 @@ void EngineGraphics::createImageViews() {
         createInfo.subresourceRange.layerCount = 1;
 
 <<<<<<< HEAD
+<<<<<<< HEAD
         if (vkCreateImageView(engineInit->device, &createInfo, nullptr, &swapChainColorImageViews[i]) != VK_SUCCESS) {
+=======
+        if (vkCreateImageView(engineInit->device, &createInfo, nullptr, &swapChainImageViews[i]) != VK_SUCCESS) {
+>>>>>>> 287851c9b52ae4d54f326ba993a64f7c3be3d4c9
 =======
         if (vkCreateImageView(engineInit->device, &createInfo, nullptr, &swapChainImageViews[i]) != VK_SUCCESS) {
 >>>>>>> 287851c9b52ae4d54f326ba993a64f7c3be3d4c9
@@ -382,8 +429,11 @@ void EngineGraphics::createImageViews() {
     }
 }
 <<<<<<< HEAD
+<<<<<<< HEAD
 //TODO: can most likely abstract the attachment creation process
 //NOTE: input attachments we feed into the shader must be bound to the pipeline in the descriptor set
+=======
+>>>>>>> 287851c9b52ae4d54f326ba993a64f7c3be3d4c9
 =======
 >>>>>>> 287851c9b52ae4d54f326ba993a64f7c3be3d4c9
 void EngineGraphics::createRenderPass() {
@@ -448,6 +498,10 @@ void EngineGraphics::createRenderPass() {
         throw std::runtime_error("could not create render pass");
     }
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+
+>>>>>>> 287851c9b52ae4d54f326ba993a64f7c3be3d4c9
 =======
 
 >>>>>>> 287851c9b52ae4d54f326ba993a64f7c3be3d4c9
@@ -471,6 +525,7 @@ void EngineGraphics::createDescriptorSetLayout() {
     }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
     
 
 }
@@ -481,13 +536,23 @@ void EngineGraphics::createUniformBuffer(size_t bufferCount) {
 
 void EngineGraphics::createUniformBuffer() {
 >>>>>>> 287851c9b52ae4d54f326ba993a64f7c3be3d4c9
+=======
+}
+
+void EngineGraphics::createUniformBuffer() {
+>>>>>>> 287851c9b52ae4d54f326ba993a64f7c3be3d4c9
     create::QueueData indices(engineInit->physicalDevice, engineInit->surface);
 
     VkDeviceSize bufferSize = sizeof(UniformBufferObject);
 
 <<<<<<< HEAD
+<<<<<<< HEAD
     uniformBuffers.resize(swapChainImages.size() * bufferCount);
     uniformMemories.resize(swapChainImages.size() * bufferCount);
+=======
+    uniformBuffers.resize(swapChainImages.size());
+    uniformMemories.resize(swapChainImages.size());
+>>>>>>> 287851c9b52ae4d54f326ba993a64f7c3be3d4c9
 =======
     uniformBuffers.resize(swapChainImages.size());
     uniformMemories.resize(swapChainImages.size());
@@ -500,7 +565,11 @@ void EngineGraphics::createUniformBuffer() {
     memoryInfo.queueFamilyIndexCount = indices.graphicsFamily.value();
 
 <<<<<<< HEAD
+<<<<<<< HEAD
     for (size_t i = 0; i < swapChainImages.size() * bufferCount; i++) {
+=======
+    for (size_t i = 0; i < swapChainImages.size(); i++) {
+>>>>>>> 287851c9b52ae4d54f326ba993a64f7c3be3d4c9
 =======
     for (size_t i = 0; i < swapChainImages.size(); i++) {
 >>>>>>> 287851c9b52ae4d54f326ba993a64f7c3be3d4c9
@@ -531,7 +600,11 @@ void EngineGraphics::createDescriptorPools() {
     VkDescriptorPoolSize poolSize{};
     poolSize.type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
 <<<<<<< HEAD
+<<<<<<< HEAD
     poolSize.descriptorCount = static_cast<uint32_t>(uniformBuffers.size());
+=======
+    poolSize.descriptorCount = static_cast<uint32_t>(swapChainImages.size());
+>>>>>>> 287851c9b52ae4d54f326ba993a64f7c3be3d4c9
 =======
     poolSize.descriptorCount = static_cast<uint32_t>(swapChainImages.size());
 >>>>>>> 287851c9b52ae4d54f326ba993a64f7c3be3d4c9
@@ -541,7 +614,11 @@ void EngineGraphics::createDescriptorPools() {
     poolInfo.poolSizeCount = 1;
     poolInfo.pPoolSizes = &poolSize;
 <<<<<<< HEAD
+<<<<<<< HEAD
     poolInfo.maxSets = static_cast<uint32_t>(uniformBuffers.size());
+=======
+    poolInfo.maxSets = static_cast<uint32_t>(swapChainImages.size());
+>>>>>>> 287851c9b52ae4d54f326ba993a64f7c3be3d4c9
 =======
     poolInfo.maxSets = static_cast<uint32_t>(swapChainImages.size());
 >>>>>>> 287851c9b52ae4d54f326ba993a64f7c3be3d4c9
@@ -553,9 +630,15 @@ void EngineGraphics::createDescriptorPools() {
     }
 }
 <<<<<<< HEAD
+<<<<<<< HEAD
 //TODO: this buffer parameter is useless
 void EngineGraphics::createDescriptorSets(VkBuffer buffer) {
     std::vector<VkDescriptorSetLayout> layouts(uniformBuffers.size(), setLayout);
+=======
+
+void EngineGraphics::createDescriptorSets(VkBuffer buffer) {
+    std::vector<VkDescriptorSetLayout> layouts(swapChainImages.size(), setLayout);
+>>>>>>> 287851c9b52ae4d54f326ba993a64f7c3be3d4c9
 =======
 
 void EngineGraphics::createDescriptorSets(VkBuffer buffer) {
@@ -566,22 +649,32 @@ void EngineGraphics::createDescriptorSets(VkBuffer buffer) {
     allocateInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
     allocateInfo.descriptorPool = descriptorPool;
 <<<<<<< HEAD
+<<<<<<< HEAD
     allocateInfo.descriptorSetCount = static_cast<uint32_t>(uniformBuffers.size());
     allocateInfo.pSetLayouts = layouts.data();
 
     descriptorSet.resize(uniformBuffers.size());
 =======
+=======
+>>>>>>> 287851c9b52ae4d54f326ba993a64f7c3be3d4c9
     allocateInfo.descriptorSetCount = static_cast<uint32_t>(swapChainImages.size());
     allocateInfo.pSetLayouts = layouts.data();
 
     descriptorSet.resize(swapChainImages.size());
+<<<<<<< HEAD
+>>>>>>> 287851c9b52ae4d54f326ba993a64f7c3be3d4c9
+=======
 >>>>>>> 287851c9b52ae4d54f326ba993a64f7c3be3d4c9
     if (vkAllocateDescriptorSets(engineInit->device, &allocateInfo, descriptorSet.data()) != VK_SUCCESS) {
         throw std::runtime_error("failed to allocate descriptor sets!");
     }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
     for (size_t i = 0; i < uniformBuffers.size(); i++) {
+=======
+    for (size_t i = 0; i < swapChainImages.size(); i++) {
+>>>>>>> 287851c9b52ae4d54f326ba993a64f7c3be3d4c9
 =======
     for (size_t i = 0; i < swapChainImages.size(); i++) {
 >>>>>>> 287851c9b52ae4d54f326ba993a64f7c3be3d4c9
@@ -634,7 +727,11 @@ void EngineGraphics::createGraphicsPipeline()  {
     posAttribute.location = 0;
     posAttribute.binding = 0;
 <<<<<<< HEAD
+<<<<<<< HEAD
     posAttribute.format = VK_FORMAT_R32G32B32_SFLOAT;
+=======
+    posAttribute.format = VK_FORMAT_R32G32_SFLOAT;
+>>>>>>> 287851c9b52ae4d54f326ba993a64f7c3be3d4c9
 =======
     posAttribute.format = VK_FORMAT_R32G32_SFLOAT;
 >>>>>>> 287851c9b52ae4d54f326ba993a64f7c3be3d4c9
@@ -763,6 +860,10 @@ void EngineGraphics::createGraphicsPipeline()  {
     vkDestroyShaderModule(engineInit->device, fragShader, nullptr);
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+    //std::cout << vertShaderCode.size() << std::endl;
+>>>>>>> 287851c9b52ae4d54f326ba993a64f7c3be3d4c9
 =======
     //std::cout << vertShaderCode.size() << std::endl;
 >>>>>>> 287851c9b52ae4d54f326ba993a64f7c3be3d4c9
@@ -771,7 +872,11 @@ void EngineGraphics::createGraphicsPipeline()  {
 void EngineGraphics::createFrameBuffers() {
     //get the number of images we need to create framebuffers for
 <<<<<<< HEAD
+<<<<<<< HEAD
     size_t imageNum = swapChainImages.size();
+=======
+    size_t imageNum = swapChainImageViews.size();
+>>>>>>> 287851c9b52ae4d54f326ba993a64f7c3be3d4c9
 =======
     size_t imageNum = swapChainImageViews.size();
 >>>>>>> 287851c9b52ae4d54f326ba993a64f7c3be3d4c9
@@ -788,8 +893,12 @@ void EngineGraphics::createFrameBuffers() {
         createInfo.attachmentCount = 1;
         //they put the image view in a separate array for some reason
 <<<<<<< HEAD
+<<<<<<< HEAD
         VkImageView imageViews[1] = {swapChainColorImageViews[i]};
         createInfo.pAttachments = &swapChainColorImageViews[i];
+=======
+        createInfo.pAttachments = &swapChainImageViews[i];
+>>>>>>> 287851c9b52ae4d54f326ba993a64f7c3be3d4c9
 =======
         createInfo.pAttachments = &swapChainImageViews[i];
 >>>>>>> 287851c9b52ae4d54f326ba993a64f7c3be3d4c9
@@ -858,13 +967,19 @@ void EngineGraphics::copyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDevice
 }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 void EngineGraphics::createCommandBuffers(VkBuffer buffer, VkBuffer indexBuffer, size_t indexCount) {
 =======
+=======
+>>>>>>> 287851c9b52ae4d54f326ba993a64f7c3be3d4c9
 void EngineGraphics::createCommandBuffers(VkBuffer buffer, VkBuffer indexBuffer, std::vector<data::Vertex2D> vertices, std::vector<uint16_t> indices) {
     //store these vertices data for resize
     verts = vertices;
     indexes = indices;
 
+<<<<<<< HEAD
+>>>>>>> 287851c9b52ae4d54f326ba993a64f7c3be3d4c9
+=======
 >>>>>>> 287851c9b52ae4d54f326ba993a64f7c3be3d4c9
     //allocate memory for command buffer, you have to create a draw command for each image
     commandBuffers.resize(swapChainFramebuffers.size());
@@ -904,8 +1019,12 @@ void EngineGraphics::createCommandBuffers(VkBuffer buffer, VkBuffer indexBuffer,
         VkClearValue clearColor = {0.0f, 0.0f, 0.0f, 1.0f};
         renderInfo.clearValueCount = 1;
 <<<<<<< HEAD
+<<<<<<< HEAD
         VkClearValue clearColors[1] = {clearColor};
         renderInfo.pClearValues = clearColors;
+=======
+        renderInfo.pClearValues = &clearColor;
+>>>>>>> 287851c9b52ae4d54f326ba993a64f7c3be3d4c9
 =======
         renderInfo.pClearValues = &clearColor;
 >>>>>>> 287851c9b52ae4d54f326ba993a64f7c3be3d4c9
@@ -931,6 +1050,7 @@ void EngineGraphics::createCommandBuffers(VkBuffer buffer, VkBuffer indexBuffer,
 
         //time for the draw calls
 <<<<<<< HEAD
+<<<<<<< HEAD
         const VkDeviceSize offsets[] = {0, offsetof(data::Vertex2D, color)};
         vkCmdBindVertexBuffers(commandBuffers[i], 0, 1, &buffer, offsets);
         vkCmdBindIndexBuffer(commandBuffers[i], indexBuffer, 0, VK_INDEX_TYPE_UINT16);
@@ -943,12 +1063,17 @@ void EngineGraphics::createCommandBuffers(VkBuffer buffer, VkBuffer indexBuffer,
         //vkCmdBindDescriptorSets(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, 0, 1, &descriptorSet[i + swapChainImages.size()], 0, nullptr);
         //vkCmdDrawIndexed(commandBuffers[i], static_cast<uint32_t>(6), 1, 36, 0, 0);
 =======
+=======
+>>>>>>> 287851c9b52ae4d54f326ba993a64f7c3be3d4c9
         const VkDeviceSize offsets[] = {0, 8};
         vkCmdBindVertexBuffers(commandBuffers[i], 0, 1, &buffer, offsets);
         vkCmdBindIndexBuffer(commandBuffers[i], indexBuffer, 0, VK_INDEX_TYPE_UINT16);
         vkCmdBindDescriptorSets(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, 0, 1, &descriptorSet[i], 0, nullptr);
         //vkCmdDraw(commandBuffers[i], (int) vertices.size(), 1, 0, 0);
         vkCmdDrawIndexed(commandBuffers[i], static_cast<uint32_t>(indices.size()), 1, 0, 0, 0);
+<<<<<<< HEAD
+>>>>>>> 287851c9b52ae4d54f326ba993a64f7c3be3d4c9
+=======
 >>>>>>> 287851c9b52ae4d54f326ba993a64f7c3be3d4c9
 
         vkCmdEndRenderPass(commandBuffers[i]);
@@ -993,6 +1118,7 @@ void EngineGraphics::createFences() {
 void EngineGraphics::updateUniformBuffers(uint32_t nextImage) {
     static auto startTime = std::chrono::high_resolution_clock::now();
 
+<<<<<<< HEAD
 <<<<<<< HEAD
     size_t imageCount = swapChainImages.size();
 
@@ -1048,6 +1174,8 @@ void EngineGraphics::updateUniformBuffers(uint32_t nextImage) {
         //std::cout << "hello" << std::endl;
     }
 =======
+=======
+>>>>>>> 287851c9b52ae4d54f326ba993a64f7c3be3d4c9
     auto currentTime = std::chrono::high_resolution_clock::now();
     float time = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - startTime).count();
     //can define 
@@ -1062,6 +1190,9 @@ void EngineGraphics::updateUniformBuffers(uint32_t nextImage) {
     vkMapMemory(engineInit->device, uniformMemories[nextImage].memoryHandle, 0, sizeof(ubo), 0, &data);
         memcpy(data, &ubo, sizeof(ubo));
     vkUnmapMemory(engineInit->device, uniformMemories[nextImage].memoryHandle);
+<<<<<<< HEAD
+>>>>>>> 287851c9b52ae4d54f326ba993a64f7c3be3d4c9
+=======
 >>>>>>> 287851c9b52ae4d54f326ba993a64f7c3be3d4c9
 }
 

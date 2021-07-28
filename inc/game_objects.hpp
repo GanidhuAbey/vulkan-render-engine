@@ -1,8 +1,11 @@
 #include "engine.hpp"
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 #include <string.h>
 
+=======
+>>>>>>> 287851c9b52ae4d54f326ba993a64f7c3be3d4c9
 =======
 >>>>>>> 287851c9b52ae4d54f326ba993a64f7c3be3d4c9
 namespace gameObject {
@@ -15,6 +18,7 @@ class Square {
         Square(int x, int y, int s, Color c, create::Engine* eng);
         ~Square();
         void translate(float x, float y);
+<<<<<<< HEAD
 <<<<<<< HEAD
         void rotate(float angle);
         void material(const char texture);
@@ -44,6 +48,12 @@ class Light {
 
 }
 
+=======
+};
+
+
+}
+>>>>>>> 287851c9b52ae4d54f326ba993a64f7c3be3d4c9
 =======
 };
 

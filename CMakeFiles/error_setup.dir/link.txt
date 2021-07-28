@@ -1,2 +1,0 @@
-/usr/bin/ar qc liberror_setup.a  CMakeFiles/error_setup.dir/lib/error_setup.cpp.o
-/usr/bin/ranlib liberror_setup.a

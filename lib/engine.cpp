@@ -5,9 +5,14 @@ using namespace create;
 
 //define some global variables.
 <<<<<<< HEAD
+<<<<<<< HEAD
 uint16_t indexCount = 0;
 uint16_t vertexCount = 0;
 uint16_t objectCount = 0;
+=======
+std::vector<data::Vertex2D> vertices;
+std::vector<uint16_t> indices;
+>>>>>>> 287851c9b52ae4d54f326ba993a64f7c3be3d4c9
 =======
 std::vector<data::Vertex2D> vertices;
 std::vector<uint16_t> indices;
@@ -47,7 +52,10 @@ Engine::~Engine() {
 }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> 287851c9b52ae4d54f326ba993a64f7c3be3d4c9
 void Engine::Rect(int x, int y, int w, int h, Color c) {
     //got to convert the screen space coordinates into vulkan space coordinates
     float vulkanX = screenToVulkan(x, screenWidth, 0);
@@ -80,6 +88,9 @@ void Engine::Rect(int x, int y, int w, int h, Color c) {
     //engineDraw.initialize(vertices, &engGraphics, &engInit, &vertexBuffer, &gpuMemory);
 }
 
+<<<<<<< HEAD
+>>>>>>> 287851c9b52ae4d54f326ba993a64f7c3be3d4c9
+=======
 >>>>>>> 287851c9b52ae4d54f326ba993a64f7c3be3d4c9
 //TODO: remove this
 void Engine::clearScreen() {
@@ -89,7 +100,11 @@ void Engine::clearScreen() {
 void Engine::draw() {
     draw::EngineDraw engineDraw;
 <<<<<<< HEAD
+<<<<<<< HEAD
     engineDraw.initialize(indexBuffer, &engGraphics, &engInit, &vertexBuffer, &gpuMemory);
+=======
+    engineDraw.initialize(vertices, indices, indexBuffer, &engGraphics, &engInit, &vertexBuffer, &gpuMemory);
+>>>>>>> 287851c9b52ae4d54f326ba993a64f7c3be3d4c9
 =======
     engineDraw.initialize(vertices, indices, indexBuffer, &engGraphics, &engInit, &vertexBuffer, &gpuMemory);
 >>>>>>> 287851c9b52ae4d54f326ba993a64f7c3be3d4c9
@@ -99,8 +114,11 @@ void Engine::writeToBuffer(void* data, VkDeviceSize dataSize, mem::MaMemory* mem
     *memory = mem::maAllocateMemory(*memory, dataSize, &memoryData);
 
 <<<<<<< HEAD
+<<<<<<< HEAD
     std::cout << "offset  factors : " << memoryData.offset - memory->offsetAmt << std::endl;
 
+=======
+>>>>>>> 287851c9b52ae4d54f326ba993a64f7c3be3d4c9
 =======
 >>>>>>> 287851c9b52ae4d54f326ba993a64f7c3be3d4c9
     void* pData;

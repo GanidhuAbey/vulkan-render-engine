@@ -1,6 +1,7 @@
 #include "../inc/game_objects.hpp"
 #include "common.hpp"
 <<<<<<< HEAD
+<<<<<<< HEAD
 #include "math.h"
 
 #include "jpeglib.h"
@@ -9,6 +10,10 @@ using namespace gameObject;
 #pragma comment(lib, "libjpeg.lib")
 
 const int DEPTH_CONSTANT = 100;
+=======
+
+using namespace gameObject;
+>>>>>>> 287851c9b52ae4d54f326ba993a64f7c3be3d4c9
 =======
 
 using namespace gameObject;
@@ -24,6 +29,7 @@ Square::Square(int x, int y, int s, Color c, create::Engine* eng) {
     float vulkanWidth = engine->screenToVulkan(s, engine->screenWidth, 0);
     float vulkanHeight = engine->screenToVulkan(s, engine->screenHeight, 0);
 
+<<<<<<< HEAD
 <<<<<<< HEAD
     //create appropriate vertices
     //TODO: sort out a method to combine vertices (resize vertices array from current length to add new vertices),
@@ -44,6 +50,8 @@ Square::Square(int x, int y, int s, Color c, create::Engine* eng) {
     objectCount++;
 
 =======
+=======
+>>>>>>> 287851c9b52ae4d54f326ba993a64f7c3be3d4c9
     //std::cout << vulkanWidth << std::endl;
 
     //create appropriate vertices
@@ -58,6 +66,9 @@ Square::Square(int x, int y, int s, Color c, create::Engine* eng) {
         0, 1, 2, 2, 3, 0
     };
 
+<<<<<<< HEAD
+>>>>>>> 287851c9b52ae4d54f326ba993a64f7c3be3d4c9
+=======
 >>>>>>> 287851c9b52ae4d54f326ba993a64f7c3be3d4c9
     /*
     for (int i = 0; i < indices.size(); ++i) {
@@ -75,7 +86,10 @@ Square::Square(int x, int y, int s, Color c, create::Engine* eng) {
     */
 
 <<<<<<< HEAD
+<<<<<<< HEAD
     /*
+=======
+>>>>>>> 287851c9b52ae4d54f326ba993a64f7c3be3d4c9
 =======
 >>>>>>> 287851c9b52ae4d54f326ba993a64f7c3be3d4c9
     engine->engGraphics.ubo.translation = glm::mat4(
@@ -85,7 +99,11 @@ Square::Square(int x, int y, int s, Color c, create::Engine* eng) {
         0.0, 0.0, 0.0, 0.0
     );
 <<<<<<< HEAD
+<<<<<<< HEAD
     */
+=======
+
+>>>>>>> 287851c9b52ae4d54f326ba993a64f7c3be3d4c9
 =======
 
 >>>>>>> 287851c9b52ae4d54f326ba993a64f7c3be3d4c9
@@ -96,7 +114,11 @@ Square::Square(int x, int y, int s, Color c, create::Engine* eng) {
 
     //not sure if the best place to put this...
 <<<<<<< HEAD
+<<<<<<< HEAD
     engine->engGraphics.createCommandBuffers(vertexBuffer, indexBuffer, indexCount);
+=======
+    engine->engGraphics.createCommandBuffers(vertexBuffer, indexBuffer, vertices, indices);
+>>>>>>> 287851c9b52ae4d54f326ba993a64f7c3be3d4c9
 =======
     engine->engGraphics.createCommandBuffers(vertexBuffer, indexBuffer, vertices, indices);
 >>>>>>> 287851c9b52ae4d54f326ba993a64f7c3be3d4c9
@@ -110,6 +132,7 @@ Square::~Square() {
 
 void Square::translate(float x, float y) {
     //update the uniform buffer here
+<<<<<<< HEAD
 <<<<<<< HEAD
     float translateX = engine->screenToVulkan(x, engine->screenWidth, 0);
     float translateY = engine->screenToVulkan(y, engine->screenHeight, 0);
@@ -258,6 +281,8 @@ Light::Light(int x, int y, int z, Color c, create::Engine* eng) {
 
 Light::~Light() {}
 =======
+=======
+>>>>>>> 287851c9b52ae4d54f326ba993a64f7c3be3d4c9
     float vulkanX = engine->screenToVulkan(x, engine->screenWidth, 0);
     float vulkanY = engine->screenToVulkan(y, engine->screenHeight, 0);
 
@@ -272,5 +297,9 @@ Light::~Light() {}
     //engine->engGraphics.updateUniformBuffers()
 }
 
+<<<<<<< HEAD
+//-------------------------------------------------------------------------------------------------------------
+>>>>>>> 287851c9b52ae4d54f326ba993a64f7c3be3d4c9
+=======
 //-------------------------------------------------------------------------------------------------------------
 >>>>>>> 287851c9b52ae4d54f326ba993a64f7c3be3d4c9

@@ -1,5 +1,0 @@
-<<<<<<< HEAD
-/usr/bin/c++     CMakeFiles/main.dir/main.cpp.o  -o main  librequired_libs.a -lvulkan -lglfw 
-=======
-/bin/x86_64-linux-gnu-g++-9  -g   CMakeFiles/main.dir/main.cpp.o  -o main  librequired_libs.a -lvulkan -lglfw 
->>>>>>> 287851c9b52ae4d54f326ba993a64f7c3be3d4c9

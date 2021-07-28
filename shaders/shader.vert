@@ -2,6 +2,7 @@
 
 layout(binding = 0) uniform UniformBufferObject {
 <<<<<<< HEAD
+<<<<<<< HEAD
     mat4 model;
     mat4 view;
     mat4 proj;
@@ -9,10 +10,15 @@ layout(binding = 0) uniform UniformBufferObject {
 
 layout(location = 0) in vec3 inPosition;
 =======
+=======
+>>>>>>> 287851c9b52ae4d54f326ba993a64f7c3be3d4c9
     mat3 translation;
 } ubo;
 
 layout(location = 0) in vec2 inPosition;
+<<<<<<< HEAD
+>>>>>>> 287851c9b52ae4d54f326ba993a64f7c3be3d4c9
+=======
 >>>>>>> 287851c9b52ae4d54f326ba993a64f7c3be3d4c9
 layout(location = 1) in vec3 inColor;
 
@@ -20,7 +26,12 @@ layout(location = 2) out vec3 fragColor;
 
 void main() {
 <<<<<<< HEAD
+<<<<<<< HEAD
     gl_Position =  ubo.proj * ubo.view * ubo.model * vec4(inPosition, 1.0);
+=======
+    vec3 new_pos = ubo.translation * vec3(inPosition, 1.0);
+    gl_Position = vec4(vec2(new_pos), 0.0, 1.0);
+>>>>>>> 287851c9b52ae4d54f326ba993a64f7c3be3d4c9
 =======
     vec3 new_pos = ubo.translation * vec3(inPosition, 1.0);
     gl_Position = vec4(vec2(new_pos), 0.0, 1.0);

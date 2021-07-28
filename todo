@@ -2,10 +2,13 @@ TODO: RENDER ENGINE
 
 [GOALS]
 <<<<<<< HEAD
+<<<<<<< HEAD
 - ROTATE CUBE AROUND ITS OWN CENTER
 - CREATE SCENES WITH OBJ FILES 
 - SORT GEOMETRY BY DEPTH
 =======
+=======
+>>>>>>> 287851c9b52ae4d54f326ba993a64f7c3be3d4c9
 - ALPACA
 - RESTRUCTURE CODE
 - FIX RESCALING
@@ -21,6 +24,9 @@ TODO: RENDER ENGINE
 - LIGHTING?
 - PLAYER INPUT INTO CAMERA 
 - QUEUE SYNCHRONIZATION (SEPHAMORES?);
+<<<<<<< HEAD
+>>>>>>> 287851c9b52ae4d54f326ba993a64f7c3be3d4c9
+=======
 >>>>>>> 287851c9b52ae4d54f326ba993a64f7c3be3d4c9
 
 [BUGS]
@@ -30,16 +36,20 @@ TODO: RENDER ENGINE
 - RENDER SQUARE
 - VERTEX BUFFER
 <<<<<<< HEAD
+<<<<<<< HEAD
 - RENDER CUBE
 - ADD UNIFORM BUFFER
 - ROTATE CUBE
 - ADD MULTIPLE OBJECTS TO SCREEN
 =======
 >>>>>>> 287851c9b52ae4d54f326ba993a64f7c3be3d4c9
+=======
+>>>>>>> 287851c9b52ae4d54f326ba993a64f7c3be3d4c9
 
 [QUESTIONS]
 - How can I reuse existing, allocatee memory
   -- Do I save the buffers associated with the memory and create a call for a new buffer everytime I need it?
+<<<<<<< HEAD
 <<<<<<< HEAD
 
 - Depth Buffer
@@ -57,5 +67,7 @@ TODO: RENDER ENGINE
   -- how do we create another render pass?
       -- how did we create the first render pass?
       -- what is a render pass?
+=======
+>>>>>>> 287851c9b52ae4d54f326ba993a64f7c3be3d4c9
 =======
 >>>>>>> 287851c9b52ae4d54f326ba993a64f7c3be3d4c9

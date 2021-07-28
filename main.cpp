@@ -13,6 +13,7 @@ int main() {
     
     //create square object
 <<<<<<< HEAD
+<<<<<<< HEAD
     gameObject::Cube cube(WIDTH/3, HEIGHT/4, 1, 100, Color(0.4, 0.5, 0.1), &engine);
     gameObject::Light light(0, 0, 1, Color(1.0, 1.0, 1.0), &engine);
 
@@ -34,6 +35,8 @@ int main() {
         //cube.rotate(angle);
         //square.rotate(angle);
 =======
+=======
+>>>>>>> 287851c9b52ae4d54f326ba993a64f7c3be3d4c9
     gameObject::Square square(WIDTH/2, HEIGHT/2, 50, Color(0.4, 0.5, 0.1), &engine);
 
     //engine.Rect(WIDTH/2, HEIGHT/2, 50, 50, Color(0.4, 0.5, 0.1));
@@ -47,6 +50,9 @@ int main() {
 
         square.translate(xTranslate, 0);
         //std::cout << "n" << std::endl;
+<<<<<<< HEAD
+>>>>>>> 287851c9b52ae4d54f326ba993a64f7c3be3d4c9
+=======
 >>>>>>> 287851c9b52ae4d54f326ba993a64f7c3be3d4c9
 
         engine.draw();
@@ -57,9 +63,12 @@ int main() {
 
         frameCount++;
 <<<<<<< HEAD
+<<<<<<< HEAD
         angle += 0.001;
         //std::cout << frameCount << std::endl;
         //std::cout << ms_double.count() << std::endl;
+=======
+>>>>>>> 287851c9b52ae4d54f326ba993a64f7c3be3d4c9
 =======
 >>>>>>> 287851c9b52ae4d54f326ba993a64f7c3be3d4c9
     }
