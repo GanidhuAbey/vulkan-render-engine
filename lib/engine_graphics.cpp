@@ -57,11 +57,11 @@ VkPipelineShaderStageCreateInfo EngineGraphics::fillShaderStageStruct(VkShaderSt
 
 VkShaderModule EngineGraphics::createShaderModule(std::vector<char> shaderCode) {
     VkShaderModule shaderModule;
-    
+
     VkShaderModuleCreateInfo createInfo{};
     createInfo.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
     createInfo.codeSize = static_cast<uint32_t>( shaderCode.size() );
-    
+
     const uint32_t* shaderFormatted = reinterpret_cast<const uint32_t*>(shaderCode.data());
 
     createInfo.pCode = shaderFormatted;
@@ -74,7 +74,7 @@ VkShaderModule EngineGraphics::createShaderModule(std::vector<char> shaderCode) 
 }
 
 std::vector<char> EngineGraphics::readFile(const std::string& filename) {
-    std::ifstream file(filename, std::ios::ate | std::ios::binary); 
+    std::ifstream file(filename, std::ios::ate | std::ios::binary);
 
     if (!file.is_open()) {
         throw std::runtime_error("could not open file");
@@ -115,7 +115,7 @@ VkPresentModeKHR EngineGraphics::chooseSwapChainPresentation(const std::vector<V
 
     //apparently this is guaranteed to be available.
     //this presentation method pushes images into a queue to be displayed as well but when the queue is full it blocks other images from being added till
-    //there is space in the queue. 
+    //there is space in the queue.
     return VK_PRESENT_MODE_FIFO_KHR;
 }
 
@@ -237,7 +237,7 @@ void EngineGraphics::createSwapChain() {
     uint32_t queueIndices[] = {indices.graphicsFamily.value(), indices.presentFamily.value()};
 
     if (indices.graphicsFamily.value() != indices.presentFamily.value()) {
-        
+
 
         createInfo.imageSharingMode = VK_SHARING_MODE_CONCURRENT;
         createInfo.queueFamilyIndexCount = 2;
@@ -273,7 +273,7 @@ void EngineGraphics::createSwapChain() {
 
 std::vector<VkImage> EngineGraphics::createImages(size_t imageNum) {
     std::vector<VkImage> images(imageNum);
-    
+
     for (size_t i = 0; i < imageNum; i++) {
         VkImageCreateInfo imageInfo{};
         imageInfo.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
@@ -303,7 +303,7 @@ void EngineGraphics::createImageViews(VkImageUsageFlags usage, VkFormat format) 
         createInfo.viewType = VK_IMAGE_VIEW_TYPE_2D;
         createInfo.format = format;
 
-        
+
         //this changes the colour output of the image, currently set to standard colours
         createInfo.components.r = VK_COMPONENT_SWIZZLE_IDENTITY;
         createInfo.components.g = VK_COMPONENT_SWIZZLE_IDENTITY;
@@ -328,10 +328,22 @@ void EngineGraphics::createImageViews(VkImageUsageFlags usage, VkFormat format) 
 //TODO: can most likely abstract the attachment creation process
 //NOTE: input attachments we feed into the shader must be bound to the pipeline in the descriptor set
 void EngineGraphics::createRenderPass() {
+    //create a depth attachment and a depth subpass
+    VkAttachmentDescription depthAttachment{};
+    depthAttachment.format = VK_FORMAT_D16_UNORM;//format must be a depth/stencil format
+    depthAttachment.samples = VK_SAMPLE_COUNT_1_BIT;
+    depthAttachment.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
+    depthAttachment.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
+    depthAttachment.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
+    depthAttachment.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+
+    depthAttachment.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+    depthAttachment.finalLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
+
     //colour buffer is a buffer for the colour data at each pixel in the framebuffer, obviously important for actually drawing to screen
     VkAttachmentDescription colorAttachment{};
     colorAttachment.format = swapChainImageFormat;
-    colorAttachment.samples = VK_SAMPLE_COUNT_1_BIT;    
+    colorAttachment.samples = VK_SAMPLE_COUNT_1_BIT;
 
     //when an image is being rendered to this is asking whether to clear everything that was on the image or store it to be readable.
     colorAttachment.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
@@ -345,44 +357,45 @@ void EngineGraphics::createRenderPass() {
     //TODO: what does the undefined here mean? that it can be anything?
     //"The initialLayout specifies which layout the image will have before the render pass begins" - vulkan tutorial
     //"Using VK_IMAGE_LAYOUT_UNDEFINED for initialLayout means that we don't care what previous layout the image was in" - vulkan tutorial
-    colorAttachment.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+    colorAttachment.initialLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
     //the final layout most likely means what layout the image should be transferred to at the end
     //and since we wont to present to the screen this would probably always remain as this
     //"The finalLayout specifies the layout to automatically transition to when the render pass finishes" - vulkan tutorial
     colorAttachment.finalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
+
+    VkAttachmentReference depthAttachmentRef{};
+    depthAttachmentRef.attachment = 0;
+    depthAttachmentRef.layout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
 
     //these are subpasses you can make in the render pass to add things depending on the framebuffer in previous passes.
     //i'd assume that if you were to use these for things like post-processing you wouldn't be able to clear the image on load like
     //we do here
     VkAttachmentReference colorAttachmentRef{};
     //this refers to where the VkAttachment is and since we only have one the '0' would point to it.
-    colorAttachmentRef.attachment = 0;
+    colorAttachmentRef.attachment = 1;
     //our framebuffer only has a color buffer attached to it so this layout will help optimize it
     colorAttachmentRef.layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
 
-    //creating the actual subpass using the reference we created above
-    VkSubpassDescription subpass{};
-    subpass.pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
-    subpass.colorAttachmentCount = 1;
-    subpass.pColorAttachments = &colorAttachmentRef;
+    VkSubpassDescription depthSubpass{};
+    depthSubpass.pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
+    depthSubpass.pDepthStencilAttachment = &depthAttachmentRef;
 
-    
-    VkSubpassDependency dependency{};
-    dependency.srcSubpass = VK_SUBPASS_EXTERNAL;
-    dependency.dstSubpass = 0;
-    dependency.srcStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
-    dependency.srcAccessMask = 0;
-    dependency.dstStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
-    dependency.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+    //creating the actual subpass using the reference we created above
+    VkSubpassDescription colorSubpass{};
+    colorSubpass.pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
+    colorSubpass.colorAttachmentCount = 1;
+    colorSubpass.pColorAttachments = &colorAttachmentRef;
 
     VkRenderPassCreateInfo createInfo{};
     createInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
-    createInfo.attachmentCount = 1;
-    createInfo.pAttachments = &colorAttachment;
-    createInfo.subpassCount = 1;
-    createInfo.pSubpasses = &subpass;
-    createInfo.dependencyCount = 1;
-    createInfo.pDependencies = &dependency;
+    createInfo.attachmentCount = 2;
+    VkAttachmentDescription attachments[2] = {depthAttachment, colorAttachment};
+    createInfo.pAttachments = attachments;
+    createInfo.subpassCount = 2;
+    VkSubpassDescription subpasses[2] = {depthSubpass, colorSubpass};
+    createInfo.pSubpasses = subpasses;
+    //createInfo.dependencyCount = 1;
+    //createInfo.pDependencies = &dependency;
 
 
     if (vkCreateRenderPass(engineInit->device, &createInfo, nullptr, &renderPass) != VK_SUCCESS) {
@@ -407,7 +420,7 @@ void EngineGraphics::createDescriptorSetLayout() {
         throw std::runtime_error("could not create descriptor set");
     }
 
-    
+
 
 }
 
@@ -433,7 +446,7 @@ void EngineGraphics::createUniformBuffer(size_t bufferCount) {
     mem::MaMemoryData memoryData{};
     uniformMemory = mem::maAllocateMemory(uniformMemory, sizeof(UniformBufferObject), &memoryData);
 
-    
+
     ubo.translation = {
         {1.0, 0.0, 0.0},
         {0.0, 1.0, 0.0},
@@ -525,8 +538,8 @@ void EngineGraphics::createGraphicsPipeline()  {
     bindingDescrip.inputRate = VK_VERTEX_INPUT_RATE_VERTEX;
     vertexInputInfo.pVertexBindingDescriptions = &bindingDescrip;
 
-    vertexInputInfo.vertexAttributeDescriptionCount = 2;    
-    
+    vertexInputInfo.vertexAttributeDescriptionCount = 2;
+
     VkVertexInputAttributeDescription posAttribute{};
     posAttribute.location = 0;
     posAttribute.binding = 0;
@@ -607,6 +620,16 @@ void EngineGraphics::createGraphicsPipeline()  {
     colorBlendInfo.attachmentCount = 1;
     colorBlendInfo.pAttachments = &colorBlendAttachment;
 
+    VkPipelineDepthStencilStateCreateInfo depthStencilInfo{};
+    depthStencilInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO;
+    depthStencilInfo.pNext = nullptr;
+    depthStencilInfo.flags = 0;
+    depthStencilInfo.depthTestEnable = VK_TRUE;
+    depthStencilInfo.depthWriteEnable = VK_TRUE;
+    depthStencilInfo.depthCompareOp = VK_COMPARE_OP_GREATER;
+    depthStencilInfo.depthBoundsTestEnable = VK_FALSE;
+    depthStencilInfo.stencilTestEnable = VK_FALSE;
+
     float blendValues[4] = {0.0, 0.0, 0.0, 0.5};
     colorBlendInfo.blendConstants[0] = blendValues[0];
     colorBlendInfo.blendConstants[1] = blendValues[1];
@@ -642,10 +665,11 @@ void EngineGraphics::createGraphicsPipeline()  {
     createGraphicsPipelineInfo.pRasterizationState = &rasterizationInfo;
     createGraphicsPipelineInfo.pMultisampleState = &multisampling;
     createGraphicsPipelineInfo.pColorBlendState = &colorBlendInfo;
+    createGraphicsPipelineInfo.pDepthStencilState  = &depthStencilInfo;
     createGraphicsPipelineInfo.pDynamicState = &dynamicInfo;
     createGraphicsPipelineInfo.layout = pipelineLayout;
     createGraphicsPipelineInfo.renderPass = renderPass;
-    createGraphicsPipelineInfo.subpass = 0; 
+    createGraphicsPipelineInfo.subpass = 1;
 
     if (vkCreateGraphicsPipelines(engineInit->device, VK_NULL_HANDLE, 1, &createGraphicsPipelineInfo, nullptr, &graphicsPipeline) != VK_SUCCESS) {
         throw std::runtime_error("could not create graphics pipeline");
@@ -702,11 +726,11 @@ void EngineGraphics::copyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDevice
     VkCommandBufferBeginInfo beginInfo{};
     beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
     beginInfo.flags = 0; // Optional
-    beginInfo.pInheritanceInfo = nullptr;       
+    beginInfo.pInheritanceInfo = nullptr;
 
     if (vkBeginCommandBuffer(transferBuffer, &beginInfo) != VK_SUCCESS) {
         throw std::runtime_error("one of the command buffers failed to begin");
-    }  
+    }
 
     //transfer between buffers
     VkBufferCopy copyData{};
@@ -741,7 +765,7 @@ void EngineGraphics::copyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDevice
 void EngineGraphics::createCommandBuffers(VkBuffer buffer, VkBuffer indexBuffer, size_t indexCount) {
     //allocate memory for command buffer, you have to create a draw command for each image
     commandBuffers.resize(swapChainFramebuffers.size());
-    
+
     VkCommandBufferAllocateInfo bufferAllocate{};
     bufferAllocate.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
     bufferAllocate.commandPool = engineInit->commandPool;
@@ -795,7 +819,7 @@ void EngineGraphics::createCommandBuffers(VkBuffer buffer, VkBuffer indexBuffer,
 
         VkRect2D newScissor{};
         newScissor.offset = {0, 0};
-        newScissor.extent = swapChainExtent;        
+        newScissor.extent = swapChainExtent;
         vkCmdSetScissor(commandBuffers[i], 0, 1, &newScissor);
 
         //time for the draw calls
@@ -829,10 +853,10 @@ void EngineGraphics::createSemaphores() {
     renderFinishedSemaphores.resize(MAX_FRAMES_IN_FLIGHT);
 
     for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++)
-        if (vkCreateSemaphore(engineInit->device, &semaphoreBegin, nullptr, &imageAvailableSemaphores[i]) != VK_SUCCESS || 
+        if (vkCreateSemaphore(engineInit->device, &semaphoreBegin, nullptr, &imageAvailableSemaphores[i]) != VK_SUCCESS ||
         vkCreateSemaphore(engineInit->device, &semaphoreBegin, nullptr, &renderFinishedSemaphores[i]) != VK_SUCCESS) {
             throw std::runtime_error("could not create semaphore ready signal");
-        }       
+        }
 }
 
 void EngineGraphics::createFences() {
@@ -841,7 +865,7 @@ void EngineGraphics::createFences() {
     VkFenceCreateInfo createInfo{};
     createInfo.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
     createInfo.flags = VK_FENCE_CREATE_SIGNALED_BIT;
-    
+
     for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++) {
         if (vkCreateFence(engineInit->device, &createInfo, nullptr, &inFlightFences[i]) != VK_SUCCESS) {
             throw std::runtime_error("failed to create fences");
@@ -857,7 +881,7 @@ void EngineGraphics::updateUniformBuffers(uint32_t nextImage) {
 
     auto currentTime = std::chrono::high_resolution_clock::now();
     float time = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - startTime).count();
-    //can define 
+    //can define
     ubos.resize(uniformBuffers.size());
     //ubos[nextImage].model = glm::rotate(glm::mat4(1.0f), time * glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
     ubos[nextImage].view = glm::lookAt(glm::vec3(1.0f, 3.0f, 3.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
@@ -868,7 +892,7 @@ void EngineGraphics::updateUniformBuffers(uint32_t nextImage) {
     ubos[nextImage + imageCount].proj = glm::perspective(glm::radians(45.0f), swapChainExtent.width / (float) swapChainExtent.height, 0.1f, 10.0f);
     ubos[nextImage + imageCount].proj[1][1] *= -1;
 
-    
+
     ubos[nextImage].model = glm::mat4(
         cos(time), -sin(time), 0, 0,
         sin(time), cos(time), 0, 0,
@@ -882,7 +906,7 @@ void EngineGraphics::updateUniformBuffers(uint32_t nextImage) {
         0, 0, 1, 0,
         0, 0, 0, 1
     );
-    
+
 
     //std::cout << ubo.translation[2][0] << std::endl;
     /*
@@ -924,7 +948,7 @@ void EngineGraphics::drawFrame() {
         cleanupSwapChain(false);
         //VkSwapchainKHR oldSwapChain = swapChain;
         recreateSwapChain();
-        
+
         return;
     }
     else if (result != VK_SUCCESS) {
@@ -939,7 +963,7 @@ void EngineGraphics::drawFrame() {
     }
     // Mark the image as now being in use by this frame
     imagesInFlight[nextImage] = inFlightFences[currentFrame];
-    
+
     VkSubmitInfo submitInfo{};
     submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
 
@@ -960,7 +984,7 @@ void EngineGraphics::drawFrame() {
 
     if (vkQueueSubmit(engineInit->graphicsQueue, 1, &submitInfo, inFlightFences[currentFrame]) !=  VK_SUCCESS) {
         throw std::runtime_error("could not submit command buffer to queue");
-    }     
+    }
 
     VkPresentInfoKHR presentInfo{};
     presentInfo.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
@@ -980,6 +1004,6 @@ void EngineGraphics::drawFrame() {
     } else if (result != VK_SUCCESS) {
         throw std::runtime_error("failed to present swap chain image!");
     }
-    
+
     currentFrame = (currentFrame + 1) % MAX_FRAMES_IN_FLIGHT;
 }
