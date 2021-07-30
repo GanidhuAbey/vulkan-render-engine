@@ -471,7 +471,7 @@ void EngineGraphics::createRenderPass() {
     colorAttachment.finalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
 
     VkAttachmentReference depthAttachmentRef{};
-    depthAttachmentRef.attachment = 0;
+    depthAttachmentRef.attachment = 1;
     depthAttachmentRef.layout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
 
     //these are subpasses you can make in the render pass to add things depending on the framebuffer in previous passes.
@@ -479,7 +479,7 @@ void EngineGraphics::createRenderPass() {
     //we do here
     VkAttachmentReference colorAttachmentRef{};
     //this refers to where the VkAttachment is and since we only have one the '0' would point to it.
-    colorAttachmentRef.attachment = 1;
+    colorAttachmentRef.attachment = 0;
     //our framebuffer only has a color buffer attached to it so this layout will help optimize it
     colorAttachmentRef.layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
 
@@ -492,14 +492,15 @@ void EngineGraphics::createRenderPass() {
     colorSubpass.pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
     colorSubpass.colorAttachmentCount = 1;
     colorSubpass.pColorAttachments = &colorAttachmentRef;
+    colorSubpass.pDepthStencilAttachment = &depthAttachmentRef;
 
     VkRenderPassCreateInfo createInfo{};
     createInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
     createInfo.attachmentCount = 2;
-    VkAttachmentDescription attachments[2] = {depthAttachment, colorAttachment};
+    VkAttachmentDescription attachments[2] = {colorAttachment, depthAttachment};
     createInfo.pAttachments = attachments;
-    createInfo.subpassCount = 2;
-    VkSubpassDescription subpasses[2] = {depthSubpass, colorSubpass};
+    createInfo.subpassCount = 1;
+    VkSubpassDescription subpasses[1] = {colorSubpass};
     createInfo.pSubpasses = subpasses;
     //createInfo.dependencyCount = 1;
     //createInfo.pDependencies = &dependency;
@@ -733,7 +734,7 @@ void EngineGraphics::createGraphicsPipeline()  {
     depthStencilInfo.flags = 0;
     depthStencilInfo.depthTestEnable = VK_TRUE;
     depthStencilInfo.depthWriteEnable = VK_TRUE;
-    depthStencilInfo.depthCompareOp = VK_COMPARE_OP_GREATER;
+    depthStencilInfo.depthCompareOp = VK_COMPARE_OP_LESS;
     depthStencilInfo.depthBoundsTestEnable = VK_FALSE;
     depthStencilInfo.stencilTestEnable = VK_FALSE;
 
@@ -776,7 +777,7 @@ void EngineGraphics::createGraphicsPipeline()  {
     createGraphicsPipelineInfo.pDynamicState = &dynamicInfo;
     createGraphicsPipelineInfo.layout = pipelineLayout;
     createGraphicsPipelineInfo.renderPass = renderPass;
-    createGraphicsPipelineInfo.subpass = 1;
+    createGraphicsPipelineInfo.subpass = 0;
 
     if (vkCreateGraphicsPipelines(engineInit->device, VK_NULL_HANDLE, 1, &createGraphicsPipelineInfo, nullptr, &graphicsPipeline) != VK_SUCCESS) {
         throw std::runtime_error("could not create graphics pipeline");
@@ -803,7 +804,7 @@ void EngineGraphics::createFrameBuffers() {
         //we only want one image per frame buffer
         createInfo.attachmentCount = 2;
         //they put the image view in a separate array for some reason
-        VkImageView imageViews[2] = {depthImageView, swapChainColorImageViews[i]};
+        VkImageView imageViews[2] = {swapChainColorImageViews[i], depthImageView};
         createInfo.pAttachments = imageViews;
         createInfo.width = swapChainExtent.width;
         createInfo.height = swapChainExtent.height;
@@ -905,17 +906,18 @@ void EngineGraphics::createCommandBuffers(VkBuffer buffer, VkBuffer indexBuffer,
         renderArea.extent = swapChainExtent;
         renderInfo.renderArea = renderArea;
 
-        VkClearValue clearColor = {0.0f, 0.0f, 0.0f, 1.0f};
-        renderInfo.clearValueCount = 2;
-        VkClearValue clearColors[2] = {clearColor, clearColor};
-        renderInfo.pClearValues = clearColors;
+        std::array<VkClearValue, 2> clearValues{};
+        clearValues[0].color = {0.0f, 0.0f, 0.0f, 1.0};
+        clearValues[1].depthStencil = {1.0, 0};
+        renderInfo.clearValueCount = static_cast<uint32_t>( clearValues.size() );
+        renderInfo.pClearValues = clearValues.data();
 
         vkCmdBeginRenderPass(commandBuffers[i],  &renderInfo, VK_SUBPASS_CONTENTS_INLINE);
         //run first subpass here?
         //the question is what does the first subpass do?
 
         //now after the first pass is complete we move on to the next subpass
-        vkCmdNextSubpass(commandBuffers[i], VK_SUBPASS_CONTENTS_INLINE);
+        //vkCmdNextSubpass(commandBuffers[i], VK_SUBPASS_CONTENTS_INLINE);
 
         //add commands to command buffer
         vkCmdBindPipeline(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, graphicsPipeline);
@@ -946,7 +948,7 @@ void EngineGraphics::createCommandBuffers(VkBuffer buffer, VkBuffer indexBuffer,
 
         //vkCmdBindDescriptorSets(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, 0, 1, &descriptorSet[i + swapChainImages.size()], 0, nullptr);
         //vkCmdDrawIndexed(commandBuffers[i], static_cast<uint32_t>(6), 1, 36, 0, 0);
-
+        //vkCmdNextSubpass(commandBuffers[i], VK_SUBPASS_CONTENTS_INLINE);
         vkCmdEndRenderPass(commandBuffers[i]);
 
         //end commands to go to execute stage

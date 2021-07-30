@@ -11,9 +11,9 @@ int main() {
     //initialize engine
     create::Engine engine(WIDTH, HEIGHT, "hello world");
 
+    gameObject::Light light(0, 0, 1, Color(1.0, 1.0, 1.0), &engine);
     //create square object
     gameObject::Cube cube(WIDTH/3, HEIGHT/4, 1, 100, Color(0.4, 0.5, 0.1), &engine);
-    gameObject::Light light(0, 0, 1, Color(1.0, 1.0, 1.0), &engine);
 
 
     //add texture to cube
