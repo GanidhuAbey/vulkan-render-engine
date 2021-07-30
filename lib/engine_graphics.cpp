@@ -181,6 +181,11 @@ EngineGraphics::~EngineGraphics() {
         mem::maDestroyMemory(engineInit->device, uniformMemories[i], uniformBuffers[i]);
     }
 
+    //destroy depth data
+    vkDestroyImageView(engineInit->device, depthImageView, nullptr);
+    vkFreeMemory(engineInit->device, depthMemory, nullptr);
+    vkDestroyImage(engineInit->device, depthImage, nullptr);
+
     //vkFreeMemory(engineInit->device, vertexMemory, nullptr);
     //vkDestroyBuffer(engineInit->device, vertexBuffer, nullptr);
 
@@ -459,7 +464,7 @@ void EngineGraphics::createRenderPass() {
     //TODO: what does the undefined here mean? that it can be anything?
     //"The initialLayout specifies which layout the image will have before the render pass begins" - vulkan tutorial
     //"Using VK_IMAGE_LAYOUT_UNDEFINED for initialLayout means that we don't care what previous layout the image was in" - vulkan tutorial
-    colorAttachment.initialLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
+    colorAttachment.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED; //the other subpass does not affect the layout of the image this subpass uses.
     //the final layout most likely means what layout the image should be transferred to at the end
     //and since we wont to present to the screen this would probably always remain as this
     //"The finalLayout specifies the layout to automatically transition to when the render pass finishes" - vulkan tutorial
