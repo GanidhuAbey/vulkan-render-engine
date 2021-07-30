@@ -100,6 +100,11 @@ class EngineGraphics {
         VkExtent2D chooseSwapExtent(const VkSurfaceCapabilitiesKHR& capabilities);
         void fillRequiredValues(VkPhysicalDevice physicalDeviceUser, VkDevice deviceUser, VkSurfaceKHR surfaceUser);
         void updateUniformBuffers(uint32_t nextImage);
+        void createImage(VkFormat format, VkImageUsageFlags usage, VkImage* images);
+		void createDepthImage();
+        void createImageMemory(VkImage image);
+        void createImageView(VkFormat format, VkImageUsageFlags usage, VkImage image, VkImageAspectFlags aspectFlags, VkImageView* imageView);
+
 
     public:
         //EngineGraphics(EngineInit* initEngine);
@@ -107,12 +112,9 @@ class EngineGraphics {
         ~EngineGraphics();
 
     private:
-        void createSwapChain(VkFormat format, VkImageUsageFlags usage, VkSwapchainKHR* swapChain, std::vector<VkImage>* images); //
-        void createImage(VkFormat format, VkImageUsageFlags usage, VkImage* images);
-		void createDepthImage();
-        void createImageMemory(VkImage image);
-        void createImageView(VkFormat format, VkImageUsageFlags usage, VkImage image, VkImageAspectFlags aspectFlags, VkImageView* imageView);
-        void createImageViews(VkImageUsageFlags usage, VkFormat format, std::vector<VkImage> images, std::vector<VkImageView>* imageViews);  //
+        void createSwapChain(); //
+        void createDepthResources();
+        void createColorImageViews();  //
         void createRenderPass(); //
         void createDescriptorSetLayout();
         void createDescriptorPools();
