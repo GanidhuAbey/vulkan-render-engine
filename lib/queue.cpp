@@ -16,7 +16,7 @@ void QueueData::findQueueFamilies(VkPhysicalDevice device, VkSurfaceKHR surface)
 
     //NOTE: the reason for the const auto& is to specify that the data being read from the for loop is NOT being modified
     int i = 0;
-    
+
     for (const auto& queue : queueFamilies) {
         VkBool32 presentSupport = false;
         vkGetPhysicalDeviceSurfaceSupportKHR(device, i, surface, &presentSupport);

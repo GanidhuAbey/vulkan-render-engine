@@ -7,7 +7,10 @@ void EngineGraphics::recreateSwapChain() {
     //probably shouldn't recreate any of these till the device has caught up to the most recent call
     vkDeviceWaitIdle(engineInit->device);
 
-    createSwapChain(); //
+    create::SwapChainSupport details(engineInit->physicalDevice, engineInit->surface);
+    VkSurfaceFormatKHR surfaceFormat = chooseSwapChainFormat(details.formats);
+    createSwapChain(surfaceFormat.format, VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT, &swapChain, &swapChainImages); //
+    //createSwapChain(VK_FORMAT_D16_UNORM, VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT, &depthChain, &depthImages);
 
     //vkDestroySwapchainKHR(device, swapChain, nullptr);
     //vkDestroyPipeline(device, graphicsPipeline, nullptr);
@@ -16,7 +19,7 @@ void EngineGraphics::recreateSwapChain() {
     //vkDestroyRenderPass(device, renderPass, nullptr);
 
     //createImageViews(&swapChainDepthImageViews, VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT, swapChainImageFormat); //create depth images
-    createImageViews(VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT, swapChainImageFormat); //creates color images
+    createImageViews(VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT, swapChainImageFormat, swapChainImages,  &swapChainColorImageViews); //creates color images
     createRenderPass(); //
     //createGraphicsPipeline(); //
     createFrameBuffers(); //
@@ -143,9 +146,16 @@ VkExtent2D EngineGraphics::chooseSwapExtent(const VkSurfaceCapabilitiesKHR& capa
 void EngineGraphics::initialize(create::EngineInit* initEngine) {
     engineInit = initEngine;
 
-    createSwapChain(); //
+    create::SwapChainSupport details(engineInit->physicalDevice, engineInit->surface);
+    VkSurfaceFormatKHR surfaceFormat = chooseSwapChainFormat(details.formats);
+
+    createSwapChain(surfaceFormat.format, VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT, &swapChain, &swapChainImages); //
+    //createSwapChain(VK_FORMAT_D16_UNORM, VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT, &depthChain, &depthImages);
     //createImageViews(&swapChainDepthImageViews, VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT, swapChainImageFormat); //create depth images
-    createImageViews(VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT, swapChainImageFormat); //creates color images
+    createDepthImage();
+	createImageMemory(depthImage);
+    createImageView(VK_FORMAT_D16_UNORM, VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT, depthImage, VK_IMAGE_ASPECT_DEPTH_BIT, &depthImageView);
+    createImageViews(VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT, swapChainImageFormat, swapChainImages, &swapChainColorImageViews); //creates color images
     createRenderPass(); //
     //createVertexBuffer();
     createDescriptorSetLayout();
@@ -201,8 +211,15 @@ EngineGraphics::~EngineGraphics() {
     //delete engineInit;
 }
 
-void EngineGraphics::createSwapChain() {
+void EngineGraphics::createSwapChain(VkFormat format, VkImageUsageFlags usage, VkSwapchainKHR* swapChain, std::vector<VkImage>* images) {
     create::SwapChainSupport details(engineInit->physicalDevice, engineInit->surface);
+
+    VkSurfaceCapabilitiesKHR surfaceCapabilities{};
+    if (vkGetPhysicalDeviceSurfaceCapabilitiesKHR(engineInit->physicalDevice, engineInit->surface, &surfaceCapabilities) != VK_SUCCESS) {
+        throw std::runtime_error("could not retrieve surface capabilities");
+    }
+
+    std::cout << "surface capabilities: " << surfaceCapabilities.supportedUsageFlags << std::endl;
 
     VkSurfaceFormatKHR surfaceFormat = chooseSwapChainFormat(details.formats);
     VkPresentModeKHR presentMode = chooseSwapChainPresentation(details.presentModes);
@@ -223,11 +240,11 @@ void EngineGraphics::createSwapChain() {
     createInfo.pNext = nullptr;
     createInfo.surface = engineInit->surface;
     createInfo.minImageCount = imageQueue;
-    createInfo.imageFormat = surfaceFormat.format;
+    createInfo.imageFormat = format;
     createInfo.imageColorSpace = surfaceFormat.colorSpace;
     createInfo.imageExtent = extent;
     createInfo.imageArrayLayers = 1;
-    createInfo.imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
+    createInfo.imageUsage = usage;
     createInfo.presentMode = presentMode;
     //TODO: try with false later
     createInfo.clipped = VK_TRUE;
@@ -253,44 +270,129 @@ void EngineGraphics::createSwapChain() {
     //TODO: can save resources if an old swap chain can be handed over here.
     createInfo.oldSwapchain = VK_NULL_HANDLE;
 
-    if (vkCreateSwapchainKHR(engineInit->device, &createInfo, nullptr, &swapChain) != VK_SUCCESS) {
+    if (vkCreateSwapchainKHR(engineInit->device, &createInfo, nullptr, swapChain) != VK_SUCCESS) {
         throw std::runtime_error("could not initialize the swap chain");
     };
 
     //grab swapchain images
     uint32_t numImages = 0;
-    vkGetSwapchainImagesKHR(engineInit->device, swapChain, &numImages, nullptr);
+    vkGetSwapchainImagesKHR(engineInit->device, *swapChain, &numImages, nullptr);
 
     //i dont think numImages can ever be 0 so this should be fine
     //if an error does occur it should probably get caught in the validation layer before we get undefined behaviour
-    swapChainImages.resize(numImages);
-    vkGetSwapchainImagesKHR(engineInit->device, swapChain, &numImages, swapChainImages.data());
+    images->resize(numImages);
+    vkGetSwapchainImagesKHR(engineInit->device, *swapChain, &numImages, images->data());
 
 
     swapChainImageFormat = surfaceFormat.format;
     swapChainExtent = extent;
 }
 
-std::vector<VkImage> EngineGraphics::createImages(size_t imageNum) {
-    std::vector<VkImage> images(imageNum);
+void EngineGraphics::createDepthImage() {
+	createImage(VK_FORMAT_D16_UNORM, VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT, &depthImage);
+}
 
-    for (size_t i = 0; i < imageNum; i++) {
-        VkImageCreateInfo imageInfo{};
-        imageInfo.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
-        imageInfo.imageType = VK_IMAGE_TYPE_2D;
-        imageInfo.format = VK_FORMAT_D16_UNORM;
-        //imageInfo.extent = swapChainExtent;
-        imageInfo.mipLevels = 1;
-        imageInfo.arrayLayers = 1;
+void EngineGraphics::createImage(VkFormat format, VkImageUsageFlags usage,  VkImage* image) {
 
+    create::QueueData indices(engineInit->physicalDevice, engineInit->surface);
+
+    VkImageCreateInfo imageInfo{};
+    imageInfo.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
+    imageInfo.pNext = nullptr;
+    imageInfo.imageType = VK_IMAGE_TYPE_2D;
+    imageInfo.format = format;
+    VkExtent3D newExtent{};
+    newExtent.width = swapChainExtent.width;
+    newExtent.height = swapChainExtent.height;
+    newExtent.depth = 1; //no clue how this setting will affect things
+    imageInfo.extent = newExtent;
+    //imageInfo.extent = swapChainExtent;
+    imageInfo.mipLevels = 1;
+    imageInfo.arrayLayers = 1;
+    imageInfo.samples = VK_SAMPLE_COUNT_1_BIT;
+    imageInfo.tiling = VK_IMAGE_TILING_OPTIMAL;
+    imageInfo.usage = usage;
+    imageInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
+    imageInfo.queueFamilyIndexCount = 1;
+    imageInfo.pQueueFamilyIndices = &indices.graphicsFamily.value();
+    imageInfo.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+
+    vkCreateImage(engineInit->device, &imageInfo, nullptr, image);
+}
+
+void EngineGraphics::createImageMemory(VkImage image) {
+    VkMemoryRequirements memoryReq{};
+    vkGetImageMemoryRequirements(engineInit->device, image, &memoryReq);
+
+    //create some memory for the image
+    VkMemoryAllocateInfo memoryAlloc{};
+    memoryAlloc.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
+    memoryAlloc.allocationSize = memoryReq.size;
+
+    VkPhysicalDeviceMemoryProperties memoryProperties;
+    vkGetPhysicalDeviceMemoryProperties(engineInit->physicalDevice, &memoryProperties);
+
+	VkMemoryPropertyFlags properties = VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT;
+
+    uint32_t memoryIndex = 0;
+    //uint32_t suitableMemoryForBuffer = 0;
+    for (uint32_t i = 0; i < memoryProperties.memoryTypeCount; i++) {
+        if (memoryReq.memoryTypeBits & (1 << i) && (memoryProperties.memoryTypes[i].propertyFlags & properties == properties)) {
+            memoryIndex = i;
+            break;
+        }
     }
+
+
+
+    memoryAlloc.memoryTypeIndex = memoryIndex;
+
+    vkAllocateMemory(engineInit->device, &memoryAlloc, nullptr, &depthMemory);
+
+    vkBindImageMemory(engineInit->device, depthImage, depthMemory, 0);
+}
+
+void EngineGraphics::createImageView(VkFormat format, VkImageUsageFlags usage, VkImage image, VkImageAspectFlags aspectFlag, VkImageView* imageView) {
+	VkImageViewUsageCreateInfo usageInfo{};
+	usageInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_USAGE_CREATE_INFO;
+	usageInfo.usage = usage;
+
+	//setup create struct for image views
+	VkImageViewCreateInfo createInfo{};
+	createInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
+	createInfo.pNext = &usageInfo;
+	createInfo.image = image;
+	createInfo.viewType = VK_IMAGE_VIEW_TYPE_2D;
+	createInfo.format = format;
+
+
+	//this changes the colour output of the image, currently set to standard colours
+	createInfo.components.r = VK_COMPONENT_SWIZZLE_IDENTITY;
+	createInfo.components.g = VK_COMPONENT_SWIZZLE_IDENTITY;
+	createInfo.components.b = VK_COMPONENT_SWIZZLE_IDENTITY;
+	createInfo.components.a = VK_COMPONENT_SWIZZLE_IDENTITY;
+
+	//deciding on how many layers are in the image, and if we're using any mipmap levels.
+	//TODO: come back here when you know what those mean
+	//layers are used for steroscopic 3d applications in which you would provide multiple images to each eye, creating a 3D effect.
+	//mipmap levels are an optimization made so that lower quality textures are used when further away to save resources.
+	createInfo.subresourceRange.aspectMask = aspectFlag;
+	createInfo.subresourceRange.baseMipLevel = 0;
+	createInfo.subresourceRange.levelCount = 1;
+	createInfo.subresourceRange.baseArrayLayer = 0;
+	createInfo.subresourceRange.layerCount = 1;
+
+	if (vkCreateImageView(engineInit->device, &createInfo, nullptr, imageView) != VK_SUCCESS) {
+		throw std::runtime_error("one of the image views could not be created");
+	}
+
 }
 
 //TODO:create two sets of image views so that i can upload depth data
-void EngineGraphics::createImageViews(VkImageUsageFlags usage, VkFormat format) {
-    swapChainColorImageViews.resize(swapChainImages.size());
+void EngineGraphics::createImageViews(VkImageUsageFlags usage, VkFormat format, std::vector<VkImage> images, std::vector<VkImageView>* imageViews) {
+    imageViews->resize(images.size());
 
-    for (int i = 0; i < swapChainColorImageViews.size(); i++) {
+    for (int i = 0; i < imageViews->size(); i++) {
         VkImageViewUsageCreateInfo usageInfo{};
         usageInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_USAGE_CREATE_INFO;
         usageInfo.usage = usage;
@@ -299,7 +401,7 @@ void EngineGraphics::createImageViews(VkImageUsageFlags usage, VkFormat format) 
         VkImageViewCreateInfo createInfo{};
         createInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
         createInfo.pNext = &usageInfo;
-        createInfo.image = swapChainImages[i];
+        createInfo.image = images[i];
         createInfo.viewType = VK_IMAGE_VIEW_TYPE_2D;
         createInfo.format = format;
 
@@ -320,7 +422,7 @@ void EngineGraphics::createImageViews(VkImageUsageFlags usage, VkFormat format) 
         createInfo.subresourceRange.baseArrayLayer = 0;
         createInfo.subresourceRange.layerCount = 1;
 
-        if (vkCreateImageView(engineInit->device, &createInfo, nullptr, &swapChainColorImageViews[i]) != VK_SUCCESS) {
+        if (vkCreateImageView(engineInit->device, &createInfo, nullptr, &imageViews->at(i)) != VK_SUCCESS) {
             throw std::runtime_error("one of the image views could not be created");
         }
     }
@@ -694,10 +796,10 @@ void EngineGraphics::createFrameBuffers() {
         createInfo.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
         createInfo.renderPass = renderPass;
         //we only want one image per frame buffer
-        createInfo.attachmentCount = 1;
+        createInfo.attachmentCount = 2;
         //they put the image view in a separate array for some reason
-        VkImageView imageViews[1] = {swapChainColorImageViews[i]};
-        createInfo.pAttachments = &swapChainColorImageViews[i];
+        VkImageView imageViews[2] = {depthImageView, swapChainColorImageViews[i]};
+        createInfo.pAttachments = imageViews;
         createInfo.width = swapChainExtent.width;
         createInfo.height = swapChainExtent.height;
         createInfo.layers = 1;
@@ -799,11 +901,16 @@ void EngineGraphics::createCommandBuffers(VkBuffer buffer, VkBuffer indexBuffer,
         renderInfo.renderArea = renderArea;
 
         VkClearValue clearColor = {0.0f, 0.0f, 0.0f, 1.0f};
-        renderInfo.clearValueCount = 1;
-        VkClearValue clearColors[1] = {clearColor};
+        renderInfo.clearValueCount = 2;
+        VkClearValue clearColors[2] = {clearColor, clearColor};
         renderInfo.pClearValues = clearColors;
 
         vkCmdBeginRenderPass(commandBuffers[i],  &renderInfo, VK_SUBPASS_CONTENTS_INLINE);
+        //run first subpass here?
+        //the question is what does the first subpass do?
+
+        //now after the first pass is complete we move on to the next subpass
+        vkCmdNextSubpass(commandBuffers[i], VK_SUBPASS_CONTENTS_INLINE);
 
         //add commands to command buffer
         vkCmdBindPipeline(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, graphicsPipeline);

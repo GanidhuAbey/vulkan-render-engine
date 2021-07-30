@@ -47,7 +47,12 @@ class EngineGraphics {
 
         std::vector<VkImage> swapChainImages;
         std::vector<VkImageView> swapChainColorImageViews;
-        std::vector<VkImageView> swapChainDepthImageViews;
+
+        VkImage depthImage;
+        VkImageView depthImageView;
+        VkDeviceMemory depthMemory;
+
+        //std::vector<VkImageView> swapChainDepthImageViews;
 
         VkSwapchainKHR swapChain;
 
@@ -82,7 +87,7 @@ class EngineGraphics {
         std::vector<data::Vertex2D> verts;
         std::vector<uint16_t> indexes;
 
-        
+
 
     private:
         void recreateSwapChain();
@@ -100,11 +105,14 @@ class EngineGraphics {
         //EngineGraphics(EngineInit* initEngine);
         void initialize(create::EngineInit* initEngine);
         ~EngineGraphics();
-    
+
     private:
-        void createSwapChain(); //
-        std::vector<VkImage> createImages(size_t imageNum);
-        void createImageViews(VkImageUsageFlags usage, VkFormat format);  //
+        void createSwapChain(VkFormat format, VkImageUsageFlags usage, VkSwapchainKHR* swapChain, std::vector<VkImage>* images); //
+        void createImage(VkFormat format, VkImageUsageFlags usage, VkImage* images);
+		void createDepthImage();
+        void createImageMemory(VkImage image);
+        void createImageView(VkFormat format, VkImageUsageFlags usage, VkImage image, VkImageAspectFlags aspectFlags, VkImageView* imageView);
+        void createImageViews(VkImageUsageFlags usage, VkFormat format, std::vector<VkImage> images, std::vector<VkImageView>* imageViews);  //
         void createRenderPass(); //
         void createDescriptorSetLayout();
         void createDescriptorPools();
