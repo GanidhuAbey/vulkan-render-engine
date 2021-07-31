@@ -2,8 +2,6 @@
 #include "common.hpp"
 #include "math.h"
 
-#include "jpeglib.h"
-
 using namespace gameObject;
 #pragma comment(lib, "libjpeg.lib")
 
@@ -68,7 +66,7 @@ Square::Square(int x, int y, int s, Color c, create::Engine* eng) {
     //not sure if the best place to put this...
     engine->engGraphics.createCommandBuffers(vertexBuffer, indexBuffer, indexCount);
     //engine->engGraphics->createCommandBuffers(*vertexBuffer, indexBuffer, vertices, indices);
-    
+
 }
 
 Square::~Square() {
@@ -107,7 +105,7 @@ Cube::Cube(int x, int y, int z, int s, Color c, create::Engine* eng) {
 
     float vulkanX = engine->screenToVulkan(x, engine->screenWidth, -1);
     float vulkanY = engine->screenToVulkan(y, engine->screenWidth, -1);
-    
+
     float vulkanWidth = engine->screenToVulkan(s, engine->screenWidth, 0) / 2;
     float vulkanHeight = engine->screenToVulkan(s, engine->screenWidth, 0) / 2;
 

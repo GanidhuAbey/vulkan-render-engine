@@ -15,7 +15,6 @@ int main() {
     //create square object
     gameObject::Cube cube(WIDTH/3, HEIGHT/4, 1, 100, Color(0.4, 0.5, 0.1), &engine);
 
-
     //add texture to cube
     //cube.material("./build/textures/create.jpg");
 

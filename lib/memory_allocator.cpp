@@ -1,4 +1,7 @@
 #include "../inc/memory_allocator.hpp"
+
+#include <bitset>
+
 using namespace mem;
 
 uint32_t mem::findMemoryType(VkPhysicalDevice physicalDevice, uint32_t typeFilter, VkMemoryPropertyFlags properties) {
@@ -7,11 +10,12 @@ uint32_t mem::findMemoryType(VkPhysicalDevice physicalDevice, uint32_t typeFilte
 
     //uint32_t suitableMemoryForBuffer = 0;
     for (uint32_t i = 0; i < memoryProperties.memoryTypeCount; i++) {
-        if (typeFilter & (1 << i) && (memoryProperties.memoryTypes[i].propertyFlags & properties == properties)) {
+        if (typeFilter & (1 << i) && ((memoryProperties.memoryTypes[i].propertyFlags & properties) == properties)) {
             return i;
         }
     }
 
+    std::cout << "it did not make it here right?" << std::endl;
 
     throw std::runtime_error("could not find appropriate memory type");
 
@@ -43,7 +47,7 @@ void mem::maCreateMemory(VkPhysicalDevice physicalDevice, VkDevice device, MaMem
     //allocate memory for buffer
     VkMemoryAllocateInfo memoryInfo{};
     memoryInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
-    memoryInfo.allocationSize = poolInfo->allocationSize;
+    memoryInfo.allocationSize = memRequirements.size;
     //too lazy to even check if this exists will do later TODO
     memoryInfo.memoryTypeIndex = findMemoryType(physicalDevice, memRequirements.memoryTypeBits, poolInfo->memoryProperties);
 

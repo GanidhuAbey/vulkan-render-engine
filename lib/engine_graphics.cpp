@@ -292,7 +292,7 @@ void EngineGraphics::createSwapChain() {
 
 void EngineGraphics::createDepthResources() {
     createDepthImage();
-	createImageMemory(depthImage);
+	  createImageMemory(depthImage);
     createImageView(VK_FORMAT_D16_UNORM, VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT, depthImage, VK_IMAGE_ASPECT_DEPTH_BIT, &depthImageView);
 
 }
@@ -341,7 +341,7 @@ void EngineGraphics::createImageMemory(VkImage image) {
     VkPhysicalDeviceMemoryProperties memoryProperties;
     vkGetPhysicalDeviceMemoryProperties(engineInit->physicalDevice, &memoryProperties);
 
-	VkMemoryPropertyFlags properties = VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT;
+	  VkMemoryPropertyFlags properties = VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT;
 
     uint32_t memoryIndex = 0;
     //uint32_t suitableMemoryForBuffer = 0;
@@ -1039,14 +1039,11 @@ void EngineGraphics::updateUniformBuffers(uint32_t nextImage) {
     */
     //std::cout << "uniform buffer size: " << uniformBuffers.size() << std::endl;
     //std::cout << imageCount << std::endl;
-
     for (size_t i = 0; i < (uniformMemories.size()/imageCount); i++) {
-        //std::cout << "s" <<  std::endl;
         void* data;
         vkMapMemory(engineInit->device, uniformMemories[nextImage + (imageCount * i)].memoryHandle, 0, sizeof(ubos[nextImage + (imageCount * i)]), 0, &data);
             memcpy(data, &ubos[nextImage + (imageCount * i)], sizeof(UniformBufferObject));
         vkUnmapMemory(engineInit->device, uniformMemories[nextImage + (imageCount * i)].memoryHandle);
-        //std::cout << "hello" << std::endl;
     }
 }
 

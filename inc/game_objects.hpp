@@ -31,11 +31,11 @@ class Cube {
 class Light {
     private:
         create::Engine* engine;
-    
+
     public:
         Light(int x, int y, int z, Color c, create::Engine* eng);
         ~Light();
-    
+
 };
 
 }

@@ -58,10 +58,12 @@ void Engine::writeToBuffer(void* data, VkDeviceSize dataSize, mem::MaMemory* mem
 
     void* pData;
     if (vkMapMemory(engInit.device, memoryData.memoryHandle, memoryData.offset, memoryData.resourceSize, 0, &pData) != VK_SUCCESS) {
-        throw std::runtime_error("could not attach data to vertex memory");
+        throw std::runtime_error("could not map data to buffer memory");
     }
     memcpy(pData, data, dataSize);
     vkUnmapMemory(engInit.device, memoryData.memoryHandle);
+
+    std::cout << "hey hey hey" << std::endl;
 }
 
 void Engine::createVertexBuffer(VkBuffer* vertexBuffer, mem::MaMemory* gpuMemory) {
