@@ -28,11 +28,11 @@ class EngineInit {
         GLFWwindow* window;
         VkCommandPool commandPool;
         VkQueue graphicsQueue;
-        VkQueue presentQueue;    
+        VkQueue presentQueue;
     private:
         VkInstance instance;
         VkDebugUtilsMessengerEXT debugMessenger;
-    
+
     public:
         void initialize(GLFWwindow* userWindow);
         ~EngineInit();
@@ -44,13 +44,15 @@ class EngineInit {
         void pickPhysicalDevice();
         void createLogicalDevice();
         void createCommandPool();
-
         int rateDeviceSuitability(VkPhysicalDevice device);
         bool checkValidationLayerSupport();
         std::vector<const char*> getRequiredExtensions();
         bool checkSupportedExtensions(std::vector<const char*> requiredExtensions);
         void populateDebugMessengerCreateInfo(VkDebugUtilsMessengerCreateInfoEXT& createInfo);
         bool checkDeviceExtensionSupport(VkPhysicalDevice device);
+
+    public:
+        std::vector<char> readFile(const std::string& fileName);
 };
 
 }

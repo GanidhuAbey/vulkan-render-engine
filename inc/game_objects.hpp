@@ -3,6 +3,17 @@
 #include <string.h>
 
 namespace gameObject {
+//empty object
+class EmptyObject {
+    private:
+        create::Engine* engine;
+    public:
+        EmptyObject(create::Engine* eng);
+        ~EmptyObject();
+        void addMeshData(const std::string& fileName);
+    private:
+        //void abstractToVector(std::vector* vector, void* data);
+};
 
 //square object
 class Square {

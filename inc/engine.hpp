@@ -38,7 +38,7 @@ class Engine {
         mem::MaMemory gpuMemory;
         mem::MaMemory indexMemory;
 
-        mem::MaMemoryData memoryData;        
+        mem::MaMemoryData memoryData;
         //draw::EngineDraw engineDraw;
         //in the future we can make this an array of vertices to hold multiple gameobject data.
 
@@ -57,7 +57,7 @@ class Engine {
     private:
         void createVertexBuffer(VkBuffer* vertexBuffer, mem::MaMemory* gpuMemory);
         mem::MaMemory createBuffer(VkBuffer* buffer, VkDeviceSize memorySize, VkBufferUsageFlags usage,
-        VkMemoryPropertyFlags properties);        
+        VkMemoryPropertyFlags properties);
 
 };
 }

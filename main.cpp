@@ -11,16 +11,18 @@ int main() {
     //initialize engine
     create::Engine engine(WIDTH, HEIGHT, "hello world");
 
-    gameObject::Light light(0, 0, 1, Color(1.0, 1.0, 1.0), &engine);
+    //gameObject::Light light(0, 0, 1, Color(1.0, 1.0, 1.0), &engine);
     //create square object
-    gameObject::Cube cube(WIDTH/3, HEIGHT/4, 1, 100, Color(0.4, 0.5, 0.1), &engine);
+    //gameObject::Cube cube(WIDTH/3, HEIGHT/4, 1, 100, Color(0.4, 0.5, 0.1), &engine);
 
-    //add texture to cube
-    //cube.material("./build/textures/create.jpg");
+    //create a empty object and plug in the mesh data
+    gameObject::EmptyObject test(&engine);
+    //auto t1 = std::chrono::high_resolution_clock::now();
+    test.addMeshData("../objects/test_object/test.obj");
+    auto t2 = std::chrono::high_resolution_clock::now();
+    //std::chrono::duration<double, std::milli> time_took = t2 - t1;
+    //std::cout << "the time the function took: " << time_took.count() << std::endl;
 
-    //gameObject::Square square(WIDTH/2, HEIGHT/2, 50, Color(0.4, 0.5, 0.1), &engine);
-    //square.material('x');
-    //engine.Rect(WIDTH/2, HEIGHT/2, 50, 50, Color(0.4, 0.5, 0.1));
     float xTranslate = 0;
     int frameCount = 0;
     //in radians
@@ -29,8 +31,6 @@ int main() {
         auto t1 = std::chrono::high_resolution_clock::now();
         engine.clearScreen();
         auto t2 = std::chrono::high_resolution_clock::now();
-        //cube.rotate(angle);
-        //square.rotate(angle);
 
         engine.draw();
 
@@ -40,12 +40,7 @@ int main() {
 
         frameCount++;
         angle += 0.001;
-        //std::cout << frameCount << std::endl;
-        //std::cout << ms_double.count() << std::endl;
     }
-    //vkDeviceWaitIdle(device);
-
-    //return EXIT_SUCCESS;
 
     return 1;
 }

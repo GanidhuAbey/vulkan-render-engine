@@ -84,24 +84,6 @@ VkShaderModule EngineGraphics::createShaderModule(std::vector<char> shaderCode) 
     return shaderModule;
 }
 
-std::vector<char> EngineGraphics::readFile(const std::string& filename) {
-    std::ifstream file(filename, std::ios::ate | std::ios::binary);
-
-    if (!file.is_open()) {
-        throw std::runtime_error("could not open file");
-    }
-
-    size_t fileSize = (size_t) file.tellg();
-    std::vector<char> buffer(fileSize);
-
-    file.seekg(0);
-    file.read(buffer.data(), fileSize);
-    file.close();
-
-    return buffer;
-}
-
-
 //Searches for the best available format (color space and color support for pixels)
 VkSurfaceFormatKHR EngineGraphics::chooseSwapChainFormat(const std::vector<VkSurfaceFormatKHR>& availableFormats) {
     for (const auto& availableFormat : availableFormats) {
@@ -627,8 +609,8 @@ void EngineGraphics::createDescriptorSets(VkBuffer buffer) {
 
 void EngineGraphics::createGraphicsPipeline()  {
     //load in the appropriate shader code for a triangle
-    auto vertShaderCode = readFile("shaders/vert.spv");
-    auto fragShaderCode = readFile("shaders/frag.spv");
+    auto vertShaderCode = engineInit->readFile("shaders/vert.spv");
+    auto fragShaderCode = engineInit->readFile("shaders/frag.spv");
 
     //convert the shader code into a vulkan object
     VkShaderModule vertShader = createShaderModule(vertShaderCode);

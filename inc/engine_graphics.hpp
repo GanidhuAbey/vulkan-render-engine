@@ -12,7 +12,6 @@
 
 #include <cstdlib>
 #include <algorithm>
-#include <fstream>
 #include <chrono>
 
 #define GLM_FORCE_RADIANS

@@ -1,73 +1,12 @@
 TODO: RENDER ENGINE
 
-[GOALS]
-<<<<<<< HEAD
-<<<<<<< HEAD
-- ROTATE CUBE AROUND ITS OWN CENTER
-- CREATE SCENES WITH OBJ FILES 
-- SORT GEOMETRY BY DEPTH
-=======
-=======
->>>>>>> 287851c9b52ae4d54f326ba993a64f7c3be3d4c9
-- ALPACA
-- RESTRUCTURE CODE
-- FIX RESCALING
-- CHANGE NAMESPACES 
-- MOVE CODE TO STAGE BUFFER (FASTT MEMORY?)
-- FULLSCREEN OPTION
-- COMPILE REQUIRED SHADERS FROM LIBRARY
-- MOVE VERTEX DATA IN FAST MEMORY
-- RENDER CUBE
-- APPLY ROTATION TRANSFORMATION TO CUBE
-- TEXTURES
-- MEMORY ALLOCATION FOR VULKAN?
-- LIGHTING?
-- PLAYER INPUT INTO CAMERA 
-- QUEUE SYNCHRONIZATION (SEPHAMORES?);
-<<<<<<< HEAD
->>>>>>> 287851c9b52ae4d54f326ba993a64f7c3be3d4c9
-=======
->>>>>>> 287851c9b52ae4d54f326ba993a64f7c3be3d4c9
-
-[BUGS]
-
-[FINISHED]
-- RENDER TRIANGLE
-- RENDER SQUARE
-- VERTEX BUFFER
-<<<<<<< HEAD
-<<<<<<< HEAD
-- RENDER CUBE
-- ADD UNIFORM BUFFER
-- ROTATE CUBE
-- ADD MULTIPLE OBJECTS TO SCREEN
-=======
->>>>>>> 287851c9b52ae4d54f326ba993a64f7c3be3d4c9
-=======
->>>>>>> 287851c9b52ae4d54f326ba993a64f7c3be3d4c9
-
-[QUESTIONS]
-- How can I reuse existing, allocatee memory
-  -- Do I save the buffers associated with the memory and create a call for a new buffer everytime I need it?
-<<<<<<< HEAD
-<<<<<<< HEAD
-
-- Depth Buffer
-  -- create depth vector housing each objects depth.
-  -- sort object vertices and indices based on its depth.
-  -- draw?
---- this would probably work but we waste so much resources passing objects through the vertex and fragment shader
-    when at least parts of it will never be rendered.
+[STEPS]
+- import objects into the scene through obj files []
+- seperate transforms for each object []
+- ...
+- add transform to empty gameObject []
+- change 'data::Vertex2D' to 'data::Vertex' []
 
 
-  -- currently we have a single render pass giving color output at the end.
-  -- if we create another render pass that will just apply the vertices to the world space
-     we can calculate exactly which triangles we need to draw and which ones we can discard
-  
-  -- how do we create another render pass?
-      -- how did we create the first render pass?
-      -- what is a render pass?
-=======
->>>>>>> 287851c9b52ae4d54f326ba993a64f7c3be3d4c9
-=======
->>>>>>> 287851c9b52ae4d54f326ba993a64f7c3be3d4c9
+[NOTE]
+- when running the command 'vkcube' using an external monitor the program outputs the error "could not find both graphics and present queues"

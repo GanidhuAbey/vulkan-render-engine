@@ -5,6 +5,9 @@
 #define GLFW_INCLUDE_VULKAN
 #include <GLFW/glfw3.h>
 
+
+#include <fstream>
+
 //this is the standard validation layer that is included in the vulkan sdk
 //if more validation layers are needed then its best to add them here
 //(i think)
@@ -77,6 +80,24 @@ bool EngineInit::checkDeviceExtensionSupport(VkPhysicalDevice device)
     return true;
 }
 
+std::vector<char> EngineInit::readFile(const std::string& filename) {
+    std::ifstream file(filename, std::ios::ate | std::ios::binary);
+
+    if (!file.is_open()) {
+        throw std::runtime_error("could not open file");
+    }
+
+    size_t fileSize = (size_t) file.tellg();
+    std::vector<char> buffer(fileSize);
+
+    file.seekg(0);
+    file.read(buffer.data(), fileSize);
+    file.close();
+
+    return buffer;
+}
+
+
 //TODO: update to vulkan version 1.2
 int EngineInit::rateDeviceSuitability(VkPhysicalDevice device)
 {
@@ -99,6 +120,8 @@ int EngineInit::rateDeviceSuitability(VkPhysicalDevice device)
     //eviceFeatures.features = vulkan10Features;
 
     //vkGetPhysicalDeviceFeatures2(device, &deviceFeatures);
+
+    //std::cout << "device name:  "  << deviceProperties.deviceName << std::endl;
 
     if (deviceProperties.deviceType == VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU)
     {
@@ -232,6 +255,8 @@ void EngineInit::populateDebugMessengerCreateInfo(VkDebugUtilsMessengerCreateInf
 void EngineInit::initialize(GLFWwindow *userWindow)
 {
     window = userWindow;
+
+    std::cout << "HELLO" << std::endl;
     createInstance();
     createSurface();
     setupDebugMessenger();
@@ -374,6 +399,7 @@ void EngineInit::pickPhysicalDevice()
 
     for (const auto &device : devices)
     {
+        //std::cout << "devices: " << device << std::endl;
         int score = rateDeviceSuitability(device);
         candidates.insert(std::make_pair(score, device));
     }
@@ -381,7 +407,13 @@ void EngineInit::pickPhysicalDevice()
     if (candidates.rbegin()->first > 0)
     {
         //this device is suitable
+        //std::cout << physicalDevice << std::endl;
         physicalDevice = candidates.rbegin()->second;
+        VkPhysicalDeviceProperties deviceProperties{};
+
+        vkGetPhysicalDeviceProperties(candidates.rbegin()->second, &deviceProperties);
+
+        std::cout << deviceProperties.deviceName << std::endl;
     }
     else
     {
@@ -393,6 +425,9 @@ void EngineInit::pickPhysicalDevice()
 void EngineInit::createLogicalDevice()
 {
     QueueData indices(physicalDevice, surface);
+
+    std::cout << "graphics queue: " << indices.graphicsFamily.value() << std::endl;
+    std::cout << "present queue: " << indices.presentFamily.value() << std::endl;
 
     //Load Queues
     std::vector<VkDeviceQueueCreateInfo> queueCreateInfos;
