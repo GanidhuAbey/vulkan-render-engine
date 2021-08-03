@@ -74,7 +74,7 @@ void EmptyObject::addMeshData(const std::string& fileName) {
                 count++;
                 value.erase(0, pos + delimiter.length());
             }
-            indices.push_back(index_types[0]);
+            indices.push_back(index_types[0] - 1);
             value = "";
         }
 

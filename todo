@@ -1,7 +1,8 @@
 TODO: RENDER ENGINE
 
 [STEPS]
-- import objects into the scene through obj files []
+- import objects into the scene through obj files [/]
+- seperate drawIndexed() call for each object []
 - seperate transforms for each object []
 - ...
 - add transform to empty gameObject []
