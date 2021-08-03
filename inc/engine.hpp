@@ -51,11 +51,13 @@ class Engine {
         void Rect(int x, int y, int w, int h, Color c);
         void clearScreen();
         void draw();
-        void writeToBuffer(void* data, VkDeviceSize dataSize, mem::MaMemory* memory);
         float screenToVulkan(int screenCoord, int screenSize, int vulkanMin);
+        void writeToVertexBuffer(VkDeviceSize dataSize, void* data);
+        void writeToIndexBuffer(VkDeviceSize dataSize, void* data);
 
     private:
-        void createVertexBuffer(VkBuffer* vertexBuffer, mem::MaMemory* gpuMemory);
+        void writeToDeviceBuffer(VkDeviceSize dataSize, VkBuffer dstBuffer, void* data);
+        mem::MaMemoryData createTempBuffer(VkDeviceSize dataSize, VkBufferUsageFlags usage, VkBuffer* tempBuffer, mem::MaMemory* tempMemory);
         mem::MaMemory createBuffer(VkBuffer* buffer, VkDeviceSize memorySize, VkBufferUsageFlags usage,
         VkMemoryPropertyFlags properties);
 

@@ -139,8 +139,8 @@ void EmptyObject::addMeshData(const std::string& fileName) {
     */
     indexCount += indices.size();
 
-    engine->writeToBuffer(vertices.data(), sizeof(vertices[0]) * vertices.size(), &engine->gpuMemory);
-    engine->writeToBuffer(indices.data(), sizeof(indices[0]) * indices.size(), &engine->indexMemory);
+    engine->writeToVertexBuffer(sizeof(vertices[0]) * vertices.size(), vertices.data());
+    engine->writeToIndexBuffer(sizeof(indices[0]) * indices.size(), indices.data());
 
     //not sure if the best place to put this...
     engine->engGraphics.createCommandBuffers(vertexBuffer, indexBuffer, indexCount);
@@ -199,8 +199,8 @@ Square::Square(int x, int y, int s, Color c, create::Engine* eng) {
     */
 
     //upload the vertices data over here instead
-    engine->writeToBuffer(vertices.data(), sizeof(vertices[0]) * vertices.size(), &engine->gpuMemory);
-    engine->writeToBuffer(indices.data(), sizeof(indices[0]) * indices.size(), &engine->indexMemory);
+    engine->writeToVertexBuffer(sizeof(vertices[0]) * vertices.size(), vertices.data());
+    engine->writeToIndexBuffer(sizeof(indices[0]) * indices.size(), indices.data());
 
     //not sure if the best place to put this...
     engine->engGraphics.createCommandBuffers(vertexBuffer, indexBuffer, indexCount);
@@ -287,8 +287,8 @@ Cube::Cube(int x, int y, int z, int s, Color c, create::Engine* eng) {
     objectCount++;
 
     //
-    engine->writeToBuffer(vertices.data(), sizeof(vertices[0]) * vertices.size(), &engine->gpuMemory);
-    engine->writeToBuffer(indices.data(), sizeof(indices[0]) * indices.size(), &engine->indexMemory);
+    engine->writeToVertexBuffer(sizeof(vertices[0]) * vertices.size(), vertices.data());
+    engine->writeToIndexBuffer(sizeof(indices[0]) * indices.size(), indices.data());
 
     engine->engGraphics.createCommandBuffers(vertexBuffer, indexBuffer, indexCount);
 
@@ -351,8 +351,8 @@ Light::Light(int x, int y, int z, Color c, create::Engine* eng) {
     indexCount += indices.size();
     objectCount++;
 
-    engine->writeToBuffer(vertices.data(), sizeof(vertices[0]) * vertices.size(), &engine->gpuMemory);
-    engine->writeToBuffer(indices.data(), sizeof(indices[0]) * indices.size(), &engine->indexMemory);
+    engine->writeToVertexBuffer(sizeof(vertices[0]) * vertices.size(), vertices.data());
+    engine->writeToIndexBuffer(sizeof(indices[0]) * indices.size(), indices.data());
 
     //move to draw call probably
     //std::cout << indexCount << std::endl;

@@ -19,9 +19,9 @@ Engine::Engine(int w, int h, const char* title) {
     engGraphics.initialize(&engInit);
 
     //creates vertex buffer
-    gpuMemory = createBuffer(&vertexBuffer, 5e7, VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
+    gpuMemory = createBuffer(&vertexBuffer, 5e7, VK_BUFFER_USAGE_VERTEX_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
     //create index buffer
-    indexMemory = createBuffer(&indexBuffer, 5e7, VK_BUFFER_USAGE_INDEX_BUFFER_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
+    indexMemory = createBuffer(&indexBuffer, 5e7, VK_BUFFER_USAGE_INDEX_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
     //create uniform buffer
     //uniformMemory = createBuffer(&uniformBuffer, 5e7, VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
     //update uniform buffer memory
@@ -51,33 +51,60 @@ void Engine::draw() {
     engineDraw.initialize(indexBuffer, &engGraphics, &engInit, &vertexBuffer, &gpuMemory);
 }
 
-void Engine::writeToBuffer(void* data, VkDeviceSize dataSize, mem::MaMemory* memory) {
-    *memory = mem::maAllocateMemory(*memory, dataSize, &memoryData);
+//PURPOSE - write data to buffer in device local memory, do NOT use this function for other memory types
+//PARAMETERS - dataSize : (the size of the data being given to buffer)
+//           - dstBuffer :  (the device local buffer the data will be written to)
+//           - data : (the actual data that will be given to the buffer)/
+//RETURNS - NONE
+void Engine::writeToDeviceBuffer(VkDeviceSize dataSize, VkBuffer dstBuffer, void* data) {
+    //create and allocate memory for a temporary cpu readable buffer
+    mem::MaMemoryData tempMemoryInfo{};
+    mem::MaMemory tempMemory{};
+    VkBuffer tempBuffer{};
 
-    std::cout << "offset  factors : " << memoryData.offset - memory->offsetAmt << std::endl;
+    tempMemoryInfo = createTempBuffer(dataSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, &tempBuffer, &tempMemory);
 
+    //map data to temporary buffer
     void* pData;
-    if (vkMapMemory(engInit.device, memoryData.memoryHandle, memoryData.offset, memoryData.resourceSize, 0, &pData) != VK_SUCCESS) {
+    if (vkMapMemory(engInit.device, tempMemoryInfo.memoryHandle,tempMemoryInfo.offset,tempMemoryInfo.resourceSize, 0, &pData) != VK_SUCCESS) {
         throw std::runtime_error("could not map data to buffer memory");
     }
     memcpy(pData, data, dataSize);
-    vkUnmapMemory(engInit.device, memoryData.memoryHandle);
+    vkUnmapMemory(engInit.device, tempMemoryInfo.memoryHandle);
 
-    std::cout << "hey hey hey" << std::endl;
+    //transfer memory from temp buffer to given device local buffer
+    engGraphics.copyBuffer(tempBuffer, dstBuffer, dataSize);
+
+    //destroy buffer and its associated memory
+    mem::maDestroyMemory(engInit.device, tempMemory, tempBuffer);
 }
 
-void Engine::createVertexBuffer(VkBuffer* vertexBuffer, mem::MaMemory* gpuMemory) {
-    //the source transfer bit allows this buffer to transfer its data to other buffers that have the destination bit flag.
+//PURPOSE - abstract a bit away from the underlying api when writing to the proper buffer
+//PARAMETERS - [VkDeviceSize] dataSize - the size of the data being written to vertex buffer
+//           - [void*] data - the data being written to vertex buffer
+//RETURNS - NONE
+void Engine::writeToVertexBuffer(VkDeviceSize dataSize, void* data) {
+    writeToDeviceBuffer(dataSize, vertexBuffer, data);
+}
 
-    /*
-    void* data;
-    //now i should have done everything needed to attach memory to the buffer.
-    if (vkMapMemory(engineInit->device, cpuMemory.memory, cpuMemory.offset, bufferSize, 0, &data) != VK_SUCCESS) {
-        throw std::runtime_error("could not attach data to vertex memory");
-    }
-    memcpy(data, vertices.data(), bufferSize);
-    vkUnmapMemory(engineInit->device, cpuMemory.memory);
-    */
+void Engine::writeToIndexBuffer(VkDeviceSize dataSize, void* data) {
+    writeToDeviceBuffer(dataSize, indexBuffer, data);
+}
+
+//PURPOSE - create and allocate memory for a small cpu-readable buffer
+//PARAMETERS  - [VkDeviceSize] dataSize (size of the data that will be allocated to this buffer)
+//            - [VkBufferUsageFlags] usage (the type of buffer this buffer will transfer data to)
+//            - [VkBuffer*] tempBuffer (memory location for the temp buffer to be created to)
+//            - [mem::MaMemory*] tempMemory (memory location for the temp memory to be created to)
+//RETURNS - [mem::MaMemoryData] memoryData (struct data giving information on where to allocate the data to)
+mem::MaMemoryData Engine::createTempBuffer(VkDeviceSize dataSize, VkBufferUsageFlags usage, VkBuffer* tempBuffer, mem::MaMemory* tempMemory) {
+    *tempMemory = createBuffer(tempBuffer, dataSize, usage, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
+
+    //allocate memory for temp buffer
+    mem::MaMemoryData memoryData{};
+    *tempMemory = mem::maAllocateMemory(*tempMemory, dataSize, &memoryData);
+
+    return memoryData;
 }
 
 //TODO: put output variables as the last parameters

@@ -514,8 +514,6 @@ void EngineGraphics::createDescriptorSetLayout() {
         throw std::runtime_error("could not create descriptor set");
     }
 
-
-
 }
 
 void EngineGraphics::createUniformBuffer(size_t bufferCount) {

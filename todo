@@ -2,7 +2,10 @@ TODO: RENDER ENGINE
 
 [STEPS]
 - import objects into the scene through obj files [/]
+- move buffers to device local memory [/]
+- overhaul the memory allocator system []
 - seperate drawIndexed() call for each object []
+- move the image memory function to the memory allocator []
 - seperate transforms for each object []
 - ...
 - add transform to empty gameObject []
