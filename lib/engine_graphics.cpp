@@ -159,7 +159,7 @@ EngineGraphics::~EngineGraphics() {
     vkDestroyDescriptorSetLayout(engineInit->device, setLayout,  nullptr);
 
     for (size_t i = 0; i < uniformBuffers.size(); ++i) {
-        mem::maDestroyMemory(engineInit->device, uniformMemories[i], uniformBuffers[i]);
+        mem::maDestroyMemory(engineInit->device, uniformMemories[i]);
     }
 
     //destroy depth data
@@ -524,14 +524,17 @@ void EngineGraphics::createUniformBuffer(size_t bufferCount) {
     uniformBuffers.resize(swapChainImages.size() * bufferCount);
     uniformMemories.resize(swapChainImages.size() * bufferCount);
 
-    mem::MaMemoryInfo memoryInfo{};
-    memoryInfo.allocationSize = bufferSize;
-    memoryInfo.bufferUsage = VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT;
-    memoryInfo.memoryProperties = VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT;
-    memoryInfo.queueFamilyIndexCount = indices.graphicsFamily.value();
+    mem::MaBufferCreateInfo bufferInfo{};
+    bufferInfo.usage = VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT;
+    bufferInfo.size  = bufferSize;
+    bufferInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
+    bufferInfo.queueFamilyIndexCount = 1;
+    bufferInfo.pQueueFamilyIndices = &indices.graphicsFamily.value();
+    bufferInfo.memoryProperties = VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT;
 
     for (size_t i = 0; i < swapChainImages.size() * bufferCount; i++) {
-        mem::maCreateMemory(engineInit->physicalDevice, engineInit->device, &memoryInfo, &uniformBuffers[i], &uniformMemories[i]);
+        mem::maCreateBuffer(engineInit->physicalDevice, engineInit->device, &bufferInfo, &uniformMemories[i]);
+        uniformBuffers[i] = uniformMemories[i].buffer; //NOTE: should not need this after we finish with the new memory allocator
     }
 
     /*
@@ -800,7 +803,7 @@ void EngineGraphics::createFrameBuffers() {
     }
 }
 //TODO: use seperate command pool for memory optimizations
-void EngineGraphics::copyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size) {
+void EngineGraphics::copyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize dstOffset, VkDeviceSize size) {
     //create command buffer
     VkCommandBuffer transferBuffer;
 
@@ -827,7 +830,8 @@ void EngineGraphics::copyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDevice
     //transfer between buffers
     VkBufferCopy copyData{};
     copyData.srcOffset = 0;
-    copyData.dstOffset = 0;
+    //TODO: need to allocate memory and choose a proper offset for this
+    copyData.dstOffset = dstOffset;
     copyData.size = size;
 
     vkCmdCopyBuffer(transferBuffer,

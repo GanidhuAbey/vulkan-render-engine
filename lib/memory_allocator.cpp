@@ -1,7 +1,7 @@
 #include "../inc/memory_allocator.hpp"
 
 #include <bitset>
-
+#include <cstring>
 using namespace mem;
 
 uint32_t mem::findMemoryType(VkPhysicalDevice physicalDevice, uint32_t typeFilter, VkMemoryPropertyFlags properties) {
@@ -20,103 +20,134 @@ uint32_t mem::findMemoryType(VkPhysicalDevice physicalDevice, uint32_t typeFilte
     throw std::runtime_error("could not find appropriate memory type");
 
 }
+//PURPOSE - create a buffer and allocate it with the memory required by the user
+//PARAMETERS - [VkPhysicalDevice] physicalDevice - the GPU the renderer is rendering on
+//           - [VkDevice] device - the logical device containing info on which parts of the GPU i'll be using
+//           - [MaBufferCreateInfo*] pCreateInfo - information struct needed to create a buffer
+//           - [MaMemory*] memory - the memory struct this function will write its data to
+//RETURNS - NONE
+void mem::maCreateBuffer(VkPhysicalDevice physicalDevice, VkDevice device, MaBufferCreateInfo* pCreateInfo, MaMemory* pMemory) {
+    VkBufferCreateInfo createInfo{};
+    createInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
+    createInfo.pNext = pCreateInfo->pNext;
+    createInfo.flags = pCreateInfo->flags;
+    createInfo.usage = pCreateInfo->usage;
+    createInfo.size = pCreateInfo->size;
+    createInfo.sharingMode = pCreateInfo->sharingMode;
+    createInfo.queueFamilyIndexCount = pCreateInfo->queueFamilyIndexCount;
+    createInfo.pQueueFamilyIndices = pCreateInfo->pQueueFamilyIndices;
 
-void mem::maCreateMemory(VkPhysicalDevice physicalDevice, VkDevice device, MaMemoryInfo* poolInfo, VkBuffer* buffer, MaMemory* maMemory) {
-    VkBufferCreateInfo bufferInfo{};
-    bufferInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
-    //bufferInfo.flags = VK_BUFFER_USAGE_VERTEX_BUFFER_BIT;
-    //TODO: currently hard coding the buffer allocation, this needs to change
-    //cannot determine the amount of data the user will use from the beginning so this buffer needs to be able to change size
-    bufferInfo.size = poolInfo->allocationSize;
-    bufferInfo.usage = poolInfo->bufferUsage;
-    //vertex buffer only needs to be accessed by graphics queue right now to draw.
-    //NOTE: when i get new computer, maybe worth abstracting this
-    bufferInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
-    bufferInfo.queueFamilyIndexCount = 1;
-    //NOTE: when getting into compute shading might be worth to abstract this
-    bufferInfo.queueFamilyIndexCount = poolInfo->queueFamilyIndexCount;
+    vkCreateBuffer(device, &createInfo, nullptr, &pMemory->buffer);
 
-    if (vkCreateBuffer(device, &bufferInfo, nullptr, buffer) != VK_SUCCESS) {
-        throw std::runtime_error("could not create vertex buffer");
-    }
-
-    //bind appropriate memory to the buffer;
+    //allocate desired memory to buffer
     VkMemoryRequirements memRequirements;
-    vkGetBufferMemoryRequirements(device, *buffer, &memRequirements);
+    vkGetBufferMemoryRequirements(device, pMemory->buffer, &memRequirements);
 
     //allocate memory for buffer
     VkMemoryAllocateInfo memoryInfo{};
     memoryInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
     memoryInfo.allocationSize = memRequirements.size;
     //too lazy to even check if this exists will do later TODO
-    memoryInfo.memoryTypeIndex = findMemoryType(physicalDevice, memRequirements.memoryTypeBits, poolInfo->memoryProperties);
+    memoryInfo.memoryTypeIndex = findMemoryType(physicalDevice, memRequirements.memoryTypeBits, pCreateInfo->memoryProperties);
 
-    VkResult allocResult = vkAllocateMemory(device, &memoryInfo, nullptr, &maMemory->memoryHandle);
+    VkResult allocResult = vkAllocateMemory(device, &memoryInfo, nullptr, &pMemory->memoryHandle);
 
     if (allocResult != VK_SUCCESS) {
         std::cout << allocResult << std::endl;
         throw std::runtime_error("could not allocate memory for memory pool");
     }
 
-    if (vkBindBufferMemory(device, *buffer, maMemory->memoryHandle, 0) != VK_SUCCESS) {
+    if (vkBindBufferMemory(device, pMemory->buffer, pMemory->memoryHandle, 0) != VK_SUCCESS) {
         throw std::runtime_error("could not bind allocated memory to buffer");
     }
 
-    maMemory->sizes.resize(1);
-    maMemory->offsets.resize(1);
+    //initialize the memory chunk for the maAllocateMemory to use
+    Space freeSpace{};
+    freeSpace.offset = 0;
+    freeSpace.size = pCreateInfo->size;
 
-    maMemory->sizes[0] = memRequirements.size;
-    maMemory->offsets[0] = 0;
-
-
-    maMemory->alignmentMultiple = memRequirements.alignment;
+    pMemory->locations.push_back(freeSpace);
 }
+//PURPOSE - create a image and allocate it with the memory required by the user
+void mem::maCreateImage()  {}
 
-MaMemory mem::maAllocateMemory(MaMemory maMemory, VkDeviceSize resourceSize, MaMemoryData* memoryData) {
-    //find space in buffer
-    size_t memoryIndex = 0;
-    bool poolFound = false;
-    for (size_t i = 0; i < maMemory.sizes.size(); i++) {
-        if (maMemory.sizes[i] > resourceSize) {
-            //found a place for the memory to be attached
-            poolFound = true;
-            memoryIndex = i;
+
+//PURPOSE - given a memory block preserve a chunk of memory to be 'allocated' so that it can be filled with data without causing
+//          conflicts
+//PARAMETRS - [VkDeviceSize] allocationSize (how much memory needs to be preserved in bytes)
+//            [MaMemory*] pMemory (memory struct which we will pass on the data for where the memory has been preserved)
+//RETURNS - NONE
+void mem::maAllocateMemory(VkDeviceSize allocationSize, MaMemory* pMemory) {
+    for (auto it = pMemory->locations.rbegin(); it != pMemory->locations.rend(); it++) {
+        if (it->size >= allocationSize) {
+            VkDeviceSize offsetLocation;
+            memcpy(&offsetLocation, &(it->offset), sizeof(it->offset));
+            pMemory->offset = offsetLocation;
+            pMemory->allocate = true;
+
+            it->offset = it->offset + allocationSize;
+            it->offset = it->size - allocationSize;
             break;
         }
     }
-    //if pool found is false, then the buffer can't fit anymore data
 
-    memoryData->memoryHandle = maMemory.memoryHandle;
-    memoryData->offset = maMemory.offsets[memoryIndex] - maMemory.alignmentOffset;
-    memoryData->resourceSize = resourceSize;
-    memoryData->offsetIndex = memoryIndex;
-
-
-
-    //maMemory.offsets[memoryIndex] += ceil (static_cast<float>( resourceSize ) / static_cast<float>( maMemory.alignmentMultiple )) * maMemory.alignmentMultiple;
-    maMemory.offsets[memoryIndex] += resourceSize;
-    //maMemory.alignmentOffset = maMemory.offsets[memoryIndex] - resourceSize;
-    maMemory.sizes[memoryIndex] -= resourceSize;
-
-    //std::cout << "resource size: " <<  resourceSize <<  std::endl;
-    //std::cout << "offset size: " << maMemory.offsets[0] << std::endl;
-
-    return maMemory;
-
+    if (!pMemory->allocate) {
+        throw std::runtime_error("welp now u have to fix this");
+    }
 }
 
-void mem::maFreeMemory(MaMemory* maMemory, MaMemoryData memoryData) {
-    //instead of actually deallocating the memory and wasting time, allocating it later
-    //we'll just tell the user we deallocated the data while keeping it to write new data later.
-    maMemory->offsets[memoryData.offsetIndex] = memoryData.offset;
-    maMemory->sizes[memoryData.offsetIndex] += memoryData.resourceSize;
+//PURPOSE - free memory described by the struct the user gives so that future memory allocations can use the space to allocate memory
+//PARAMETERS - [MaFreeMemoryInfo] freeInfo (struct describing the data the user wants to  free)
+//           - [MaMemory*] pMemory (pointer to the memory where the data is located)
+//RETURNS - NONE
+void mem::maFreeMemory(MaFreeMemoryInfo freeInfo, MaMemory* pMemory) {
+    //need to do a check on where this data is
+    //iterate through the memory locations to figure out if any offsets match
+    for (auto it = pMemory->locations.begin(); it != pMemory->locations.end(); it++) {
+        VkDeviceSize freeOffset = freeInfo.deleteOffset + freeInfo.deleteSize;
+        if (freeOffset < it->offset) {
+            //we know we need to insert a new value into the vector, so we can break after we finish
+            const Space& freeSpace = {
+                freeInfo.deleteOffset,
+                freeInfo.deleteSize,
+            };
+
+            //insert into list
+            pMemory->locations.insert(it, freeSpace);
+            break;
+        }
+        if (freeOffset == it->offset) {
+            //we know we need to move the value in the vector, so we can break after we finish
+            it->offset -= freeInfo.deleteSize;
+            it->size += freeInfo.deleteSize;
+            break;
+        }
+    }
 }
 
-void mem::maDestroyMemory(VkDevice device, MaMemory maMemory, VkBuffer buffer) {
+//PURPOSE - map the given data to the given memory
+//PARAMETERS - [VkDevice] device - the logical device
+//           - [VkDeviceSize] dataSize - the size of the data being mapped
+//           - [MaMemory*] pMemory - pointer to memory struct
+//           - [void*] data - the data actually being mapped
+void mem::maMapMemory(VkDevice device, VkDeviceSize dataSize, MaMemory* pMemory, void* data) {
+    if (!pMemory->allocate) {
+        throw std::runtime_error("tried to map memory to unallocated data");
+    }
+
+    void* pData;
+    if (vkMapMemory(device, pMemory->memoryHandle, pMemory->offset, dataSize, 0, &pData) != VK_SUCCESS) {
+        throw std::runtime_error("could not map data to memory");
+    }
+    memcpy(pData, data, dataSize);
+    vkUnmapMemory(device, pMemory->memoryHandle);
+}
+
+void mem::maDestroyMemory(VkDevice device, MaMemory maMemory) {
     vkDeviceWaitIdle(device);
     //free the large chunk of memory
     vkFreeMemory(device, maMemory.memoryHandle, nullptr);
 
     //destroy the associated buffer
-    vkDestroyBuffer(device, buffer, nullptr);
+    vkDestroyBuffer(device, maMemory.buffer, nullptr);
 }

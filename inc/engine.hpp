@@ -5,8 +5,6 @@
 #include "engine_draw.hpp"
 #include "memory_allocator.hpp"
 
-
-
 #include "data_formats.hpp"
 
 #include "glm/glm.hpp"
@@ -24,6 +22,9 @@ class Color {
 namespace create {
 class Engine {
     private:
+        uint32_t queueG;
+        uint32_t queueP;
+
         GLFWwindow* glfWindow;
 
         uint32_t primitiveCount = 0;
@@ -54,10 +55,13 @@ class Engine {
         float screenToVulkan(int screenCoord, int screenSize, int vulkanMin);
         void writeToVertexBuffer(VkDeviceSize dataSize, void* data);
         void writeToIndexBuffer(VkDeviceSize dataSize, void* data);
+        void addToRenderQueue(uint16_t indexCount);
 
     private:
-        void writeToDeviceBuffer(VkDeviceSize dataSize, VkBuffer dstBuffer, void* data);
-        mem::MaMemoryData createTempBuffer(VkDeviceSize dataSize, VkBufferUsageFlags usage, VkBuffer* tempBuffer, mem::MaMemory* tempMemory);
+        void createVertexBuffer(mem::MaMemory* pMemory);
+        void createIndexBuffer(mem::MaMemory* pMemory);
+        void writeToDeviceBuffer(VkDeviceSize dataSize, mem::MaMemory* pMemory, void* data);
+        void createTempBuffer(VkDeviceSize dataSize, VkBufferUsageFlags usage, mem::MaMemory* tempMemory);
         mem::MaMemory createBuffer(VkBuffer* buffer, VkDeviceSize memorySize, VkBufferUsageFlags usage,
         VkMemoryPropertyFlags properties);
 

@@ -10,6 +10,7 @@
 #include <vector>
 #include <math.h>
 #include <algorithm>
+#include <list>
 
 //100 mb of data per allocation
 //TODO: need to create a information struct in the style of vulkan to let user manipulate this data
@@ -25,13 +26,37 @@ struct MaMemoryInfo {
 
 };
 
+struct MaBufferCreateInfo {
+    const void* pNext = nullptr;
+    VkBufferCreateFlags flags = 0;
+    VkDeviceSize size;
+    VkBufferUsageFlags usage;
+    VkSharingMode sharingMode;
+    uint32_t queueFamilyIndexCount;
+    const uint32_t* pQueueFamilyIndices;
+
+    VkMemoryPropertyFlags memoryProperties;
+};
+
+struct Space {
+    VkDeviceSize offset;
+    VkDeviceSize size;
+};
+
+struct MaFreeMemoryInfo {
+    VkDeviceSize deleteSize;
+    VkDeviceSize deleteOffset;
+};
+
 struct MaMemory {
+    VkBuffer buffer;
+    VkImage image;
     VkDeviceMemory memoryHandle;
-    std::vector<VkDeviceSize> sizes;
-    std::vector<VkDeviceSize> offsets;
-    VkDeviceSize alignmentMultiple = 0;
-    VkDeviceSize alignmentOffset = 0;
-    VkDeviceSize offsetAmt = 0;
+    VkDeviceSize offset;
+    size_t deleteIndex;
+    bool allocate;
+
+    std::list<Space> locations;
 };
 
 struct MaMemoryData {
@@ -40,12 +65,14 @@ struct MaMemoryData {
     VkDeviceSize resourceSize;
     size_t offsetIndex;
 };
-
+void maCreateBuffer(VkPhysicalDevice physicalDevice, VkDevice device, MaBufferCreateInfo* pCreateInfo, MaMemory* memory);
+void maCreateImage();
+void maMapMemory(VkDevice device, VkDeviceSize dataSize, MaMemory* pMemory, void* data);
 uint32_t findMemoryType(VkPhysicalDevice physicalDevice, uint32_t typeFilter, VkMemoryPropertyFlags properties);
 
 void maCreateMemory(VkPhysicalDevice physicalDevice, VkDevice device, MaMemoryInfo* poolInfo, VkBuffer* buffer, MaMemory* maMemory);
-MaMemory maAllocateMemory(MaMemory maMemory, VkDeviceSize resourceSize, MaMemoryData* memoryData);
-void maFreeMemory(MaMemory* maMemory, MaMemoryData memoryData);
-void maDestroyMemory(VkDevice device, MaMemory maMemory, VkBuffer buffer);
+void maAllocateMemory(VkDeviceSize allocationSize, MaMemory* pMemory);
+void maFreeMemory(MaFreeMemoryInfo freeInfo, MaMemory* pMemory);
+void maDestroyMemory(VkDevice device, MaMemory maMemory);
 
 } // namespace mem

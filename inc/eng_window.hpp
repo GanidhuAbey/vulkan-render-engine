@@ -19,12 +19,10 @@ class EngWindow {
         GLFWwindow *window;
         int width;
         int height;
-        const char* title;    
+        const char* title;
     //functions user can interact with
     public:
         bool closeRequest();
-        
-        
 };
 
 }

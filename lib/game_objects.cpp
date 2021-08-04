@@ -143,7 +143,8 @@ void EmptyObject::addMeshData(const std::string& fileName) {
     engine->writeToIndexBuffer(sizeof(indices[0]) * indices.size(), indices.data());
 
     //not sure if the best place to put this...
-    engine->engGraphics.createCommandBuffers(vertexBuffer, indexBuffer, indexCount);
+    //not the place at ALL to put this functionality
+    engine->addToRenderQueue(indexCount);
 }
 
 //Square GameObject  ------------------------------------------------------------------------------------------
@@ -203,8 +204,8 @@ Square::Square(int x, int y, int s, Color c, create::Engine* eng) {
     engine->writeToIndexBuffer(sizeof(indices[0]) * indices.size(), indices.data());
 
     //not sure if the best place to put this...
-    engine->engGraphics.createCommandBuffers(vertexBuffer, indexBuffer, indexCount);
     //engine->engGraphics->createCommandBuffers(*vertexBuffer, indexBuffer, vertices, indices);
+    engine->addToRenderQueue(indexCount);
 
 }
 
@@ -290,8 +291,7 @@ Cube::Cube(int x, int y, int z, int s, Color c, create::Engine* eng) {
     engine->writeToVertexBuffer(sizeof(vertices[0]) * vertices.size(), vertices.data());
     engine->writeToIndexBuffer(sizeof(indices[0]) * indices.size(), indices.data());
 
-    engine->engGraphics.createCommandBuffers(vertexBuffer, indexBuffer, indexCount);
-
+    engine->addToRenderQueue(indexCount);
 }
 
 Cube::~Cube() {}
@@ -356,7 +356,7 @@ Light::Light(int x, int y, int z, Color c, create::Engine* eng) {
 
     //move to draw call probably
     //std::cout << indexCount << std::endl;
-    engine->engGraphics.createCommandBuffers(vertexBuffer, indexBuffer, indexCount);
+    engine->addToRenderQueue(indexCount);
 }
 
 Light::~Light() {}
