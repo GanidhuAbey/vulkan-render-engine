@@ -32,6 +32,8 @@ int main() {
         engine.clearScreen();
         auto t2 = std::chrono::high_resolution_clock::now();
 
+        test.addTransform(0, 0, 0, angle);
+
         engine.draw();
 
         std::chrono::duration<double, std::milli> ms_double = t2 - t1;

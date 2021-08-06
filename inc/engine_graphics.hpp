@@ -30,14 +30,6 @@ class EngineGraphics {
         std::vector<data::Vertex2D> oldVertices;
         std::vector<VkCommandBuffer> commandBuffers;
 
-        struct UniformBufferObject {
-            glm::mat4 model;
-            glm::mat4 view;
-            glm::mat4 proj;
-        };
-
-        std::vector<UniformBufferObject> ubos;
-
     private:
         VkFormat swapChainImageFormat;
         VkExtent2D swapChainExtent;
@@ -60,8 +52,8 @@ class EngineGraphics {
         uint32_t attributeCount = 2;
 
         VkDescriptorSetLayout setLayout;
-        VkDescriptorPool descriptorPool;
-        std::vector<VkDescriptorSet> descriptorSet;
+        std::vector<VkDescriptorPool> descriptorPools;
+        std::vector<std::vector<VkDescriptorSet>> descriptorSets;
         VkPipelineLayout pipelineLayout;
 
         std::vector<VkFramebuffer> swapChainFramebuffers;
@@ -79,14 +71,6 @@ class EngineGraphics {
         //the last frame (if it was then we wait the fence to return a signal before we continue) and then we dont waste
         //energy
         std::vector<VkFence> imagesInFlight;
-
-        std::vector<VkBuffer> uniformBuffers;
-        std::vector<mem::MaMemory> uniformMemories;
-
-        std::vector<data::Vertex2D> verts;
-        std::vector<uint16_t> indexes;
-
-
 
     private:
         void recreateSwapChain();
@@ -116,7 +100,6 @@ class EngineGraphics {
         void createColorImageViews();  //
         void createRenderPass(); //
         void createDescriptorSetLayout();
-        void createDescriptorPools();
         void createGraphicsPipeline(); //
         void createFrameBuffers(); //
         void createSemaphores();
@@ -126,8 +109,10 @@ class EngineGraphics {
         void createCommandBuffers(VkBuffer buffer, VkBuffer indexBuffer, size_t indexCount);
         void drawFrame();
         void copyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize dstOffset, VkDeviceSize size);
-        void createDescriptorSets(VkBuffer buffer);
+        void updateDescriptorSets(VkDeviceSize bufferSize, VkBuffer buffer);
         void createUniformBuffer(size_t bufferCount);
+        void createDescriptorPools();
+        void createDescriptorSets(VkDeviceSize dataSize, VkBuffer buffer);
 };
 
 }

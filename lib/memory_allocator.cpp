@@ -37,7 +37,9 @@ void mem::maCreateBuffer(VkPhysicalDevice physicalDevice, VkDevice device, MaBuf
     createInfo.queueFamilyIndexCount = pCreateInfo->queueFamilyIndexCount;
     createInfo.pQueueFamilyIndices = pCreateInfo->pQueueFamilyIndices;
 
-    vkCreateBuffer(device, &createInfo, nullptr, &pMemory->buffer);
+    if (vkCreateBuffer(device, &createInfo, nullptr, &pMemory->buffer) != VK_SUCCESS) {
+        throw std::runtime_error("could not create buffer");
+    };
 
     //allocate desired memory to buffer
     VkMemoryRequirements memRequirements;

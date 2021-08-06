@@ -10,9 +10,19 @@ const int DEPTH_CONSTANT = 100;
 //Empty GameObject --------------------------------------------------------------------------------------------
 EmptyObject::EmptyObject(create::Engine* eng) {
     engine = eng;
+
+    //add a default transform
+    objTransform = glm::mat4(
+        1, 0, 0, 0,
+        0, 1, 0, 0,
+        0, 0, 1, 0,
+        0, 0, 0, 1
+    );
 }
 
-EmptyObject::~EmptyObject() {}
+EmptyObject::~EmptyObject() {
+    engine->destroyUniformData(0);
+}
 
 //PURPOSE - this function will read an obj file and parse its data into formats that our renderer can handle
 //PARAMETERS - fileName (name of the obj file that data will be extracted from)
@@ -20,6 +30,7 @@ EmptyObject::~EmptyObject() {}
 //      - if we had read the file more efficiently than we could save time here
 void EmptyObject::addMeshData(const std::string& fileName) {
     //convert mesh data into vertices and index data.
+    /*
     std::vector<char> meshData = engine->engInit.readFile(fileName);
 
     //iterate through the meshData file
@@ -125,18 +136,27 @@ void EmptyObject::addMeshData(const std::string& fileName) {
 
         vertices.push_back(vertex);
     }
-    /*
     //print out vertices to check
     for (size_t i = 0; i < vertices.size(); i++) {
         //print position
         std::cout << vertices[i].position[0] << ", " << vertices[i].position[1] << ", " << vertices[i].position[2] << '\n';
         std::cout << vertices[i].color[0] << ", " << vertices[i].color[1] << ", " << vertices[i].color[2] << '\n';
     }
+    */
+    std::vector<data::Vertex2D> vertices = {
+        { {-0.5, -0.5, 0.0, 0.0}, {0.1, 0.2, 0.6} },
+        { {0.5, -0.5, 0.0, 0.0},  {0.1, 0.2, 0.6} },
+        { {0.5, 0.5, 0.0, 0.0},   {0.1, 0.2, 0.6} },
+        { {-0.5, 0.5, 0.0, 0.0},  {0.1, 0.2, 0.6} }
+    };
+
+    std::vector<uint16_t> indices = {
+        0, 1, 2, 2, 3, 0
+    };
+    std::cout << std::endl;
     for (size_t i = 0; i < indices.size(); i++) {
         std::cout << indices[i] << ", ";
     }
-    std::cout << std::endl;
-    */
     indexCount += indices.size();
 
     engine->writeToVertexBuffer(sizeof(vertices[0]) * vertices.size(), vertices.data());
@@ -144,7 +164,24 @@ void EmptyObject::addMeshData(const std::string& fileName) {
 
     //not sure if the best place to put this...
     //not the place at ALL to put this functionality
+    engine->applyTransform(objTransform, 0, 0);
     engine->addToRenderQueue(indexCount);
+}
+
+//PURPOSE - define the transformation of the object (rotation, scale, translation)
+//PARAMTERS - [uint32_t] x - x translation
+//          - [uint32_t] y - y translation
+//          - [uint32_t] z - z translation
+void EmptyObject::addTransform(uint32_t x, uint32_t y, uint32_t z, float camera_angle) {
+    objTransform = {
+        1, 0, 0, x,
+        0, 1, 0, y,
+        0, 0, 1, z,
+        0, 0, 0, 1
+    };
+
+    std::cout << "CAMERA " << camera_angle << std::endl;
+    engine->applyTransform(objTransform, 0, camera_angle);
 }
 
 //Square GameObject  ------------------------------------------------------------------------------------------

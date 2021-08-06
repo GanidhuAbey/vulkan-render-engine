@@ -2,15 +2,22 @@
 
 #include <string.h>
 
+#define GLM_FORCE_RADIANS
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+
 namespace gameObject {
 //empty object
 class EmptyObject {
     private:
         create::Engine* engine;
     public:
+        glm::mat4 objTransform; //matrix representing the linear transformation the user wants to apply (translate, rotate, scale)
+    public:
         EmptyObject(create::Engine* eng);
         ~EmptyObject();
         void addMeshData(const std::string& fileName);
+        void addTransform(uint32_t x, uint32_t y, uint32_t z, float camera_angle);
     private:
         //void abstractToVector(std::vector* vector, void* data);
 };

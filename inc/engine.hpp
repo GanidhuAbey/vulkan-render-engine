@@ -7,6 +7,8 @@
 
 #include "data_formats.hpp"
 
+#define GLM_SWIZZLE
+#define GLM_FORCE_RADIANS
 #include "glm/glm.hpp"
 
 class Color {
@@ -28,6 +30,15 @@ class Engine {
         GLFWwindow* glfWindow;
 
         uint32_t primitiveCount = 0;
+
+        struct UniformBufferObject {
+            glm::mat4 modelToWorld;
+            glm::mat4 worldToCamera;
+            glm::mat4 projection;
+        };
+
+        std::vector<mem::MaMemory> uniformBufferData;
+
     public:
         EngWindow userWindow;
         EngineInit engInit;
@@ -56,14 +67,23 @@ class Engine {
         void writeToVertexBuffer(VkDeviceSize dataSize, void* data);
         void writeToIndexBuffer(VkDeviceSize dataSize, void* data);
         void addToRenderQueue(uint16_t indexCount);
+        void applyTransform(glm::mat4 transform, size_t objIndex, float camera_angle);
+        void destroyUniformData(size_t objIndex);
+
 
     private:
+        glm::mat4 createCameraMatrix(glm::vec3 lookAt, glm::vec3 cameraPos);
+        glm::vec3 calculateCrossProduct(glm::vec3 v, glm::vec3 w);
         void createVertexBuffer(mem::MaMemory* pMemory);
         void createIndexBuffer(mem::MaMemory* pMemory);
         void writeToDeviceBuffer(VkDeviceSize dataSize, mem::MaMemory* pMemory, void* data);
         void createTempBuffer(VkDeviceSize dataSize, VkBufferUsageFlags usage, mem::MaMemory* tempMemory);
         mem::MaMemory createBuffer(VkBuffer* buffer, VkDeviceSize memorySize, VkBufferUsageFlags usage,
         VkMemoryPropertyFlags properties);
+        void createUniformBuffer(VkDeviceSize dataSize, mem::MaMemory* pMemory);
+        void writeToLocalBuffer(VkDeviceSize dataSize, mem::MaMemory* pMemory, void* data);
+
+
 
 };
 }

@@ -25,6 +25,8 @@ Engine::Engine(int w, int h, const char* title) {
     //creates vertex buffer
     createVertexBuffer(&gpuMemory);
     createIndexBuffer(&indexMemory);
+
+    std::cout << "hi yah" << std::endl;
     //create uniform buffer
     //uniformMemory = createBuffer(&uniformBuffer, 5e7, VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
     //update uniform buffer memory
@@ -54,6 +56,142 @@ void Engine::draw() {
     engineDraw.initialize(indexBuffer, &engGraphics, &engInit, &vertexBuffer, &gpuMemory);
 }
 
+void Engine::destroyUniformData(size_t objIndex) {
+    std::cout << "this should only run once" << std::endl;
+    mem::maDestroyMemory(engInit.device, uniformBufferData[objIndex]);
+}
+
+//PURPOSE - take a given transform and apply it the object specified by the objIndex
+//PARAMETERS - [glm::mat4] transform - the transform being applied to the object
+//           - [size_t] objIndex - the index representing the order at which the object was created.
+//RETURNS - NONE
+//NOTES - need functionality to choose which object i am applying the transformation for
+//      - a set system could possibly be a more efficient method than using vectors
+void Engine::applyTransform(glm::mat4 transform, size_t objIndex, float camera_angle) {
+    //add transform to buffer
+    UniformBufferObject ubo;
+    ubo.modelToWorld = {
+        1, 0, 0, 0,
+        0, 1, 0, 0,
+        0, 0, 1, 0,
+        0, 0, 0, 1,
+    };
+    ubo.worldToCamera = createCameraMatrix(glm::vec3(0, 0, 0), glm::vec3(0, 0.2, camera_angle)); //we probably constructed this wrong somehow...
+    //ubo.projection = createProjectionMatrix();
+
+    //create buffers if needed
+    if (objIndex >= uniformBufferData.size()) {
+        //std::cout << objIndex << " oh yea!" << std::endl;
+        uniformBufferData.resize(objIndex + 1);
+        //need to create new buffer
+        mem::MaMemory uniformBufferMemory;
+        createUniformBuffer(sizeof(ubo), &uniformBufferMemory);
+        uniformBufferData[objIndex] = uniformBufferMemory;
+    }
+
+    //finish?
+
+    //the data is now written to memory in a uniform buffer
+    //we just need a descriptor pool and set to describe the resource to the gpu
+    engGraphics.createDescriptorPools();
+    engGraphics.createDescriptorSets(sizeof(UniformBufferObject), uniformBufferData[objIndex].buffer);
+
+    writeToLocalBuffer(sizeof(UniformBufferObject), &uniformBufferData[objIndex], &ubo);
+
+}
+/*
+//PURPOSE - construct a matrix that maps the clip space to appropriate coordinates and constructs a perspective projection
+glm::mat4 Engine::createProjectionMatrix() {
+
+}
+*/
+
+//PURPOSE - construct a matrix that transforms objects relative to the camera
+//PARAMETERS - [glm::vec3] lookAt - vector representing the point the camera is looking at
+//           - [glm::vec3] cameraPos - vector representing the point the camera is located at
+//RETURNS - [glm::mat4] worldToCamera - matrix representing the transformation required to get to camera space
+glm::mat4 Engine::createCameraMatrix(glm::vec3 lookAt, glm::vec3 cameraPos) {
+    //we know we're looking at the point described by the lookAt matrix, but where is the camera?
+    //this vector should also represent the distance we need to translate the object by;
+    glm::vec3 camera_z = glm::normalize(-(cameraPos-lookAt));
+    //we can define the y axis as just up
+    glm::vec3 camera_y = glm::vec3(0, 1, 0) * glm::length(camera_z); //the axis dont have to be perpendicular to use the cross product
+    glm::vec3 camera_x = glm::normalize(calculateCrossProduct(camera_z, camera_y));
+
+    //so  if i use camera_x and camera_z i can calculate a camera y that is perpendicular to the other two vectors
+    camera_y = calculateCrossProduct(camera_z, camera_x);
+
+    glm::mat4 cameraPerspective = {
+        camera_x.x, camera_y.x, camera_z.x, 0,
+        camera_x.y, camera_y.y, camera_z.y, 0,
+        camera_x.z, camera_y.z, camera_z.z, 0,
+        0, 0, 0, 1,
+    };
+
+    glm::vec3 translate_vector = cameraPos - lookAt;
+    //std::cout << "translate: " << camera_x.x << camera_x.y << camera_x.z << std::endl;
+    glm::mat4 objectTranslate = {
+        1, 0, 0, translate_vector.x,
+        0, 1, 0, translate_vector.y,
+        0, 0, 1, translate_vector.z,
+        0, 0, 0, 1,
+    };
+
+    std::cout << "[";
+    for (size_t i = 0; i < 4; i++) {
+        for (size_t j = 0; j < 4; j++) {
+            std::cout << objectTranslate[i][j] << ", ";
+        }
+        std::cout << "\n";
+    }
+    std::cout << "]";
+
+    return glm::transpose(cameraPerspective * objectTranslate);
+}
+
+//PURPOSE - calculates the cross product of two vectors
+//PARAMETERS - [glm::vec3] v (the first vector)
+//           - [glm::vec3] w (the second vector)
+//RETURNS - [glm::vec3] the cross product of the two given vectors
+glm::vec3 Engine::calculateCrossProduct(glm::vec3 v, glm::vec3 w) {
+    //[x, v1, w1]
+    //[y, v2, w2]
+    //[z, v3, w3]
+    //determinant = x*(v2*w3 - w2*v3) - y*(v1*w3 - w1*v3) + z(v1*w2 - w1*v2)
+
+    return {
+        (v.y*w.z - w.y*v.z),
+        -(v.x*w.z - w.x*v.z),
+        (v.x*w.y - w.x*v.y),
+    };
+}
+
+//PURPOSE - create a buffer with the uniform bit active that is located in cpu-readable memory
+//PARAMETERS - [VkDeviceSize] dataSize (the size of the data that will be allocated to this buffer)
+//             [mem::MaMemory*] pMemory (pointer to the MaMemory obj that will contain the neccesary data on the buffer
+//RETURNS - NONE
+void Engine::createUniformBuffer(VkDeviceSize dataSize, mem::MaMemory* pMemory) {
+    mem::MaBufferCreateInfo bufferInfo{};
+    bufferInfo.size = dataSize;
+    bufferInfo.usage = VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT;
+    bufferInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
+    bufferInfo.queueFamilyIndexCount = 1;
+    bufferInfo.pQueueFamilyIndices = &queueG;
+    bufferInfo.memoryProperties = VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT;
+
+    mem::maCreateBuffer(engInit.physicalDevice, engInit.device, &bufferInfo, pMemory);
+}
+
+//PURPOSE - write data to buffer in cpu-readable memory
+//PARAMETERS - [VkDeviceSize] dataSize (size of the data being allocated)
+//           - [mem::MaMemory*] pMemory (pointer to the memory where the data is being allocated)
+//           - [void*] data (the information being allocated)
+//RETURNS - NONE
+void Engine::writeToLocalBuffer(VkDeviceSize dataSize, mem::MaMemory* pMemory, void* data) {
+    mem::maAllocateMemory(dataSize, pMemory);
+    mem::maMapMemory(engInit.device, dataSize, pMemory, data);
+}
+
 //PURPOSE - write data to buffer in device local memory, do NOT use this function for other memory types
 //PARAMETERS - dataSize : (the size of the data being given to buffer)
 //           - dstBuffer :  (the device local buffer the data will be written to)
@@ -78,6 +216,8 @@ void Engine::writeToDeviceBuffer(VkDeviceSize dataSize, mem::MaMemory* pMemory, 
 
     //destroy buffer and its associated memory
     mem::maDestroyMemory(engInit.device, tempMemory);
+
+    std::cout <<  "hellow as up" << std::endl;
 }
 
 //PURPOSE - abstract a bit away from the underlying api when writing to the proper buffer
@@ -96,6 +236,7 @@ void Engine::writeToIndexBuffer(VkDeviceSize dataSize, void* data) {
 //PARAMETERS - [uint16_t] indexCount - a count of how many indices the the renderer has to draw
 //RETURNS - NONE
 void Engine::addToRenderQueue(uint16_t indexCount) {
+    std::cout << "x" << std::endl;
     engGraphics.createCommandBuffers(gpuMemory.buffer, indexMemory.buffer, indexCount);
 }
 
