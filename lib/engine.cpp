@@ -70,14 +70,14 @@ void Engine::destroyUniformData(size_t objIndex) {
 void Engine::applyTransform(glm::mat4 transform, size_t objIndex, float camera_angle) {
     //add transform to buffer
     UniformBufferObject ubo;
-    ubo.modelToWorld = {
+    ubo.modelToWorld = transform;
+    ubo.worldToCamera = createCameraMatrix(glm::vec3(0, 0, 0), glm::vec3(0.1, 0.3, 0.3));
+    ubo.projection = {
         1, 0, 0, 0,
         0, 1, 0, 0,
-        0, 0, 1, 0,
+        0, 0, 0, 0,
         0, 0, 0, 1,
     };
-    ubo.worldToCamera = createCameraMatrix(glm::vec3(0, 0, 0), glm::vec3(0, 0.2, camera_angle)); //we probably constructed this wrong somehow...
-    //ubo.projection = createProjectionMatrix();
 
     //create buffers if needed
     if (objIndex >= uniformBufferData.size()) {
@@ -99,12 +99,13 @@ void Engine::applyTransform(glm::mat4 transform, size_t objIndex, float camera_a
     writeToLocalBuffer(sizeof(UniformBufferObject), &uniformBufferData[objIndex], &ubo);
 
 }
-/*
+
 //PURPOSE - construct a matrix that maps the clip space to appropriate coordinates and constructs a perspective projection
 glm::mat4 Engine::createProjectionMatrix() {
-
+    //define the subspace that will act as the screen.
+    //since the camera will be looking at the object the negative z axis it makes sense to define the plane using the x and y axis
 }
-*/
+
 
 //PURPOSE - construct a matrix that transforms objects relative to the camera
 //PARAMETERS - [glm::vec3] lookAt - vector representing the point the camera is looking at
@@ -114,6 +115,7 @@ glm::mat4 Engine::createCameraMatrix(glm::vec3 lookAt, glm::vec3 cameraPos) {
     //we know we're looking at the point described by the lookAt matrix, but where is the camera?
     //this vector should also represent the distance we need to translate the object by;
     glm::vec3 camera_z = glm::normalize(-(cameraPos-lookAt));
+    //std::cout << "camera position: " << camera_z.z<< std::endl;
     //we can define the y axis as just up
     glm::vec3 camera_y = glm::vec3(0, 1, 0) * glm::length(camera_z); //the axis dont have to be perpendicular to use the cross product
     glm::vec3 camera_x = glm::normalize(calculateCrossProduct(camera_z, camera_y));

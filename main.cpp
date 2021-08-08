@@ -9,7 +9,7 @@ const int HEIGHT = 600;
 
 int main() {
     //initialize engine
-    create::Engine engine(WIDTH, HEIGHT, "hello world");
+    create::Engine engine(WIDTH, HEIGHT, "Test");
 
     //gameObject::Light light(0, 0, 1, Color(1.0, 1.0, 1.0), &engine);
     //create square object

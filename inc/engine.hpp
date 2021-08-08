@@ -72,6 +72,7 @@ class Engine {
 
 
     private:
+        glm::mat4 createProjectionMatrix();
         glm::mat4 createCameraMatrix(glm::vec3 lookAt, glm::vec3 cameraPos);
         glm::vec3 calculateCrossProduct(glm::vec3 v, glm::vec3 w);
         void createVertexBuffer(mem::MaMemory* pMemory);

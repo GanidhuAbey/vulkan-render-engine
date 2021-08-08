@@ -640,7 +640,7 @@ void EngineGraphics::createGraphicsPipeline()  {
     rasterizationInfo.polygonMode = VK_POLYGON_MODE_FILL;
     //TODO: try to enable the wideLines gpu feature
     rasterizationInfo.lineWidth = 1.0f;
-    rasterizationInfo.cullMode = VK_CULL_MODE_NONE;
+    rasterizationInfo.cullMode = VK_CULL_MODE_BACK_BIT;
     rasterizationInfo.frontFace = VK_FRONT_FACE_CLOCKWISE;
     rasterizationInfo.depthBiasEnable = VK_FALSE;
     rasterizationInfo.depthBiasConstantFactor = 0.0f; // Optional

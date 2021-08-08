@@ -30,7 +30,6 @@ EmptyObject::~EmptyObject() {
 //      - if we had read the file more efficiently than we could save time here
 void EmptyObject::addMeshData(const std::string& fileName) {
     //convert mesh data into vertices and index data.
-    /*
     std::vector<char> meshData = engine->engInit.readFile(fileName);
 
     //iterate through the meshData file
@@ -115,6 +114,7 @@ void EmptyObject::addMeshData(const std::string& fileName) {
     std::cout << v.size() / vDataCount << std::endl;
 
     //last step is to convert them to our format
+    _Float32 colour_change = 0.0;
     std::vector<data::Vertex2D> vertices;
     for (size_t i = 0; i < v.size() / vDataCount; i++) {
         //for now i only accept sizes of 3
@@ -127,7 +127,7 @@ void EmptyObject::addMeshData(const std::string& fileName) {
         glm::vec4 vertice = glm::vec4(v[index], v[index+1], v[index+2], 0.0);
 
         //materials haven't been implemented so we'll just do a default value here
-        glm::vec3 color = glm::vec3(0.1, 0.2, 0.6);
+        glm::vec3 color = glm::vec3(0.1 + colour_change, 0.2 + colour_change, 0.6 + colour_change);
 
         data::Vertex2D vertex = {
             vertice,
@@ -135,27 +135,15 @@ void EmptyObject::addMeshData(const std::string& fileName) {
         };
 
         vertices.push_back(vertex);
+        colour_change += 0.5;
     }
+
+
     //print out vertices to check
     for (size_t i = 0; i < vertices.size(); i++) {
         //print position
         std::cout << vertices[i].position[0] << ", " << vertices[i].position[1] << ", " << vertices[i].position[2] << '\n';
         std::cout << vertices[i].color[0] << ", " << vertices[i].color[1] << ", " << vertices[i].color[2] << '\n';
-    }
-    */
-    std::vector<data::Vertex2D> vertices = {
-        { {-0.5, -0.5, 0.0, 0.0}, {0.1, 0.2, 0.6} },
-        { {0.5, -0.5, 0.0, 0.0},  {0.1, 0.2, 0.6} },
-        { {0.5, 0.5, 0.0, 0.0},   {0.1, 0.2, 0.6} },
-        { {-0.5, 0.5, 0.0, 0.0},  {0.1, 0.2, 0.6} }
-    };
-
-    std::vector<uint16_t> indices = {
-        0, 1, 2, 2, 3, 0
-    };
-    std::cout << std::endl;
-    for (size_t i = 0; i < indices.size(); i++) {
-        std::cout << indices[i] << ", ";
     }
     indexCount += indices.size();
 
@@ -174,13 +162,13 @@ void EmptyObject::addMeshData(const std::string& fileName) {
 //          - [uint32_t] z - z translation
 void EmptyObject::addTransform(uint32_t x, uint32_t y, uint32_t z, float camera_angle) {
     objTransform = {
-        1, 0, 0, x,
-        0, 1, 0, y,
-        0, 0, 1, z,
-        0, 0, 0, 1
+        cos(camera_angle), 0, sin(camera_angle), 0,
+        0, 1, 0, 0,
+        -sin(camera_angle), 0, cos(camera_angle), 0,
+        0, 0, 0, 1,
     };
 
-    std::cout << "CAMERA " << camera_angle << std::endl;
+    //std::cout << "CAMERA " << camera_angle << std::endl;
     engine->applyTransform(objTransform, 0, camera_angle);
 }
 
