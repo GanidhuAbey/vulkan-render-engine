@@ -41,7 +41,7 @@ int main() {
         xTranslate += 0.1;
 
         frameCount++;
-        angle += 0.001;
+        angle += 0.01;
     }
 
     return 1;

@@ -30,9 +30,10 @@ class EngineGraphics {
         std::vector<data::Vertex2D> oldVertices;
         std::vector<VkCommandBuffer> commandBuffers;
 
+        VkExtent2D swapChainExtent;
+
     private:
         VkFormat swapChainImageFormat;
-        VkExtent2D swapChainExtent;
 
         VkRenderPass renderPass;
 
@@ -84,7 +85,7 @@ class EngineGraphics {
         void fillRequiredValues(VkPhysicalDevice physicalDeviceUser, VkDevice deviceUser, VkSurfaceKHR surfaceUser);
         void updateUniformBuffers(uint32_t nextImage);
         void createImage(VkFormat format, VkImageUsageFlags usage, VkImage* images);
-    		void createDepthImage();
+    	void createDepthImage();
         void createImageMemory(VkImage image);
         void createImageView(VkFormat format, VkImageUsageFlags usage, VkImage image, VkImageAspectFlags aspectFlags, VkImageView* imageView);
 
@@ -106,7 +107,7 @@ class EngineGraphics {
         void createFences();
 
     public:
-        void createCommandBuffers(VkBuffer buffer, VkBuffer indexBuffer, size_t indexCount);
+        void createCommandBuffers(VkBuffer buffer, VkBuffer indBuffer, size_t indexCount);
         void drawFrame();
         void copyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize dstOffset, VkDeviceSize size);
         void updateDescriptorSets(VkDeviceSize bufferSize, VkBuffer buffer);

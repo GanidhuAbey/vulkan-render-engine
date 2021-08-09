@@ -640,7 +640,7 @@ void EngineGraphics::createGraphicsPipeline()  {
     rasterizationInfo.polygonMode = VK_POLYGON_MODE_FILL;
     //TODO: try to enable the wideLines gpu feature
     rasterizationInfo.lineWidth = 1.0f;
-    rasterizationInfo.cullMode = VK_CULL_MODE_BACK_BIT;
+    rasterizationInfo.cullMode = VK_CULL_MODE_NONE;
     rasterizationInfo.frontFace = VK_FRONT_FACE_CLOCKWISE;
     rasterizationInfo.depthBiasEnable = VK_FALSE;
     rasterizationInfo.depthBiasConstantFactor = 0.0f; // Optional
@@ -815,7 +815,9 @@ void EngineGraphics::copyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDevice
     vkFreeCommandBuffers(engineInit->device, engineInit->commandPool, 1, &transferBuffer);
 }
 
-void EngineGraphics::createCommandBuffers(VkBuffer buffer, VkBuffer indexBuffer, size_t indexCount) {
+void EngineGraphics::createCommandBuffers(VkBuffer buffer, VkBuffer indBuffer, size_t indexCount) {
+    vertexBuffer = buffer;
+    indexBuffer = indBuffer;
     //allocate memory for command buffer, you have to create a draw command for each image
     commandBuffers.resize(swapChainFramebuffers.size());
 
@@ -885,7 +887,7 @@ void EngineGraphics::createCommandBuffers(VkBuffer buffer, VkBuffer indexBuffer,
         //time for the draw calls
         const VkDeviceSize offsets[] = {0, offsetof(data::Vertex2D, color)};
         vkCmdBindVertexBuffers(commandBuffers[i], 0, 1, &buffer, offsets);
-        vkCmdBindIndexBuffer(commandBuffers[i], indexBuffer, 0, VK_INDEX_TYPE_UINT16);
+        vkCmdBindIndexBuffer(commandBuffers[i], indBuffer, 0, VK_INDEX_TYPE_UINT16);
 
         //draw first object (cube)
         std::cout << "descriptor count: " << descriptorSets[0].size() << std::endl;

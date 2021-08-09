@@ -1,19 +1,25 @@
 TODO: RENDER ENGINE
 
 [STEPS]
-- import objects into the scene through obj files [/]
-- move buffers to device local memory [/]
-- overhaul the memory allocator system [/]
-- implement memory allocation for transfer commands []
+- implment perspective projection []
+- move camera code to seperate class/file []
 - learn how to write unit tests for functions []
-- move includes out from .hpp file to .cpp file
+- move includes out from .hpp file to .cpp file []
 - seperate drawIndexed() call for each object []
 - move the image memory function to the memory allocator []
 - seperate transforms for each object []
 - ...
-- add transform to empty gameObject []
 - change 'data::Vertex2D' to 'data::Vertex' []
 
 
 [NOTE]
 - when running the command 'vkcube' using an external monitor the program outputs the error "could not find both graphics and present queues"
+
+[FINISHED]
+- import objects into the scene through obj files [/]
+- move buffers to device local memory [/]
+- overhaul the memory allocator system [/]
+- implement memory allocation for transfer commands [/]
+- create camera matrix [/]
+- implement orthogonal projection  [/]
+- add transform to empty gameObject [/]

@@ -123,8 +123,7 @@ int EngineInit::rateDeviceSuitability(VkPhysicalDevice device)
 
     //std::cout << "device name:  "  << deviceProperties.deviceName << std::endl;
 
-    if (deviceProperties.deviceType == VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU)
-    {
+    if (deviceProperties.deviceType == VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU) {
         score += 1000;
     }
 
@@ -132,14 +131,12 @@ int EngineInit::rateDeviceSuitability(VkPhysicalDevice device)
     score += deviceProperties.limits.maxImageDimension2D;
 
     //needed to draw images.
-    if (!deviceFeatures.geometryShader)
-    {
+    if (!deviceFeatures.geometryShader) {
         return 0;
     }
 
     //check if neede7d extensions are supported by device
-    if (!checkDeviceExtensionSupport(device))
-    {
+    if (!checkDeviceExtensionSupport(device)) {
         return 0;
     }
 

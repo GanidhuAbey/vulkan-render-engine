@@ -70,14 +70,21 @@ void Engine::destroyUniformData(size_t objIndex) {
 void Engine::applyTransform(glm::mat4 transform, size_t objIndex, float camera_angle) {
     //add transform to buffer
     UniformBufferObject ubo;
-    ubo.modelToWorld = transform;
-    ubo.worldToCamera = createCameraMatrix(glm::vec3(0, 0, 0), glm::vec3(0.1, 0.3, 0.3));
-    ubo.projection = {
-        1, 0, 0, 0,
-        0, 1, 0, 0,
-        0, 0, 0, 0,
-        0, 0, 0, 1,
-    };
+    //ubo.modelToWorld = transform;
+    //float lookAtVec = glm::dot(glm::vec3(0.229416,  0.688247, 0.688247), glm::vec3(-0.948683,  0.316228, 0));
+    //printf("vec: <%f> \n", lookAtVec);
+
+
+
+    static auto startTime = std::chrono::high_resolution_clock::now();
+    auto currentTime = std::chrono::high_resolution_clock::now();
+    float time = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - startTime).count();
+    ubo.modelToWorld = glm::rotate(glm::mat4(1.0f), time * glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+    //ubo.worldToCamera = createCameraMatrix(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 3.0f, 3.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+    ubo.worldToCamera = glm::lookAt(glm::vec3(1.0f, 3.0f, 3.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+    //ubo.projection = glm::perspective(glm::radians(45.0f), engGraphics.swapChainExtent.width / (float) engGraphics.swapChainExtent.height, 0.1f, 10.0f); 
+    
+    ubo.projection = createPerspectiveProjection(glm::radians(45.0f), engGraphics.swapChainExtent.width / (float) engGraphics.swapChainExtent.height, 0.1f, 10.0f);
 
     //create buffers if needed
     if (objIndex >= uniformBufferData.size()) {
@@ -100,10 +107,58 @@ void Engine::applyTransform(glm::mat4 transform, size_t objIndex, float camera_a
 
 }
 
+//PURPOSE - create a projection matrix that adds perspective (lines are not parallel, lines approach eachother the farther they get)
+glm::mat4 Engine::createPerspectiveProjection(float vertical_angle, float aspect, float n, float f) {
+    //find the distance to the "screen" that will be mapped to
+    //the distance to the screen is related to the angle between 'l' and 'r' by the eqn : phi = 2arctan(w/2d)
+    //d = w/(2*tan(phi/2)) <-- how can i derive the the neccesarry information to solve this from the parameters used by glm::perspective?
+    float c = 1.0/(glm::tan(vertical_angle/2));
+
+    //translate and normalize the vertices to bring it the unit cube form
+    glm::mat4 projection_simplified = {
+        c/aspect, 0, 0, 0,
+        0, c, 0, 0,
+        0, 0, -(f+n)/(f-n), -(2*f*n)/(f-n),
+        0, 0, -1, 0,
+    };
+
+    return glm::transpose(projection_simplified);
+    //project the points to a plane
+}
+
 //PURPOSE - construct a matrix that maps the clip space to appropriate coordinates and constructs a perspective projection
-glm::mat4 Engine::createProjectionMatrix() {
-    //define the subspace that will act as the screen.
-    //since the camera will be looking at the object the negative z axis it makes sense to define the plane using the x and y axis
+//NOTES - these parameters can be simplified
+//      - somewhat worried about how well this is working
+glm::mat4 Engine::createOrthogonalProjection(float left, float right, float top, float bottom, float near, float far) {
+    //the given parameters define a cube the governs the space that our input values live in. we must then convert this cube
+    //into a normalized cube with a center located at (0, 0, 0). finally we then project this object onto the screen orthogonaly
+
+    //translate the cube
+    glm::mat4 translate = {
+        1, 0, 0, -(right+left)/2,
+        0, 1, 0, -(top+bottom)/2,
+        0, 0, 1, -(far+near)/2,
+        0, 0, 0, 1,
+    };
+
+    //normalize the cube
+    glm::mat4 normalize = {
+        2/(right-left), 0, 0, 0,
+        0, 2/(top-bottom), 0, 0,
+        0, 0, 2/(far-near), 0,
+        0, 0, 0, 1,
+    };
+
+    //project the cube space onto a plane
+    glm::mat4 project = {
+        1, 0, 0, 0,
+        0, 1, 0, 0,
+        0, 0, -1, 0,
+        0, 0, 0, 1,
+    };
+
+    //multiply these vectors and return the output
+    return glm::transpose(project * normalize * translate);
 }
 
 
@@ -111,44 +166,26 @@ glm::mat4 Engine::createProjectionMatrix() {
 //PARAMETERS - [glm::vec3] lookAt - vector representing the point the camera is looking at
 //           - [glm::vec3] cameraPos - vector representing the point the camera is located at
 //RETURNS - [glm::mat4] worldToCamera - matrix representing the transformation required to get to camera space
-glm::mat4 Engine::createCameraMatrix(glm::vec3 lookAt, glm::vec3 cameraPos) {
+//NOTES - for some reason matrix multiplication was not giving me the expected output
+glm::mat4 Engine::createCameraMatrix(glm::vec3 lookAt, glm::vec3 cameraPos, glm::vec3 up) {
     //we know we're looking at the point described by the lookAt matrix, but where is the camera?
     //this vector should also represent the distance we need to translate the object by;
-    glm::vec3 camera_z = glm::normalize(-(cameraPos-lookAt));
-    //std::cout << "camera position: " << camera_z.z<< std::endl;
-    //we can define the y axis as just up
-    glm::vec3 camera_y = glm::vec3(0, 1, 0) * glm::length(camera_z); //the axis dont have to be perpendicular to use the cross product
-    glm::vec3 camera_x = glm::normalize(calculateCrossProduct(camera_z, camera_y));
+    glm::vec3 camera_z = glm::normalize(lookAt - cameraPos);
+    glm::vec3 camera_x = glm::normalize(calculateCrossProduct(up, camera_z)); //the axis dont have to be perpendicular to use the cross product
 
     //so  if i use camera_x and camera_z i can calculate a camera y that is perpendicular to the other two vectors
-    camera_y = calculateCrossProduct(camera_z, camera_x);
+    glm::vec3 camera_y = calculateCrossProduct(camera_z, camera_x);
 
-    glm::mat4 cameraPerspective = {
-        camera_x.x, camera_y.x, camera_z.x, 0,
-        camera_x.y, camera_y.y, camera_z.y, 0,
-        camera_x.z, camera_y.z, camera_z.z, 0,
+    camera_z = -camera_z;
+
+    glm::mat4 modelToWorld = {
+        camera_x.x, camera_x.y, camera_x.z, glm::dot(camera_x, -cameraPos),
+        camera_y.x, camera_y.y, camera_y.z, glm::dot(camera_y, -cameraPos),
+        camera_z.x, camera_z.y, camera_z.z, glm::dot(camera_z, -cameraPos),
         0, 0, 0, 1,
     };
 
-    glm::vec3 translate_vector = cameraPos - lookAt;
-    //std::cout << "translate: " << camera_x.x << camera_x.y << camera_x.z << std::endl;
-    glm::mat4 objectTranslate = {
-        1, 0, 0, translate_vector.x,
-        0, 1, 0, translate_vector.y,
-        0, 0, 1, translate_vector.z,
-        0, 0, 0, 1,
-    };
-
-    std::cout << "[";
-    for (size_t i = 0; i < 4; i++) {
-        for (size_t j = 0; j < 4; j++) {
-            std::cout << objectTranslate[i][j] << ", ";
-        }
-        std::cout << "\n";
-    }
-    std::cout << "]";
-
-    return glm::transpose(cameraPerspective * objectTranslate);
+    return glm::transpose(modelToWorld);
 }
 
 //PURPOSE - calculates the cross product of two vectors
@@ -157,7 +194,6 @@ glm::mat4 Engine::createCameraMatrix(glm::vec3 lookAt, glm::vec3 cameraPos) {
 //RETURNS - [glm::vec3] the cross product of the two given vectors
 glm::vec3 Engine::calculateCrossProduct(glm::vec3 v, glm::vec3 w) {
     //[x, v1, w1]
-    //[y, v2, w2]
     //[z, v3, w3]
     //determinant = x*(v2*w3 - w2*v3) - y*(v1*w3 - w1*v3) + z(v1*w2 - w1*v2)
 

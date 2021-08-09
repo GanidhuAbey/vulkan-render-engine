@@ -72,8 +72,9 @@ class Engine {
 
 
     private:
-        glm::mat4 createProjectionMatrix();
-        glm::mat4 createCameraMatrix(glm::vec3 lookAt, glm::vec3 cameraPos);
+        glm::mat4 createPerspectiveProjection(float vertical_angle, float aspect, float n, float f);
+        glm::mat4 createOrthogonalProjection(float left, float right, float top, float bottom, float near, float far);
+        glm::mat4 createCameraMatrix(glm::vec3 lookAt, glm::vec3 cameraPos, glm::vec3 up);
         glm::vec3 calculateCrossProduct(glm::vec3 v, glm::vec3 w);
         void createVertexBuffer(mem::MaMemory* pMemory);
         void createIndexBuffer(mem::MaMemory* pMemory);
