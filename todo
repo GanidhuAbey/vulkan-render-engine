@@ -1,7 +1,6 @@
 TODO: RENDER ENGINE
 
 [STEPS]
-- implment perspective projection []
 - move camera code to seperate class/file []
 - learn how to write unit tests for functions []
 - move includes out from .hpp file to .cpp file []
@@ -23,3 +22,4 @@ TODO: RENDER ENGINE
 - create camera matrix [/]
 - implement orthogonal projection  [/]
 - add transform to empty gameObject [/]
+- implment perspective projection [/]

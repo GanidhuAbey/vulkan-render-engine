@@ -51,7 +51,12 @@
         "cstring": "cpp",
         "chrono": "cpp",
         "ctime": "cpp",
-        "ratio": "cpp"
+        "ratio": "cpp",
+        "bitset": "cpp",
+        "compare": "cpp",
+        "concepts": "cpp",
+        "list": "cpp",
+        "ranges": "cpp"
     },
     "cmake.configureOnOpen": true
 }

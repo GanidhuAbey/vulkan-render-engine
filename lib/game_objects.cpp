@@ -11,6 +11,10 @@ const int DEPTH_CONSTANT = 100;
 EmptyObject::EmptyObject(create::Engine* eng) {
     engine = eng;
 
+    if (!engine->cameraInit) {
+        throw std::runtime_error("a camera has not been placed into the scene!, you will not be able to render anything without it");
+    }
+
     //add a default transform
     objTransform = glm::mat4(
         1, 0, 0, 0,

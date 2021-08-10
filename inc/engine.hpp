@@ -38,8 +38,13 @@ class Engine {
         };
 
         std::vector<mem::MaMemory> uniformBufferData;
+        
+        glm::mat4 worldToCameraMatrix;
+        glm::mat4 projectionMatrix;
 
     public:
+        bool cameraInit = false;
+
         EngWindow userWindow;
         EngineInit engInit;
         graphics::EngineGraphics engGraphics;
@@ -53,6 +58,7 @@ class Engine {
         mem::MaMemoryData memoryData;
         //draw::EngineDraw engineDraw;
         //in the future we can make this an array of vertices to hold multiple gameobject data.
+
 
     public:
         Engine(int w, int h, const char* title);
@@ -70,12 +76,10 @@ class Engine {
         void applyTransform(glm::mat4 transform, size_t objIndex, float camera_angle);
         void destroyUniformData(size_t objIndex);
 
+        void sendCameraData(glm::mat4 worldToCamera, glm::mat4 projection);
+
 
     private:
-        glm::mat4 createPerspectiveProjection(float vertical_angle, float aspect, float n, float f);
-        glm::mat4 createOrthogonalProjection(float left, float right, float top, float bottom, float near, float far);
-        glm::mat4 createCameraMatrix(glm::vec3 lookAt, glm::vec3 cameraPos, glm::vec3 up);
-        glm::vec3 calculateCrossProduct(glm::vec3 v, glm::vec3 w);
         void createVertexBuffer(mem::MaMemory* pMemory);
         void createIndexBuffer(mem::MaMemory* pMemory);
         void writeToDeviceBuffer(VkDeviceSize dataSize, mem::MaMemory* pMemory, void* data);
